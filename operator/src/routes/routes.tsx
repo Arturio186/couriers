@@ -1,3 +1,5 @@
+import { Navigate } from "react-router-dom";
+
 import IRoute from "#interfaces/IRoute";
 
 import AuthenticationLayout from "#layouts/AuthenticationLayout/AuthenticationLayout";
@@ -27,9 +29,9 @@ export const publicRoutes: IRoute[] = [
     path: "/",
     element: <AuthenticationLayout />,
     children: [
+      { path: '*', element: <Navigate to={LOGIN_ROUTE} /> },
       { path: LOGIN_ROUTE, element: <Login />, title: "Вход" },
       { path: REGISTER_ROUTE, element: <Register />, title: "Регистрация" },
-      { path: "*", element: <NotFound />, title: "Страница не найдена" },
     ],
   },
 ];

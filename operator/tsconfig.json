@@ -8,6 +8,7 @@
 
     "baseUrl": "./src",
     "paths": {
+      "#assets/*": ["assets/*"],
       "#components/*": ["components/*"],
       "#interfaces/*": ["interfaces/*"],
       "#layouts/*": ["layouts/*"],
