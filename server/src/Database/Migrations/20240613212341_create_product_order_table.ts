@@ -3,14 +3,12 @@ import type { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable("product_order", function (table) {
         table
-            .integer("product_id")
-            .unsigned()
+            .uuid("product_id")
             .references("id")
             .inTable("products")
             .onDelete("CASCADE");
         table
-            .integer("order_id")
-            .unsigned()
+            .uuid("order_id")
             .references("id")
             .inTable("orders")
             .onDelete("CASCADE");

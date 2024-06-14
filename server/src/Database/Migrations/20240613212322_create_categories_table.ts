@@ -2,11 +2,10 @@ import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable("categories", function (table) {
-        table.increments("id").primary();
+        table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
         table.string("name", 100).notNullable();
         table
-            .integer("branch_id")
-            .unsigned()
+            .uuid("branch_id")
             .references("id")
             .inTable("branches");
         table.timestamp("created_at").defaultTo(knex.fn.now());
