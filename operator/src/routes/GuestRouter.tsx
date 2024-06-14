@@ -4,6 +4,8 @@ import { publicRoutes } from "./routes";
 
 const guestBrowserRouter = createBrowserRouter(publicRoutes);
 
-const GuestRouter = () => <RouterProvider router={guestBrowserRouter} />;
+const GuestRouter = () => <RouterProvider router={guestBrowserRouter} />
+     
+
 
 export default GuestRouter;

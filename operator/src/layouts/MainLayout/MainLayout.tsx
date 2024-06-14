@@ -1,13 +1,19 @@
 import { FC } from "react";
 import { Outlet } from "react-router-dom";
 
+import { privateRoutes } from "#routes/routes";
+
+import useDocumentTitle from "#hooks/useDocumentTitle";
+
 const MainLayout: FC = () => {
-  return (
-    <>
-      <div>MainLayout</div>
-      <Outlet />
-    </>
-  );
+	useDocumentTitle(privateRoutes);
+
+    return (
+        <>
+            <div>MainLayout</div>
+            <Outlet />
+        </>
+    );
 };
 
 export default MainLayout;
