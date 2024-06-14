@@ -1,0 +1,51 @@
+$white-color: hsl(0, 0%, 100%);
+$small-font-size: .813rem;
+$font-medium: 500;
+
+.auth__box {
+    padding-right: 1rem;
+    border-bottom: 2px solid $white-color;
+}
+
+.auth__box-group {
+    position: relative;
+    width: 100%;
+}
+
+.auth__box-input {
+    width: 100%;
+    padding-block: 0.8rem;
+    background: none;
+    color: $white-color;
+    position: relative;
+    z-index: 1;
+}
+
+.auth__box-input:focus + .auth__box-label {
+    top: -12px;
+    font-size: $small-font-size;
+}
+  
+  /* Input focus sticky top label */
+.auth__box-input:not(:placeholder-shown).auth__box-input:not(:focus) + .auth__box-label {
+    top: -12px;
+    font-size: $small-font-size;
+}
+
+.auth__box-label {
+    position: absolute;
+    left: 0;
+    top: 13px;
+    font-weight: $font-medium;
+    transition: top 0.3s, font-size 0.3s;
+  }
+
+  .auth__box-input:focus + .auth__box-label {
+    top: -12px;
+    font-size: $small-font-size;
+  }
+
+  .auth__box-input:not(:placeholder-shown).auth__box-input:not(:focus) + .auth__box-label {
+    top: -12px;
+    font-size: $small-font-size;
+  }

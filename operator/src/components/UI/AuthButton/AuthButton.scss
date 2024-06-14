@@ -1,0 +1,19 @@
+$white-color: hsl(0, 0%, 100%);
+$white-color-hover: hsl(0, 0%, 90%);
+$font-medium: 500;
+
+.auth__button {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: $white-color;
+    font-weight: $font-medium;
+    cursor: pointer;
+    margin-bottom: 2rem;
+
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: $white-color-hover;
+    }
+}
