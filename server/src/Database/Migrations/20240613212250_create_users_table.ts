@@ -8,6 +8,8 @@ export async function up(knex: Knex): Promise<void> {
         table.string("email", 100).unique().notNullable();
         table.string("password", 255).notNullable();
         table.integer("role_id").unsigned().references("id").inTable("roles");
+        table.boolean("is_email_activated").notNullable().defaultTo(false);
+        table.string("activation_link");
         table.timestamp("created_at").defaultTo(knex.fn.now());
         table.timestamp("updated_at").defaultTo(knex.fn.now());
     });
