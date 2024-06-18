@@ -16,7 +16,7 @@ interface City {
     map_y: number;
 }
 
-exports.seed = async function (knex: Knex): Promise<void> {
+export async function seed(knex: Knex): Promise<void> {
     const filePath = path.join(__dirname, "..", "cities.json");
     const citiesJSON: CityJSON[] = JSON.parse(
         fs.readFileSync(filePath, "utf8")

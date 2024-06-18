@@ -1,5 +1,5 @@
 class MailService {
-    async SendActivationMail(emailTo: string, link: string) {
+    SendActivationMail = async (emailTo: string, link: string) => {
 
     }
 }

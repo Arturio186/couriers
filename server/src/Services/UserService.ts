@@ -1,20 +1,27 @@
 import bcrypt from "bcrypt";
-import uuid from 'uuid';
+import { v4 } from "uuid";
 
 import MailService from "./MailService";
+import TokenService from "./TokenService";
 
-import IUserModel from "../Models/IUserModel";
-import IUserService from "./IUserService";
+import IUserModel from "../Interfaces/IUserModel";
+import IUserService from "../Interfaces/IUserService";
+import UserDTO from "../DTO/UserDTO";
 
 class UserService implements IUserService {
-    UserModel: IUserModel;
+    public UserModel: IUserModel;
 
     constructor(userModel: IUserModel) {
         this.UserModel = userModel;
     }
 
-    async registration(name: string, email: string, password: string) {
-        const candidate = await this.UserModel.getUserByEmail(email);
+    Registration = async (
+        name: string,
+        email: string,
+        password: string,
+        roleID: number
+    ) => {
+        const candidate = await this.UserModel.GetUserByEmail(email);
 
         if (candidate) {
             throw new Error(`Пользователь с email ${email} уже существует!`);
@@ -22,12 +29,25 @@ class UserService implements IUserService {
 
         const hashPassword = await bcrypt.hash(password, 5);
 
-        const activationLink = uuid.v4()
+        const activationLink = v4();
 
-        const user = await this.UserModel.create(name, email, hashPassword, activationLink);
+        const user = await this.UserModel.Create({
+            first_name: name,
+            email: email,
+            password: hashPassword,
+            activation_link: activationLink,
+            role_id: roleID,
+        });
 
-        await MailService.SendActivationMail(email, activationLink)
-    }
+        const userDTO = new UserDTO(user);
+        const tokens = TokenService.GenerateTokens({ ...userDTO });
+        
+        await TokenService.SaveToken(userDTO.id, tokens.refreshToken);
+
+        await MailService.SendActivationMail(email, activationLink);
+
+        return { ...tokens, user: userDTO };
+    };
 }
 
 export default UserService;

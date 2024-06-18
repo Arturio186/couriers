@@ -1,17 +1,22 @@
 import db from "../Database/db";
 
-import IUserModel from "./IUserModel";
+import IUserModel from "../Interfaces/IUserModel";
+import IUser from "../Interfaces/IUser";
 
 class UserModel implements IUserModel {
-    async getUserByEmail(email: string) {
-        const user = await db("users").where({ email }).first();
+    private tableName = "users";
+
+    public Create = async (user: IUser): Promise<IUser> => {
+        const [newUser] = await db(this.tableName).insert(user).returning<IUser[]>("*");
+
+        return newUser;
+    };
+
+    public GetUserByEmail = async (email: string): Promise<IUser | undefined> => {
+        const user = await db(this.tableName).where({ email }).first();
 
         return user;
-    }
-
-    async create(name: string, email: string, password: string, activationLink: string) {
-
-    }
+    };
 }
 
 export default new UserModel();
