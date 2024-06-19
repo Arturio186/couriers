@@ -9,5 +9,7 @@ export default interface IUserService {
         accessToken: string;
         refreshToken: string;
     }>;
+
+    Activate: (link: string) => Promise<void>;
     
 }   

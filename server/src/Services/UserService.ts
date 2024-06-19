@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { v4 } from "uuid";
 
 import MailService from "./MailService";
-import TokenService from "./TokenService";
+import RefreshSessionService from "./RefreshSessionService";
 
 import IUserModel from "../Interfaces/IUserModel";
 import IUserService from "../Interfaces/IUserService";
@@ -23,6 +23,8 @@ class UserService implements IUserService {
     ) => {
         const candidate = await this.UserModel.GetUserByEmail(email);
 
+        console.log({name,email,password,roleID})
+
         if (candidate) {
             throw new Error(`Пользователь с email ${email} уже существует!`);
         }
@@ -40,14 +42,24 @@ class UserService implements IUserService {
         });
 
         const userDTO = new UserDTO(user);
-        const tokens = TokenService.GenerateTokens({ ...userDTO });
+        const tokens = RefreshSessionService.GenerateTokens({ ...userDTO });
         
-        await TokenService.SaveToken(userDTO.id, tokens.refreshToken);
+        await RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
 
-        await MailService.SendActivationMail(email, activationLink);
+        await MailService.SendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
         return { ...tokens, user: userDTO };
     };
+
+    Activate = async (link: string) => {
+        const user = await this.UserModel.FindOne({ activation_link: link })
+
+        if (!user) {
+            throw new Error('Неккоректная ссылка активации')
+        }
+
+        await this.UserModel.Update({ id: user.id }, { is_email_activated: true })
+    }
 }
 
 export default UserService;

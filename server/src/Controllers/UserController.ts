@@ -11,9 +11,24 @@ class UserController implements IUserController {
 
     public Registration = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userData = await this.UserService.Registration("artur", "artur@mail.ru", "123", 1)
+            const { name, email, password, role } = req.body;
 
+            const userData = await this.UserService.Registration(name, email, password, role)
+
+            res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }) // https => secure: true
             res.status(200).json(userData)
+        }
+        catch (e) {
+            console.log(e)
+            res.status(500).json('error')
+        }
+    }
+
+    public Activate = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const activationLink = req.params.link;
+            await this.UserService.Activate(activationLink);
+            return res.redirect(process.env.CLIENT_URL);
         }
         catch (e) {
             console.log(e)
@@ -39,14 +54,7 @@ class UserController implements IUserController {
         }
     }
 
-    public Activate = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-
-        }
-        catch (e) {
-            
-        }
-    }
+    
 
     public Refresh = async (req: Request, res: Response, next: NextFunction) => {
         try {

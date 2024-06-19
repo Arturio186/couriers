@@ -3,7 +3,7 @@ import IRefreshSessionModel from "../Interfaces/IRefreshSessionModel";
 
 import RefreshSessionModel from "../Models/RefreshSessionModel";
 
-class TokenService {
+class RefreshSessionService {
     RefreshSessionModel: IRefreshSessionModel;
 
     constructor(refreshSessionModel: IRefreshSessionModel) {
@@ -36,13 +36,11 @@ class TokenService {
             );
         }
 
-        const token = await this.RefreshSessionModel.Create({
+        return await this.RefreshSessionModel.Create({
             user_id: userID,
             token: refreshToken,
-        });
-
-        return token;
+        });;
     };
 }
 
-export default new TokenService(RefreshSessionModel);
+export default new RefreshSessionService(RefreshSessionModel);
