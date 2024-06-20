@@ -6,15 +6,20 @@ class APIError extends Error {
 
     constructor(status: number, message: string) {
         super(message);
+
         this.status = status;
+        this.message = message
+
+        Object.setPrototypeOf(this, APIError.prototype) // Фикс, почему-то при выбросе из сервиса еррор миделвара глотала ошибку как Error
+        Error.captureStackTrace(this, this.constructor)
     }
 
     static BadRequest(message: string) {
-        return new APIError(consts.HTTP_STATUS_BAD_REQUEST, "Bad request");
+        return new APIError(consts.HTTP_STATUS_BAD_REQUEST, message);
     }
 
     static Unauthorized(message: string) {
-        return new APIError(consts.HTTP_STATUS_UNAUTHORIZED, "Пользователь не авторизован");
+        return new APIError(consts.HTTP_STATUS_UNAUTHORIZED, message);
     }
 
     static Forbidden(message: string) {

@@ -7,6 +7,9 @@ const ErrorMiddleware = (error: Error, req: Request, res: Response, next: NextFu
         return res.status(error.status).json({message: error.message});
     }
 
+    console.log(error instanceof APIError)
+    console.log(error)
+
     return res.status(500).json({message: "Unexpected error"});
 }
 

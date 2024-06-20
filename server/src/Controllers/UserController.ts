@@ -18,9 +18,8 @@ class UserController implements IUserController {
             res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }) // https => secure: true
             res.status(200).json(userData)
         }
-        catch (e) {
-            console.log(e)
-            res.status(500).json('error')
+        catch (error) {
+            next(error)
         }
     }
 
@@ -30,9 +29,8 @@ class UserController implements IUserController {
             await this.UserService.Activate(activationLink);
             return res.redirect(process.env.CLIENT_URL);
         }
-        catch (e) {
-            console.log(e)
-            res.status(500).json('error')
+        catch (error) {
+            next(error)
         }
     }
 
@@ -40,8 +38,8 @@ class UserController implements IUserController {
         try {
 
         }
-        catch (e) {
-            
+        catch (error) {
+            next(error)
         }
     }
 
@@ -49,8 +47,8 @@ class UserController implements IUserController {
         try {
 
         }
-        catch (e) {
-            
+        catch (error) {
+            next(error)
         }
     }
 
@@ -60,8 +58,8 @@ class UserController implements IUserController {
         try {
 
         }
-        catch (e) {
-            
+        catch (error) {
+            next(error)
         }
     }
 
@@ -69,8 +67,8 @@ class UserController implements IUserController {
         try {
             res.json(['111', '333'])
         }
-        catch (e) {
-            
+        catch (error) {
+            next(error)
         }
     }
 }
