@@ -1,4 +1,7 @@
 import { Request, Response, NextFunction } from "express";
+import { validationResult } from "express-validator";
+import APIError from "../Exceptions/APIError";
+
 import IUserService from "../Interfaces/IUserService";
 import IUserController from "../Interfaces/IUserController";
 
@@ -11,6 +14,12 @@ class UserController implements IUserController {
 
     public Registration = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+
             const { name, email, password, role } = req.body;
 
             const userData = await this.UserService.Registration(name, email, password, role)

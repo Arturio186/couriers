@@ -4,13 +4,10 @@ import APIError from "../Exceptions/APIError";
 
 const ErrorMiddleware = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof APIError) {
-        return res.status(error.status).json({message: error.message});
+        return res.status(error.status).json({message: error.message, errors: error.errors})
     }
 
-    console.log(error instanceof APIError)
-    console.log(error)
-
-    return res.status(500).json({message: "Unexpected error"});
+    return res.status(500).json({message: "Непредвиденная ошибка"});
 }
 
 export default ErrorMiddleware; 
