@@ -3,24 +3,19 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 
-import UserModel from "./Models/UserModel";
-import UserRoutes from "./Routes/UserRoutes";
-import UserController from "./Controllers/UserController";
-import UserService from "./Services/UserService";
+import router from "./Routes";
 
 import ErrorMiddleware from "./Middlewares/ErrorMiddleware";
 
 config();
 
-const userService = new UserService(UserModel)
-const userController = new UserController(userService)
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use('/api', UserRoutes(userController))
+app.use('/api', router)
 app.use(ErrorMiddleware)
 
 const PORT = process.env.PORT || 5000;

@@ -2,30 +2,26 @@ import bcrypt from "bcrypt";
 import { v4 } from "uuid";
 
 import MailService from "./MailService";
-import RefreshSessionService from "./RefreshSessionService";
 
 import IUserModel from "../Interfaces/IUserModel";
 import IUserService from "../Interfaces/IUserService";
+import IRefreshSessionService from "../Interfaces/IRefreshSessionService";
+
 import UserDTO from "../DTO/UserDTO";
 
 import APIError from "../Exceptions/APIError";
 
 class UserService implements IUserService {
     public UserModel: IUserModel;
+    public RefreshSessionService: IRefreshSessionService;
 
-    constructor(userModel: IUserModel) {
+    constructor(userModel: IUserModel, refreshSessionService: IRefreshSessionService) {
         this.UserModel = userModel;
+        this.RefreshSessionService = refreshSessionService;
     }
 
-    Registration = async (
-        name: string,
-        email: string,
-        password: string,
-        roleID: number
-    ) => {
+    Registration = async (name: string, email: string, password: string, roleID: number) => {
         const candidate = await this.UserModel.GetUserByEmail(email);
-
-        console.log({name,email,password,roleID})
 
         if (candidate) {
             throw APIError.BadRequest(`Пользователь с email ${email} уже существует!`);
@@ -44,9 +40,9 @@ class UserService implements IUserService {
         });
 
         const userDTO = new UserDTO(user);
-        const tokens = RefreshSessionService.GenerateTokens({ ...userDTO });
+        const tokens = this.RefreshSessionService.GenerateTokens({ ...userDTO });
         
-        await RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
+        await this.RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
 
         await MailService.SendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
@@ -57,7 +53,7 @@ class UserService implements IUserService {
         const user = await this.UserModel.FindOne({ activation_link: link })
 
         if (!user) {
-            throw new Error('Неккоректная ссылка активации')
+            throw APIError.BadRequest('Неккоректная ссылка активации')
         }
 
         await this.UserModel.Update({ id: user.id }, { is_email_activated: true })

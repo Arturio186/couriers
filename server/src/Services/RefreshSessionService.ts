@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
-import IRefreshSessionModel from "../Interfaces/IRefreshSessionModel";
 
 import RefreshSessionModel from "../Models/RefreshSessionModel";
 
-class RefreshSessionService {
+import IRefreshSessionModel from "../Interfaces/IRefreshSessionModel";
+import IRefreshSessionService from "../Interfaces/IRefreshSessionService";
+
+class RefreshSessionService implements IRefreshSessionService {
     RefreshSessionModel: IRefreshSessionModel;
 
     constructor(refreshSessionModel: IRefreshSessionModel) {
@@ -39,8 +41,8 @@ class RefreshSessionService {
         return await this.RefreshSessionModel.Create({
             user_id: userID,
             token: refreshToken,
-        });;
+        });
     };
 }
 
-export default new RefreshSessionService(RefreshSessionModel);
+export default RefreshSessionService;

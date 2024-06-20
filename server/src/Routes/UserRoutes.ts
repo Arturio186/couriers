@@ -1,15 +1,15 @@
 import { Router } from "express";
 import IUserController from "../Interfaces/IUserController";
 
-export default (UserController: IUserController) => {
+export default (userController: IUserController) => {
     const router = Router();
 
-    router.post("/registration", UserController.Registration);
-    router.post("/login", UserController.Login);
-    router.post("/logout", UserController.Logout);
-    router.get("/activate/:link", UserController.Activate);
-    router.get("/refresh", UserController.Refresh);
-    router.get("/users", UserController.GetUsers);
+    router.post("/registration", userController.Registration);
+    router.post("/login", userController.Login);
+    router.post("/logout", userController.Logout);
+    router.get("/activate/:link", userController.Activate);
+    router.get("/refresh", userController.Refresh);
+    router.get("/users", userController.GetUsers);
 
     return router;
 };
