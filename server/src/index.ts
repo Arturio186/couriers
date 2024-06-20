@@ -8,6 +8,8 @@ import UserRoutes from "./Routes/UserRoutes";
 import UserController from "./Controllers/UserController";
 import UserService from "./Services/UserService";
 
+import ErrorMiddleware from "./Middlewares/ErrorMiddleware";
+
 config();
 
 const userService = new UserService(UserModel)
@@ -19,6 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use('/api', UserRoutes(userController))
+app.use(ErrorMiddleware)
 
 const PORT = process.env.PORT || 5000;
 

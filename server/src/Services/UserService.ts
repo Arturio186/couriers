@@ -8,6 +8,8 @@ import IUserModel from "../Interfaces/IUserModel";
 import IUserService from "../Interfaces/IUserService";
 import UserDTO from "../DTO/UserDTO";
 
+import APIError from "../Exceptions/APIError";
+
 class UserService implements IUserService {
     public UserModel: IUserModel;
 
@@ -26,7 +28,7 @@ class UserService implements IUserService {
         console.log({name,email,password,roleID})
 
         if (candidate) {
-            throw new Error(`Пользователь с email ${email} уже существует!`);
+            throw APIError.BadRequest(`Пользователь с email ${email} уже существует!`);
         }
 
         const hashPassword = await bcrypt.hash(password, 5);
