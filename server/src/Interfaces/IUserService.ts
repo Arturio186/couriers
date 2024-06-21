@@ -12,6 +12,22 @@ export default interface IUserService {
         refreshToken: string;
     }>;
 
+    Refresh: (refreshToken: string) => Promise<{
+        user: UserDTO;
+        accessToken: string;
+        refreshToken: string;
+    }>;
+
+    Login: (email: string, password: string) => Promise<{
+        user: UserDTO;
+        accessToken: string;
+        refreshToken: string;
+    }>
+
     Activate: (link: string) => Promise<void>;
+
+    Logout: (refreshToken: string) => Promise<void>
+
+    
     
 }   

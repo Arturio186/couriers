@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
-class MailService {
+class MailSender {
     public transporter: nodemailer.Transporter;
 
     constructor() {
@@ -35,4 +35,4 @@ class MailService {
     };
 }
 
-export default new MailService();
+export default new MailSender();

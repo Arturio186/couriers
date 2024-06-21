@@ -9,7 +9,6 @@ import ErrorMiddleware from "./Middlewares/ErrorMiddleware";
 
 config();
 
-
 const app = express();
 
 app.use(express.json());

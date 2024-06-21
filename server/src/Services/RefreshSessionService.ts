@@ -1,5 +1,3 @@
-import jwt from "jsonwebtoken";
-
 import RefreshSessionModel from "../Models/RefreshSessionModel";
 
 import IRefreshSessionModel from "../Interfaces/IRefreshSessionModel";
@@ -11,20 +9,6 @@ class RefreshSessionService implements IRefreshSessionService {
     constructor(refreshSessionModel: IRefreshSessionModel) {
         this.RefreshSessionModel = refreshSessionModel;
     }
-
-    public GenerateTokens = (payload) => {
-        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-            expiresIn: "30m",
-        });
-        const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-            expiresIn: "30d",
-        });
-
-        return {
-            accessToken,
-            refreshToken,
-        };
-    };
 
     public SaveToken = async (userID: string, refreshToken: string) => {
         const tokenData = await RefreshSessionModel.FindOne({
@@ -43,6 +27,15 @@ class RefreshSessionService implements IRefreshSessionService {
             token: refreshToken,
         });
     };
+
+    public RemoveToken = async (refreshToken: string) => {
+        return await this.RefreshSessionModel.Delete({ token: refreshToken })
+    }
+
+    public FindToken = async (refreshToken: string) => {
+        const token = await this.RefreshSessionModel.FindOne({token: refreshToken})
+        return token;
+    }
 }
 
 export default RefreshSessionService;

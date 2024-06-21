@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import { v4 } from "uuid";
 
-import MailService from "./MailService";
+import JWTManager from "../Utilities/JWTManager";
+import MailSender from "../Utilities/MailSender";
 
 import IUserModel from "../Interfaces/IUserModel";
 import IUserService from "../Interfaces/IUserService";
@@ -21,7 +22,7 @@ class UserService implements IUserService {
     }
 
     Registration = async (name: string, email: string, password: string, roleID: number) => {
-        const candidate = await this.UserModel.GetUserByEmail(email);
+        const candidate = await this.UserModel.FindOne({email});
 
         if (candidate) {
             throw APIError.BadRequest(`Пользователь с email ${email} уже существует!`);
@@ -40,11 +41,11 @@ class UserService implements IUserService {
         });
 
         const userDTO = new UserDTO(user);
-        const tokens = this.RefreshSessionService.GenerateTokens({ ...userDTO });
+        const tokens = JWTManager.GenerateTokens({ ...userDTO });
         
         await this.RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
 
-        await MailService.SendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
+        await MailSender.SendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`);
 
         return { ...tokens, user: userDTO };
     };
@@ -58,6 +59,52 @@ class UserService implements IUserService {
 
         await this.UserModel.Update({ id: user.id }, { is_email_activated: true })
     }
+
+    Login = async (email: string, password: string) => {
+        const user = await this.UserModel.FindOne({email})
+        if (!user) {
+            throw APIError.BadRequest('Пользователь с таким email не найден')
+        }
+
+        const isPassEquals = await bcrypt.compare(password, user.password);
+
+        if (!isPassEquals) {
+            throw APIError.BadRequest('Неверный пароль');
+        }
+
+        const userDTO = new UserDTO(user);
+        const tokens = JWTManager.GenerateTokens({...userDTO});
+
+        await this.RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
+
+        return {...tokens, user: userDTO}
+    }
+
+    Logout = async (refreshToken: string) => {
+        await this.RefreshSessionService.RemoveToken(refreshToken);
+    }
+
+    Refresh = async (refreshToken: string) => {
+        if (!refreshToken) {
+            throw APIError.Unauthorized();
+        }
+
+        const userData = JWTManager.ValidateRefreshToken(refreshToken);
+        const tokenFromDb = await this.RefreshSessionService.FindToken(refreshToken);
+
+        if (!userData || !tokenFromDb) {
+            throw APIError.Unauthorized();
+        }
+
+        const user = await this.UserModel.FindOne({ id: userData.id });
+        const userDTO = new UserDTO(user);
+        const tokens = JWTManager.GenerateTokens({...userDTO});
+
+        await this.RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
+        return {...tokens, user: userDTO}
+    }
+
+
 }
 
 export default UserService;

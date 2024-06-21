@@ -5,6 +5,5 @@ export default interface IRefreshSessionModel {
     Update: (conditions: Partial<IRefreshSession>, data: Partial<IRefreshSession>) => Promise<number>
     FindOne: (conditions: Partial<IRefreshSession>) => Promise<IRefreshSession | undefined>
     FindAll: (conditions: Partial<IRefreshSession>) => Promise<IRefreshSession[] | undefined>
-    Delete: (id: number) => Promise<number>
-    DeleteByUserId: (user_id: number) => Promise<number>
+    Delete: (conditions: Partial<IRefreshSession>) => Promise<number>
 }

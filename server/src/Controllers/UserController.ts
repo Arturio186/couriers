@@ -34,8 +34,16 @@ class UserController implements IUserController {
 
     public Activate = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+
             const activationLink = req.params.link;
+
             await this.UserService.Activate(activationLink);
+            
             return res.redirect(process.env.CLIENT_URL);
         }
         catch (error) {
@@ -45,7 +53,17 @@ class UserController implements IUserController {
 
     public Login = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const errors = validationResult(req);
 
+            if (!errors.isEmpty()) {
+                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+
+            const {email, password} = req.body;
+            const userData = await this.UserService.Login(email, password);
+
+            res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }) // https => secure: true
+            res.status(200).json(userData)
         }
         catch (error) {
             next(error)
@@ -54,18 +72,25 @@ class UserController implements IUserController {
 
     public Logout = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const { refreshToken } = req.cookies;
+            await this.UserService.Logout(refreshToken);
 
+            res.clearCookie('refreshToken');
+            res.status(200).json('success');
         }
         catch (error) {
             next(error)
         }
     }
-
     
-
     public Refresh = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const { refreshToken } = req.cookies;
+            const userData = await this.UserService.Refresh(refreshToken);
 
+            res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+
+            res.status(200).json(userData);
         }
         catch (error) {
             next(error)

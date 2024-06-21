@@ -26,12 +26,8 @@ class RefreshSessionModel implements IRefreshSessionModel {
         return db(this.tableName).where(conditions).orderBy("created_at", "asc");
     }
 
-    public Delete = async (id: number): Promise<number> => {
-        return db(this.tableName).where({ id }).del();
-    }
-
-    public DeleteByUserId = async (userID: number): Promise<number> => {
-        return db(this.tableName).where({ user_id: userID }).del();
+    public Delete = async (conditions: Partial<IRefreshSession>): Promise<number> => {
+        return db(this.tableName).where(conditions).del();
     }
 }
 
