@@ -12,8 +12,7 @@ interface CityJSON {
 interface City {
     name: string;
     region: string;
-    map_x: number;
-    map_y: number;
+    coords: Knex.Raw
 }
 
 export async function seed(knex: Knex): Promise<void> {
@@ -25,8 +24,7 @@ export async function seed(knex: Knex): Promise<void> {
     const cities: City[] = citiesJSON.map((city) => ({
         name: city["Город"],
         region: city["Регион"],
-        map_x: parseFloat(city["Широта"]),
-        map_y: parseFloat(city["Долгота"]),
+        coords: knex.raw(`ST_GeomFromText('POINT(${city['Долгота']} ${city['Широта']})', 4326)`)
     }));
 
     await knex("cities").del();

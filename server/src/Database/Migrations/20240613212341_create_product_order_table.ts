@@ -13,6 +13,7 @@ export async function up(knex: Knex): Promise<void> {
             .inTable("orders")
             .onDelete("CASCADE");
         table.integer("quantity").notNullable();
+        table.decimal("product_price", 10, 2).notNullable();
         table.primary(["product_id", "order_id"]);
     });
 }

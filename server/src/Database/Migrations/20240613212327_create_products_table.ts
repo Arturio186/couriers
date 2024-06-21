@@ -9,10 +9,6 @@ export async function up(knex: Knex): Promise<void> {
             .uuid("category_id")    
             .references("id")
             .inTable("categories");
-        table
-            .uuid("branch_id")
-            .references("id")
-            .inTable("branches");
         table.timestamp("created_at").defaultTo(knex.fn.now());
         table.timestamp("updated_at").defaultTo(knex.fn.now());
     });
