@@ -1,10 +1,10 @@
 import RefreshSessionModel from "../Models/RefreshSessionModel";
 
-import IRefreshSessionModel from "../Interfaces/IRefreshSessionModel";
-import IRefreshSessionService from "../Interfaces/IRefreshSessionService";
+import IRefreshSessionModel from "../Interfaces/RefreshSession/IRefreshSessionModel";
+import IRefreshSessionService from "../Interfaces/RefreshSession/IRefreshSessionService";
 
 class RefreshSessionService implements IRefreshSessionService {
-    RefreshSessionModel: IRefreshSessionModel;
+    private readonly RefreshSessionModel: IRefreshSessionModel;
 
     constructor(refreshSessionModel: IRefreshSessionModel) {
         this.RefreshSessionModel = refreshSessionModel;

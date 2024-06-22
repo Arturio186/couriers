@@ -1,10 +1,10 @@
 import db from "../Database/db";
 
-import IRefreshSession from "../Interfaces/IRefreshSession";
-import IRefreshSessionModel from "../Interfaces/IRefreshSessionModel";
+import IRefreshSession from "../Interfaces/RefreshSession/IRefreshSession";
+import IRefreshSessionModel from "../Interfaces/RefreshSession/IRefreshSessionModel";
 
 class RefreshSessionModel implements IRefreshSessionModel {
-    private tableName = "refresh_sessions";
+    private readonly tableName = "refresh_sessions";
 
     public Create = async (session: IRefreshSession): Promise<IRefreshSession> => {
         return db(this.tableName)

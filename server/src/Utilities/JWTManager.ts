@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import IUser from "../Interfaces/IUser";
+import IUser from "../Interfaces/User/IUser";
 
 class JWTManager {
     public GenerateTokens = (payload) => {

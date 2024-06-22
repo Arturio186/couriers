@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import APIError from "../Exceptions/APIError";
 
-import IUserService from "../Interfaces/IUserService";
-import IUserController from "../Interfaces/IUserController";
+import IUserService from "../Interfaces/User/IUserService";
+import IUserController from "../Interfaces/User/IUserController";
 
 class UserController implements IUserController {
-    public UserService: IUserService
+    private readonly UserService: IUserService
 
     constructor(userService: IUserService) {
         this.UserService = userService

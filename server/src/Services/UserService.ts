@@ -4,28 +4,37 @@ import { v4 } from "uuid";
 import JWTManager from "../Utilities/JWTManager";
 import MailSender from "../Utilities/MailSender";
 
-import IUserModel from "../Interfaces/IUserModel";
-import IUserService from "../Interfaces/IUserService";
-import IRefreshSessionService from "../Interfaces/IRefreshSessionService";
+import IUserModel from "../Interfaces/User/IUserModel";
+import IUserService from "../Interfaces/User/IUserService";
+import IRefreshSessionService from "../Interfaces/RefreshSession/IRefreshSessionService";
 
 import UserDTO from "../DTO/UserDTO";
 
 import APIError from "../Exceptions/APIError";
+import IRoleService from "../Interfaces/Role/IRoleService";
 
 class UserService implements IUserService {
-    public UserModel: IUserModel;
-    public RefreshSessionService: IRefreshSessionService;
+    private readonly UserModel: IUserModel;
+    private readonly RefreshSessionService: IRefreshSessionService;
+    private readonly RoleService: IRoleService;
 
-    constructor(userModel: IUserModel, refreshSessionService: IRefreshSessionService) {
+    constructor(userModel: IUserModel, refreshSessionService: IRefreshSessionService, roleService: IRoleService) {
         this.UserModel = userModel;
         this.RefreshSessionService = refreshSessionService;
+        this.RoleService = roleService;
     }
 
-    Registration = async (name: string, email: string, password: string, roleID: number) => {
+    Registration = async (name: string, email: string, password: string, role: string) => {
         const candidate = await this.UserModel.FindOne({email});
 
         if (candidate) {
             throw APIError.BadRequest(`Пользователь с email ${email} уже существует!`);
+        }
+
+        const userRole = await this.RoleService.FindRole(role);
+
+        if (!userRole) {
+            throw APIError.BadRequest(`Роль ${role} не найдена`)
         }
 
         const hashPassword = await bcrypt.hash(password, 5);
@@ -37,7 +46,7 @@ class UserService implements IUserService {
             email: email,
             password: hashPassword,
             activation_link: activationLink,
-            role_id: roleID,
+            role_id: userRole.id,
         });
 
         const userDTO = new UserDTO(user);

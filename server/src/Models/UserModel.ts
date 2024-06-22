@@ -1,10 +1,10 @@
 import db from "../Database/db";
 
-import IUserModel from "../Interfaces/IUserModel";
-import IUser from "../Interfaces/IUser";
+import IUserModel from "../Interfaces/User/IUserModel";
+import IUser from "../Interfaces/User/IUser";
 
 class UserModel implements IUserModel {
-    private tableName = "users";
+    private readonly tableName = "users";
 
     public Create = async (user: IUser): Promise<IUser> => {
         const [newUser] = await db(this.tableName).insert(user).returning<IUser[]>("*");

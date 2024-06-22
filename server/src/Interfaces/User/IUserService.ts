@@ -1,12 +1,7 @@
-import IUserModel from "./IUserModel";
-import UserDTO from "../DTO/UserDTO";
-import IRefreshSessionService from "./IRefreshSessionService";
+import UserDTO from "../../DTO/UserDTO";
 
 export default interface IUserService {
-    UserModel: IUserModel;
-    RefreshSessionService: IRefreshSessionService
-
-    Registration: (name: string, email: string, password: string, roleID: number) => Promise<{
+    Registration: (name: string, email: string, password: string, role: string) => Promise<{
         user: UserDTO;
         accessToken: string;
         refreshToken: string;

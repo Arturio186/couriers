@@ -1,4 +1,4 @@
-import IUser from "../Interfaces/IUser";
+import IUser from "../Interfaces/User/IUser";
 
 class UserDTO {
     public email: string;

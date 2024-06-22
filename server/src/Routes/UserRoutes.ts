@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { body, param } from "express-validator";
 
-import IUserController from "../Interfaces/IUserController";
+import IUserController from "../Interfaces/User/IUserController";
 
 import AuthMiddleware from "../Middlewares/AuthMiddleware";
 
