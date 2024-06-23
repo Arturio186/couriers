@@ -89,7 +89,6 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.isAuth = true;
                 state.data = action.payload.user;
-                console.log(state.data) // Убарть!
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
@@ -126,6 +125,8 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.isAuth = true;
                 state.data = action.payload.user;
+
+                console.log(action.payload.user)
             })
             .addCase(checkAuth.rejected, (state, action) => {
                 state.isLoading = false;
