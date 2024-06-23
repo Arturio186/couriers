@@ -8,13 +8,15 @@ export default defineConfig({
     alias: {
       '#assets': '/src/assets',
       '#components': '/src/components',
+      '#hooks': '/src/hooks',
+      '#http': '/src/http',
       '#interfaces': '/src/interfaces',
       '#layouts': '/src/layouts',
       '#pages': '/src/pages',
       '#routes': '/src/routes',
+      '#services': '/src/services',
       '#store': '/src/store',
       '#utils': '/src/utils',
-      '#hooks': '/src/hooks',
     }
   }
 })

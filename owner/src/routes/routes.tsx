@@ -10,15 +10,19 @@ import Register from "#pages/Register/Register";
 
 import NotFound from "#pages/NotFound/NotFound";
 
-import { MAIN_ROUTE } from "#utils/consts";
+import { DASHBOARD_ROUTE, MAIN_ROUTE, SETTINGS_ROUTE } from "#utils/consts";
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "#utils/consts";
+
+import { FaHome, FaUser, FaCog } from "react-icons/fa";
 
 export const privateRoutes: IRoute[] = [
     {
         path: "/",
         element: <MainLayout />,
         children: [
-            { path: MAIN_ROUTE, element: <p>Main</p>, title: "Главная" },
+            { path: MAIN_ROUTE, element: <p>Main</p>, title: "Главная", icon: <FaHome /> },
+            { path: DASHBOARD_ROUTE, element: <p>Dashboard</p>, title: "Личный кабинет", icon: <FaUser /> },
+            { path: SETTINGS_ROUTE, element: <p>Settings</p>, title: "Настройки", icon: <FaCog /> },
             { path: "*", element: <NotFound />, title: "Страница не найдена" },
         ],
     },

@@ -1,8 +1,12 @@
-import "./LoginForm.scss";
-
-import { REGISTER_ROUTE } from "#utils/consts";
 import { NavLink } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useDispatch } from 'react-redux'
+import "./LoginForm.scss";
+
+import { AppDispatch } from "#store/store";
+
+import { login } from "#store/userSlice";
+import { REGISTER_ROUTE } from "#utils/consts";
 
 import AuthBox from "#components/UI/AuthBox/AuthBox";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
@@ -19,8 +23,10 @@ const LoginForm = () => {
         formState: { errors },
     } = useForm<ILoginField>({ mode: "onBlur" });
 
+    const dispatch = useDispatch<AppDispatch>();
+
     const onSubmit: SubmitHandler<ILoginField> = async (data) => {
-        console.log(data);
+        dispatch(login({ email: data.email, password: data.password }));
     };
 
     return (
@@ -49,12 +55,6 @@ const LoginForm = () => {
                     })}
                     error={errors.password}
                 />
-            </div>
-
-            <div className="link__container">
-                <NavLink to={REGISTER_ROUTE} className="auth__link">
-                    Забыли пароль?
-                </NavLink>
             </div>
 
             <AuthButton>Войти</AuthButton>

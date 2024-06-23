@@ -1,8 +1,12 @@
-import "./RegisterForm.scss";
-
-import { LOGIN_ROUTE } from "#utils/consts";
 import { NavLink } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useDispatch } from 'react-redux'
+import "./RegisterForm.scss";
+
+import { AppDispatch } from "#store/store";
+
+import { registration } from "#store/userSlice";
+import { LOGIN_ROUTE } from "#utils/consts";
 
 import AuthBox from "#components/UI/AuthBox/AuthBox";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
@@ -22,8 +26,10 @@ const RegisterForm = () => {
         watch
     } = useForm<IRegisterField>({ mode: "onBlur" });
 
+    const dispatch = useDispatch<AppDispatch>();
+
     const onSubmit: SubmitHandler<IRegisterField> = async (data) => {
-        console.log(data);
+        dispatch(registration({ name: data.name, email: data.email, password: data.password }));
     };
 
 
@@ -76,12 +82,6 @@ const RegisterForm = () => {
                     })}
                     error={errors.confirmPassword}
                 />
-            </div>
-
-            <div className="link__container">
-                <NavLink to={LOGIN_ROUTE} className="auth__link">
-                    Забыли пароль?
-                </NavLink>
             </div>
 
             <AuthButton>Войти</AuthButton>
