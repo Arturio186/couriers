@@ -49,7 +49,7 @@ class UserService implements IUserService {
             role_id: userRole.id,
         });
 
-        const userDTO = new UserDTO(user);
+        const userDTO = new UserDTO({ ...user, role: userRole.name });
         const tokens = JWTManager.GenerateTokens({ ...userDTO });
         
         await this.RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
@@ -81,6 +81,8 @@ class UserService implements IUserService {
             throw APIError.BadRequest('Неверный пароль');
         }
 
+        console.log(user)
+
         const userDTO = new UserDTO(user);
         const tokens = JWTManager.GenerateTokens({...userDTO});
 
@@ -107,9 +109,10 @@ class UserService implements IUserService {
 
         const user = await this.UserModel.FindOne({ id: userData.id });
         const userDTO = new UserDTO(user);
+        
         const tokens = JWTManager.GenerateTokens({...userDTO});
 
-        await this.RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
+        await this.RefreshSessionService.UpdateToken(userDTO.id, refreshToken, tokens.refreshToken);
         return {...tokens, user: userDTO}
     }
 

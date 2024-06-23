@@ -4,6 +4,7 @@ export default interface IUser {
     last_name?: string;
     email: string;
     password: string;
+    role?: string;
     role_id: number;
     is_email_activated?: boolean;
     activation_link?: string;

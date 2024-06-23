@@ -86,6 +86,7 @@ class UserController implements IUserController {
     public Refresh = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { refreshToken } = req.cookies;
+            
             const userData = await this.UserService.Refresh(refreshToken);
 
             res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })

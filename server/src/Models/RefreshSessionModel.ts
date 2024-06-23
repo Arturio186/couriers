@@ -15,7 +15,10 @@ class RefreshSessionModel implements IRefreshSessionModel {
     public Update = async (conditions: Partial<IRefreshSession>, data: Partial<IRefreshSession>): Promise<number> => {
         return db(this.tableName)
                 .where(conditions)
-                .update(data);
+                .update({
+                    ...data,
+                    updated_at: db.fn.now()
+                });
     }
 
     public FindOne = async (conditions: Partial<IRefreshSession>): Promise<IRefreshSession | undefined> => {

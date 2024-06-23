@@ -19,7 +19,17 @@ class UserModel implements IUserModel {
     }
 
     public FindOne = async (conditions: Partial<IUser>): Promise<IUser | undefined> => {
-        return db(this.tableName).where(conditions).first();
+        const qualifiedConditions = {};
+
+        for (const [key, value] of Object.entries(conditions)) {
+            qualifiedConditions[`users.${key}`] = value;
+        }
+
+        return db(this.tableName)
+                .join('roles', 'roles.id', '=', 'users.role_id')
+                .where(qualifiedConditions)
+                .select('users.*', 'roles.name as role')
+                .first();
     }
 }
 
