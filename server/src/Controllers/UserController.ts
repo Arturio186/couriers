@@ -97,15 +97,6 @@ class UserController implements IUserController {
             next(error)
         }
     }
-
-    public GetUsers = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            res.json(['111', '333'])
-        }
-        catch (error) {
-            next(error)
-        }
-    }
 }
 
 export default UserController;

@@ -6,5 +6,4 @@ export default interface IUserController {
     Logout: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Activate: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Refresh: (req: Request, res: Response, next: NextFunction) => Promise<void>;
-    GetUsers: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

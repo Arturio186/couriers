@@ -3,8 +3,6 @@ import { body, param } from "express-validator";
 
 import IUserController from "../Interfaces/User/IUserController";
 
-import AuthMiddleware from "../Middlewares/AuthMiddleware";
-
 export default (userController: IUserController) => {
     const router = Router();
 
@@ -31,7 +29,7 @@ export default (userController: IUserController) => {
 
     router.post("/logout", userController.Logout);
     router.get("/refresh", userController.Refresh);
-    router.get("/users", AuthMiddleware, userController.GetUsers);
+    // router.get("/users", AuthMiddleware, userController.GetUsers);
 
     return router;
 };

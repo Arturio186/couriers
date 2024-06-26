@@ -1,5 +1,5 @@
 export default interface IRefreshSession {
-    id?: number;
+    id: number;
     user_id: string;
     token: string;
     created_at?: Date;
