@@ -11,6 +11,10 @@ class BusinessModel implements IBusinessModel {
 
         return newBusiness;
     };
+
+    public FindAll = async (conditions: Partial<IBusiness>) : Promise<IBusiness[] | undefined> => {
+        return db(this.tableName).where(conditions).orderBy("created_at", "desc");
+    }
 }
 
 export default new BusinessModel();

@@ -22,12 +22,21 @@ class BusinessController implements IBusinessController {
 
             const { name } = req.body;
 
-            console.log(res.locals.user)
-
             const createdBusiness = await this.BusinessService.SaveBusiness(name, res.locals.user.id)
 
             res.status(200).json(createdBusiness)
 
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
+    public GetMyBusiness = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userBusinesses = await this.BusinessService.GetOwnerBusinesses(res.locals.user.id)
+            
+            res.status(200).json(userBusinesses)
         }
         catch (error) {
             next(error)

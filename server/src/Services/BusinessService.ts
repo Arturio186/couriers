@@ -3,6 +3,7 @@ import IBusinessModel from "../Interfaces/Business/IBusinessModel";
 import IBusinessService from "../Interfaces/Business/IBusinessService";
 
 import APIError from "../Exceptions/APIError";
+import BusinessDTO from "../DTO/BusinessDTO";
 
 class BusinessService implements IBusinessService {
     private readonly BusinessModel: IBusinessModel;
@@ -13,21 +14,28 @@ class BusinessService implements IBusinessService {
         this.UserModel = userModel;
     }
 
-    public SaveBusiness = async (name: string, owner_id: string) => {
-        const owner = await this.UserModel.FindOne({ id: owner_id });
+    public SaveBusiness = async (name: string, ownerID: string) => {
+        const owner = await this.UserModel.FindOne({ id: ownerID });
 
         if (!owner) {
             throw APIError.BadRequest("Пользователь не найден");
         }
 
-        if (owner.role !== "owner") {
-            throw APIError.Forbidden("Пользователь не является владельцем бизнеса")
-        }
-
-        return await this.BusinessModel.Create({
+        const createdBusiness = await this.BusinessModel.Create({
             name,
-            owner_id,
+            owner_id: ownerID,
         });
+
+        return new BusinessDTO(createdBusiness);
+    };
+
+    public GetOwnerBusinesses = async (ownerID: string) => {
+
+        const ownerBusinesses = (
+            await this.BusinessModel.FindAll({ owner_id: ownerID })
+        ).map((business) => new BusinessDTO(business));
+
+        return ownerBusinesses;
     };
 }
 
