@@ -1,4 +1,4 @@
 export default interface IRole {
-    id: number;
+    id?: number;
     name: string;
 }

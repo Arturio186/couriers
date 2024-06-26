@@ -1,5 +1,5 @@
 export default interface IBusiness {
-    id: string;
+    id?: string;
     name: string;
     owner_id: string;
     created_at?: Date;

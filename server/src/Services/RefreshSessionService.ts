@@ -1,5 +1,3 @@
-import knex from "knex";
-
 import RefreshSessionModel from "../Models/RefreshSessionModel";
 
 import IRefreshSessionModel from "../Interfaces/RefreshSession/IRefreshSessionModel";
@@ -52,8 +50,6 @@ class RefreshSessionService implements IRefreshSessionService {
             { token: newToken }
         );
     }
-
-    
 
     public RemoveToken = async (refreshToken: string) => {
         return await this.RefreshSessionModel.Delete({ token: refreshToken })
