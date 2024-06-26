@@ -12,8 +12,25 @@ class BusinessModel implements IBusinessModel {
         return newBusiness;
     };
 
+    public Update = async (conditions: Partial<IBusiness>, data: Partial<IBusiness>) => {
+        return db(this.tableName)
+            .where(conditions)
+            .update({
+                ...data,
+                updated_at: db.fn.now()
+            });
+    }
+
+    public Delete = async (conditions: Partial<IBusiness>) => {
+        return db(this.tableName).where(conditions).del();
+    }
+
     public FindAll = async (conditions: Partial<IBusiness>) : Promise<IBusiness[] | undefined> => {
         return db(this.tableName).where(conditions).orderBy("created_at", "desc");
+    }
+
+    public FindOne = async (conditions: Partial<IBusiness>): Promise<IBusiness | undefined> => {
+        return db(this.tableName).where(conditions).first();
     }
 }
 

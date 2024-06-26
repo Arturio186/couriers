@@ -32,6 +32,45 @@ class BusinessController implements IBusinessController {
         }
     }
 
+    public Update = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+
+            const { id } = req.params;
+            const { name } = req.body;
+
+            await this.BusinessService.UpdateBusiness(name, id, res.locals.user.id)
+
+            res.status(200).json({message: "Success"})
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
+    public Destroy = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+
+            const { id } = req.params;
+
+            await this.BusinessService.RemoveBusiness(id, res.locals.user.id)
+
+            res.status(200).json({message: "Success"})
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
     public GetMyBusiness = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userBusinesses = await this.BusinessService.GetOwnerBusinesses(res.locals.user.id)

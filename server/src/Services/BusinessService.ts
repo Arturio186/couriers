@@ -28,6 +28,34 @@ class BusinessService implements IBusinessService {
 
         return new BusinessDTO(createdBusiness);
     };
+    
+    public UpdateBusiness = async (name: string, businessID: string, userID: string) => {
+        const business = await this.BusinessModel.FindOne({ id: businessID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        if (business.owner_id !== userID) {
+            throw APIError.Forbidden("Бизнес не пренадлежит вам")
+        }
+
+        return await this.BusinessModel.Update({ id: businessID }, { name })
+    };
+
+    public RemoveBusiness = async (businessID: string, userID: string) => {
+        const business = await this.BusinessModel.FindOne({ id: businessID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        if (business.owner_id !== userID) {
+            throw APIError.Forbidden("Бизнес не пренадлежит вам")
+        }
+        
+        return await this.BusinessModel.Delete({ id: businessID })
+    };  
 
     public GetOwnerBusinesses = async (ownerID: string) => {
 
@@ -37,6 +65,7 @@ class BusinessService implements IBusinessService {
 
         return ownerBusinesses;
     };
+
 }
 
 export default BusinessService;

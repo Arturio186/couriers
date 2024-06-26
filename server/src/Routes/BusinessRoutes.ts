@@ -17,6 +17,23 @@ export default (businessController: IBusinessController) => {
         businessController.Store
     );
 
+    router.put(
+        "/:id",
+        AuthMiddleware,
+        OwnerMiddleware,
+        param("id").notEmpty(),
+        body("name").notEmpty(),
+        businessController.Update
+    );
+
+    router.delete(
+        "/:id",
+        AuthMiddleware,
+        OwnerMiddleware,
+        param("id").notEmpty(),
+        businessController.Destroy
+    );
+
     router.get(
         "/my",
         AuthMiddleware,
