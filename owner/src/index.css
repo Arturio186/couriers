@@ -8,3 +8,13 @@
 
   font-family: "Montserrat", sans-serif;
 }
+
+body {
+  background-color: #111;
+}
+
+.message {
+  margin: 10px 0;
+  font-size: 0.9rem;
+  font-style: italic;
+}

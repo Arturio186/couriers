@@ -46,7 +46,7 @@ const SideBar: FC<SideBarProps> = ({ isOpen, setIsOpen }) => {
                 </nav>
                 <button className="logout-btn" onClick={handleClickLogout}>
                     <FaSignOutAlt />
-                    {isOpen && <span>Выйти</span>}
+                    <span className={`${isOpen ? "visible" : ""}`}>Выйти</span>
                 </button>
             </div>
         </> 

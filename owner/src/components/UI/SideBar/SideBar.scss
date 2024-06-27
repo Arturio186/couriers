@@ -1,17 +1,21 @@
+$sidebar-background: #333;
+$sidebar-hover: #4b4b4b;
+$main-text-color: #fff;
+
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
-    background-color: #333;
-    color: white;
+    background-color: $sidebar-background;
+    color: $main-text-color;
     transition: width 0.3s;
     overflow: hidden;
 
     .toggle-btn {
         background: none;
         border: none;
-        color: white;
+        color: $main-text-color;
         font-size: 1.5em;
         cursor: pointer;
         margin: 10px;
@@ -25,7 +29,7 @@
 
             a {
                 text-decoration: none;
-                color: #fff;
+                color: $main-text-color;
             }
 
             li {
@@ -39,7 +43,7 @@
                 transition: background-color 0.3s ease;
             
                 &:hover {
-                    background-color: #4b4b4b;
+                    background-color: $sidebar-hover;
                 }
     
                 svg {
@@ -66,7 +70,7 @@
 
         display: flex;
         align-items: center;
-        justify-content: center;
+        
 
         width: 100%;
         bottom: 20px;
@@ -79,16 +83,28 @@
 
         cursor: pointer;
         
-        padding: 10px;
+        padding: 15px;
 
         transition: background-color 0.3s ease;
 
         &:hover {
-            background-color: #4b4b4b;
+            background-color: $sidebar-hover;
+        }
+
+        svg {
+            min-width: 16px;
         }
 
         span {
-            margin-left: 5px;
+            margin-left: 10px;
+            white-space: nowrap;
+
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .visible {
+            opacity: 1;
         }
     }
 }

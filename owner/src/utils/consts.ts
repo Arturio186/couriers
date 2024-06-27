@@ -1,4 +1,4 @@
-export const MAIN_ROUTE = "/";
+export const BUSINESSES_ROUTE = "/businesses";
 export const DASHBOARD_ROUTE = "/dashboard";
 export const SETTINGS_ROUTE = "/settings";
 

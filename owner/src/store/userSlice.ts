@@ -25,7 +25,7 @@ export const login = createAsyncThunk(
     'user/login',
     async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
         try {
-            const response = await AuthService.login(email, password);
+            const response = await AuthService.Login(email, password);
             localStorage.setItem('token', response.data.accessToken);
             return response.data;
         } catch (error: any) {
@@ -38,7 +38,7 @@ export const registration = createAsyncThunk(
     'user/registration',
     async ({ name, email, password }: { name: string, email: string; password: string }, { rejectWithValue }) => {
         try {
-            const response = await AuthService.registration(name, email, password);
+            const response = await AuthService.Registration(name, email, password);
             localStorage.setItem('token', response.data.accessToken);
             return response.data;
         } catch (error: any) {
@@ -49,7 +49,7 @@ export const registration = createAsyncThunk(
 
 export const logout = createAsyncThunk('user/logout', async (_, { rejectWithValue }) => {
     try {
-        await AuthService.logout();
+        await AuthService.Logout();
         localStorage.removeItem('token');
     } catch (error: any) {
         return rejectWithValue(error.response?.data?.message || error.message);
@@ -92,7 +92,6 @@ const userSlice = createSlice({
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
-                console.log(action.payload);
             })
             .addCase(registration.pending, (state) => {
                 state.isLoading = true;
@@ -120,12 +119,14 @@ const userSlice = createSlice({
             })
             .addCase(checkAuth.pending, (state) => {
                 state.isLoading = true;
+                console.log("Начал загрузку")
             })
             .addCase(checkAuth.fulfilled, (state, action) => {
+                console.log("Получил данные")
                 state.isLoading = false;
                 state.isAuth = true;
                 state.data = action.payload.user;
-
+                
                 console.log(action.payload.user)
             })
             .addCase(checkAuth.rejected, (state, action) => {
