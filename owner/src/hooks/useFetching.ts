@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const useFetching = <T>(callback: () => Promise<T>) => {
+const useFetching = <T>(response: Promise<T>) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -9,14 +9,14 @@ const useFetching = <T>(callback: () => Promise<T>) => {
         setLoading(true);
         setError(null);
         try {
-            const result = await callback();
+            const result = await response;
             setData(result);
         } catch (err) {
             setError("Failed to fetch data");
         } finally {
             setLoading(false);
         }
-    }, [callback]);
+    }, []);
 
     useEffect(() => {
         fetchData();

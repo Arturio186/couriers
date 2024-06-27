@@ -17,7 +17,7 @@ const BusinessesList = () => {
         loading,
         error,
         refetch,
-    } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses);
+    } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses());
 
     if (loading) {
         return <Loader />
