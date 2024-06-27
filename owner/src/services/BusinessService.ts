@@ -13,6 +13,11 @@ export default class BusinessService {
         return response.data;
     }
 
+    static async GetBusiness(id: string): Promise<IBusiness> {
+        const response = await $api.get<IBusiness>(`/businesses/${id}`)
+        return response.data;
+    }
+
     static async DeleteBusiness(id: string): Promise<void> {
         await $api.delete(`/businesses/${id}`);
     }

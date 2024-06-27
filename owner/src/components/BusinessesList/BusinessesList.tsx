@@ -1,3 +1,4 @@
+
 import "./BusinessesList.scss";
 
 import useFetching from "#hooks/useFetching";
@@ -38,7 +39,7 @@ const BusinessesList = () => {
             console.error('Failed to delete business', error);
         }
     };
-
+    
     return (
         <>
             {businesses?.length == 0 && <p className="message">Нет ни одной сети</p>}

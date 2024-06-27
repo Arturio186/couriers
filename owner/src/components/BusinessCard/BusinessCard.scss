@@ -20,13 +20,22 @@ $card-border: #3a3a3c;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
     &:hover {
-        transform: translateY(-5px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
 
     &__title {
         font-size: 1.5em;
         color: #ffffff;
+
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: #8e7aff;
+        }
+    }
+
+    &__title-link {
+        text-decoration: none;
     }
 
     &__actions {
@@ -42,6 +51,7 @@ $card-border: #3a3a3c;
         padding: 10px 15px;
         cursor: pointer;
         transition: background-color 0.3s ease, color 0.3s ease;
+        font-weight: 600;
 
         &:hover {
             background-color: #e0e0e0;

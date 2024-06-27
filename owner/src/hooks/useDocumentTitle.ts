@@ -26,8 +26,6 @@ const useDocumentTitle = (routes: IRoute[]) => {
 
         if (currentRoute && currentRoute.title) {
             document.title = currentRoute.title;
-        } else {
-            document.title = "";
         }
     }, [location]);
 };
