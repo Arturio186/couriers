@@ -30,41 +30,42 @@ class BusinessService implements IBusinessService {
     };
     
     public UpdateBusiness = async (name: string, businessID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID })
+        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
 
         if (!business) {
             throw APIError.BadRequest("Бизнес не найден");
-        }
-
-        if (business.owner_id !== userID) {
-            throw APIError.Forbidden("Бизнес не пренадлежит вам")
         }
 
         return await this.BusinessModel.Update({ id: businessID }, { name })
     };
 
     public RemoveBusiness = async (businessID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID })
+        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
 
         if (!business) {
             throw APIError.BadRequest("Бизнес не найден");
-        }
-
-        if (business.owner_id !== userID) {
-            throw APIError.Forbidden("Бизнес не пренадлежит вам")
         }
         
         return await this.BusinessModel.Delete({ id: businessID })
     };  
 
-    public GetOwnerBusinesses = async (ownerID: string) => {
-
+    public GetOwnerBusinesses = async (userID: string) => {
         const ownerBusinesses = (
-            await this.BusinessModel.FindAll({ owner_id: ownerID })
+            await this.BusinessModel.FindAll({ owner_id: userID })
         ).map((business) => new BusinessDTO(business));
 
         return ownerBusinesses;
     };
+
+    public GetBusiness = async (userID: string, businessID: string) => {
+        const business = await this.BusinessModel.FindOne({ owner_id: userID, id: businessID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        return new BusinessDTO(business);
+    }
 
 }
 

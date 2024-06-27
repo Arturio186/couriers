@@ -71,11 +71,30 @@ class BusinessController implements IBusinessController {
         }
     }
 
-    public GetMyBusiness = async (req: Request, res: Response, next: NextFunction) => {
+    public GetMyBusinesses = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userBusinesses = await this.BusinessService.GetOwnerBusinesses(res.locals.user.id)
             
             res.status(200).json(userBusinesses)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
+    public GetBusiness = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+
+            const { id } = req.params;
+
+            const business = await this.BusinessService.GetBusiness(res.locals.user.id, id)
+            
+            res.status(200).json(business)
         }
         catch (error) {
             next(error)

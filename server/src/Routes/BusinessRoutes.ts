@@ -21,7 +21,7 @@ export default (businessController: IBusinessController) => {
         "/:id",
         AuthMiddleware,
         OwnerMiddleware,
-        param("id").notEmpty(),
+        param("id").notEmpty().isUUID(),
         body("name").notEmpty(),
         businessController.Update
     );
@@ -30,7 +30,7 @@ export default (businessController: IBusinessController) => {
         "/:id",
         AuthMiddleware,
         OwnerMiddleware,
-        param("id").notEmpty(),
+        param("id").notEmpty().isUUID(),
         businessController.Destroy
     );
 
@@ -38,7 +38,15 @@ export default (businessController: IBusinessController) => {
         "/my",
         AuthMiddleware,
         OwnerMiddleware,
-        businessController.GetMyBusiness
+        businessController.GetMyBusinesses
+    )
+
+    router.get(
+        "/:id",
+        AuthMiddleware,
+        OwnerMiddleware,
+        param("id").notEmpty().isUUID(),
+        businessController.GetBusiness
     )
 
     return router;
