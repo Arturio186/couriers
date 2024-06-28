@@ -14,12 +14,6 @@ class UserController implements IUserController {
 
     public Registration = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const errors = validationResult(req);
-
-            if (!errors.isEmpty()) {
-                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
-            }
-
             const { name, email, password, role } = req.body;
 
             const userData = await this.UserService.Registration(name, email, password, role)
@@ -34,12 +28,6 @@ class UserController implements IUserController {
 
     public Activate = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const errors = validationResult(req);
-
-            if (!errors.isEmpty()) {
-                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
-            }
-
             const activationLink = req.params.link;
 
             await this.UserService.Activate(activationLink);
@@ -53,13 +41,7 @@ class UserController implements IUserController {
 
     public Login = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const errors = validationResult(req);
-
-            if (!errors.isEmpty()) {
-                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
-            }
-
-            const {email, password} = req.body;
+            const { email, password } = req.body;
             const userData = await this.UserService.Login(email, password);
 
             res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }) // https => secure: true

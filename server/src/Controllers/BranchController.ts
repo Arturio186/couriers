@@ -1,6 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
-import APIError from "../Exceptions/APIError";
 
 import IBranchController from "../Interfaces/Branch/IBranchController";
 import IBranchService from "../Interfaces/Branch/IBranchService";
