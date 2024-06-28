@@ -12,7 +12,11 @@ class BranchController implements IBranchController {
 
     public GetByBusiness = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            
+            const { business_id } = req.query
+
+            const branches = await this.BranchService.GetBranchesByBusinessID(business_id.toString(), res.locals.user.id);
+
+            res.status(200).json(branches)
 
         }
         catch (error) {

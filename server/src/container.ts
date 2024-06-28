@@ -12,6 +12,10 @@ import BusinessModel from "./Models/BusinessModel";
 import BusinessService from "./Services/BusinessService";
 import BusinessController from "./Controllers/BusinessController";
 
+import BranchModel from "./Models/BranchModel";
+import BranchService from "./Services/BranchService";
+import BranchController from "./Controllers/BranchController";
+
 const refreshSessionService = new RefreshSessionService(RefreshSessionModel)
 const roleService = new RoleService(RoleModel)
 
@@ -21,9 +25,14 @@ const userController = new UserController(userService)
 const businessService = new BusinessService(BusinessModel, UserModel)
 const businessController = new BusinessController(businessService)
 
+const branchService = new BranchService(BranchModel, BusinessModel)
+const branchController = new BranchController(branchService)
+
+
 const container = {
     userController,
-    businessController
+    businessController,
+    branchController
 }
 
 export default container;

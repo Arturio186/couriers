@@ -1,5 +1,5 @@
-import BusinessDTO from "../../DTO/BusinessDTO"
+import BranchDTO from "../../DTO/BranchDTO"
 
 export default interface IBranchService {
-    SaveBranch: (name: string, owner_id: string) => Promise<BusinessDTO>
+    GetBranchesByBusinessID: (businessID: string, userID: string) => Promise<BranchDTO[]>
 }
