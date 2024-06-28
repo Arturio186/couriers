@@ -13,12 +13,15 @@ class BusinessModel implements IBusinessModel {
     };
 
     public Update = async (conditions: Partial<IBusiness>, data: Partial<IBusiness>) => {
-        return db(this.tableName)
+        const [updatedBusiness] = await db(this.tableName)
             .where(conditions)
             .update({
                 ...data,
                 updated_at: db.fn.now()
-            });
+            })
+            .returning<IBusiness[]>('*');
+
+        return updatedBusiness;
     }
 
     public Delete = async (conditions: Partial<IBusiness>) => {

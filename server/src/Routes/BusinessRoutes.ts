@@ -5,6 +5,7 @@ import IBusinessController from "../Interfaces/Business/IBusinessController";
 
 import AuthMiddleware from "../Middlewares/AuthMiddleware";
 import OwnerMiddleware from "../Middlewares/OwnerMiddleware";
+import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
 
 export default (businessController: IBusinessController) => {
     const router = Router();
@@ -14,6 +15,7 @@ export default (businessController: IBusinessController) => {
         AuthMiddleware,
         OwnerMiddleware,
         body("name").notEmpty(),
+        ValidationMiddleware,
         businessController.Store
     );
 
@@ -23,6 +25,7 @@ export default (businessController: IBusinessController) => {
         OwnerMiddleware,
         param("id").notEmpty().isUUID(),
         body("name").notEmpty(),
+        ValidationMiddleware,
         businessController.Update
     );
 
@@ -31,6 +34,7 @@ export default (businessController: IBusinessController) => {
         AuthMiddleware,
         OwnerMiddleware,
         param("id").notEmpty().isUUID(),
+        ValidationMiddleware,
         businessController.Destroy
     );
 
@@ -46,6 +50,7 @@ export default (businessController: IBusinessController) => {
         AuthMiddleware,
         OwnerMiddleware,
         param("id").notEmpty().isUUID(),
+        ValidationMiddleware,
         businessController.GetBusiness
     )
 

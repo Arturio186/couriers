@@ -1,6 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
-import APIError from "../Exceptions/APIError";
 
 import IBusinessController from "../Interfaces/Business/IBusinessController";
 import IBusinessService from "../Interfaces/Business/IBusinessService";
@@ -14,12 +12,6 @@ class BusinessController implements IBusinessController {
 
     public Store = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const errors = validationResult(req);
-
-            if (!errors.isEmpty()) {
-                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
-            }
-
             const { name } = req.body;
 
             const createdBusiness = await this.BusinessService.SaveBusiness(name, res.locals.user.id)
@@ -34,18 +26,12 @@ class BusinessController implements IBusinessController {
 
     public Update = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const errors = validationResult(req);
-
-            if (!errors.isEmpty()) {
-                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
-            }
-
             const { id } = req.params;
             const { name } = req.body;
 
-            await this.BusinessService.UpdateBusiness(name, id, res.locals.user.id)
+            const updatedBusiness = await this.BusinessService.UpdateBusiness(name, id, res.locals.user.id)
 
-            res.status(200).json({message: "Success"})
+            res.status(200).json(updatedBusiness)
         }
         catch (error) {
             next(error)
@@ -54,12 +40,6 @@ class BusinessController implements IBusinessController {
 
     public Destroy = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const errors = validationResult(req);
-
-            if (!errors.isEmpty()) {
-                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
-            }
-
             const { id } = req.params;
 
             await this.BusinessService.RemoveBusiness(id, res.locals.user.id)
@@ -84,12 +64,6 @@ class BusinessController implements IBusinessController {
 
     public GetBusiness = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const errors = validationResult(req);
-
-            if (!errors.isEmpty()) {
-                return next(APIError.BadRequest('Ошибка при валидации', errors.array()))
-            }
-
             const { id } = req.params;
 
             const business = await this.BusinessService.GetBusiness(res.locals.user.id, id)

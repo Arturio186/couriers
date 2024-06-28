@@ -36,7 +36,9 @@ class BusinessService implements IBusinessService {
             throw APIError.BadRequest("Бизнес не найден");
         }
 
-        return await this.BusinessModel.Update({ id: businessID }, { name })
+        const updatedBusiness = await this.BusinessModel.Update({ id: businessID }, { name })
+
+        return new BusinessDTO(updatedBusiness)
     };
 
     public RemoveBusiness = async (businessID: string, userID: string) => {
