@@ -5,7 +5,7 @@ import IBusiness from "#interfaces/IBusiness";
 
 export default class BusinessService {
     static async Create(name: string): Promise<AxiosResponse<IBusiness>> {
-        return $api.post<IBusiness>('/businesses/login', { name })
+        return $api.post<IBusiness>('/businesses/create', { name })
     }
 
     static async GetMyBusinesses(): Promise<AxiosResponse<IBusiness[]>> {

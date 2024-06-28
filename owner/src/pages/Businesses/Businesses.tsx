@@ -1,15 +1,28 @@
-import './Businesses.scss'
+import { useState } from "react";
+import "./Businesses.scss";
+
+import useFetching from "#hooks/useFetching";
+
+import CreateBusinessForm from "#components/Forms/CreateBusinessForm/CreateBusinessForm";
 import BusinessesList from "#components/BusinessesList/BusinessesList";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
-
 import Modal from "#components/UI/Modal/Modal";
-import { useState } from "react";
-import IBusiness from '#interfaces/IBusiness';
+
+import BusinessService from "#services/BusinessService";
+
+import IBusiness from "#interfaces/IBusiness";
+
 
 const Businesses = () => {
-    const [businessCreateModal, setBusinessCreateModal] = useState<boolean>(false);
-    const [businessEditModal, setBusinessEditModal] = useState<boolean>(false);
-    const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null)
+    const [businessCreateModal, setBusinessCreateModal] =
+        useState<boolean>(false);
+
+    const {
+        data: businesses,
+        setData: setBusinesses,
+        loading,
+        error,
+    } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses);
 
     return (
         <>
@@ -17,23 +30,23 @@ const Businesses = () => {
                 visible={businessCreateModal}
                 setVisible={setBusinessCreateModal}
             >
-                <p className="message">Создание бизнеса</p>
-            </Modal>
-
-            <Modal
-                visible={businessEditModal}
-                setVisible={setBusinessEditModal}
-            >
-                {targetBusiness && <p className="message">Изменение бизнеса {targetBusiness.id}</p>}
+                <CreateBusinessForm 
+                    setModalVisible={setBusinessCreateModal}
+                    setBusinesses={setBusinesses}
+                />
             </Modal>
 
             <h2>Ваши сети</h2>
 
-            <CoolButton onClick={() => setBusinessCreateModal(true)}>Создать бизнес</CoolButton>
+            <CoolButton onClick={() => setBusinessCreateModal(true)}>
+                Создать бизнес
+            </CoolButton>
 
-            <BusinessesList 
-                setBusinessEditModal={setBusinessEditModal}
-                setTargetBusiness={setTargetBusiness}
+            <BusinessesList
+                businesses={businesses}
+                setBusinesses={setBusinesses}
+                loading={loading}
+                error={error}
             />
         </>
     );

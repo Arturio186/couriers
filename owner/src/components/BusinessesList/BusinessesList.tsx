@@ -1,29 +1,35 @@
 import { FC, useState } from "react";
 import "./BusinessesList.scss";
 
-import useFetching from "#hooks/useFetching";
+
 
 import BusinessService from "#services/BusinessService";
 
 import BusinessCard from "#components/BusinessCard/BusinessCard";
 import Loader from "#components/UI/Loader/Loader";
+import Modal from "#components/UI/Modal/Modal";
+import Toast from "#components/UI/Toast/Toast";
 
 import IBusiness from "#interfaces/IBusiness";
 
 interface BusinessesListProps {
-    setBusinessEditModal: React.Dispatch<React.SetStateAction<boolean>>
-    setTargetBusiness: React.Dispatch<React.SetStateAction<IBusiness | null>>
+    businesses: IBusiness[] | null;
+    setBusinesses: React.Dispatch<React.SetStateAction<IBusiness[] | null>>;
+    loading: boolean;
+    error: string | null;
+
 }
 
-const BusinessesList : FC<BusinessesListProps> = ({ setBusinessEditModal, setTargetBusiness }) => {
-    const {
-        data: businesses,
-        setData: setBusinesses,
-        loading,
-        error,
-    } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses);
-
+const BusinessesList : FC<BusinessesListProps> = ({
+    businesses,
+    setBusinesses,
+    loading,
+    error
+}) => {
     const [deletingBusinessID, setDeletingBusinessID] = useState<string>('')
+    const [businessEditModal, setBusinessEditModal] = useState<boolean>(false);
+    const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null)
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
 
     if (loading) {
         return <Loader />
@@ -66,6 +72,12 @@ const BusinessesList : FC<BusinessesListProps> = ({ setBusinessEditModal, setTar
     
     return (
         <>
+            <Modal
+                visible={businessEditModal}
+                setVisible={setBusinessEditModal}
+            >
+                {targetBusiness && <p className="message">Изменение бизнеса {targetBusiness.id}</p>}
+            </Modal>
             {businesses?.length == 0 && <p className="message">Нет ни одной сети</p>}
             {businesses && <div className="businesses-list">
                 {businesses.map((business) => (
@@ -77,7 +89,11 @@ const BusinessesList : FC<BusinessesListProps> = ({ setBusinessEditModal, setTar
                         isDeleting={deletingBusinessID === business.id}
                     />
                 ))}
-            </div>}
+            </div>
+            }
+            {toastMessage && (
+                <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+            )}
         </>
     );
 };

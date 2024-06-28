@@ -1,0 +1,12 @@
+.modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    min-width: 400px;
+
+    button {
+        width: 30%;
+        margin: 0 auto;
+    }
+}
