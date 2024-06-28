@@ -40,6 +40,7 @@ $card-border: #3a3a3c;
 
     &__actions {
         display: flex;
+        align-items: flex-end;
         gap: 10px;
     }
 

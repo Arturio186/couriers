@@ -8,7 +8,7 @@ import { AppDispatch } from "#store/store";
 import { login } from "#store/userSlice";
 import { REGISTER_ROUTE } from "#utils/consts";
 
-import AuthBox from "#components/UI/AuthBox/AuthBox";
+import CoolInput from "#components/UI/CoolInput/CoolInput";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
 
 interface ILoginField {
@@ -34,7 +34,7 @@ const LoginForm = () => {
             <h1 className="auth__title">Вход</h1>
 
             <div className="auth__content">
-                <AuthBox
+                <CoolInput
                     label="Email"
                     type="email"
                     register={register("email", {
@@ -47,7 +47,7 @@ const LoginForm = () => {
                     error={errors.email}
                 />
 
-                <AuthBox
+                <CoolInput
                     label="Пароль"
                     type="password"
                     register={register("password", {

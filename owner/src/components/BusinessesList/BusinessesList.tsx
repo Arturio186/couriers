@@ -1,4 +1,4 @@
-
+import { FC, useState } from "react";
 import "./BusinessesList.scss";
 
 import useFetching from "#hooks/useFetching";
@@ -10,14 +10,20 @@ import Loader from "#components/UI/Loader/Loader";
 
 import IBusiness from "#interfaces/IBusiness";
 
+interface BusinessesListProps {
+    setBusinessEditModal: React.Dispatch<React.SetStateAction<boolean>>
+    setTargetBusiness: React.Dispatch<React.SetStateAction<IBusiness | null>>
+}
 
-const BusinessesList = () => {
+const BusinessesList : FC<BusinessesListProps> = ({ setBusinessEditModal, setTargetBusiness }) => {
     const {
         data: businesses,
+        setData: setBusinesses,
         loading,
         error,
-        refetch,
-    } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses());
+    } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses);
+
+    const [deletingBusinessID, setDeletingBusinessID] = useState<string>('')
 
     if (loading) {
         return <Loader />
@@ -27,16 +33,34 @@ const BusinessesList = () => {
         return <div>{error}</div>;
     }
 
-    const handleEdit = (id: string) => {
-        console.log(`Edit business with id ${id}`);
+    const handleEdit = (business: IBusiness) => {
+        setTargetBusiness(business)
+        setBusinessEditModal(true)
     };
 
     const handleDelete = async (id: string) => {
         try {
-            await BusinessService.DeleteBusiness(id);
-            refetch(); 
+            if (deletingBusinessID !== '') {
+                return
+            }
+
+            if (confirm("Вы уверены, что хотите удалить сеть?")) {
+                setDeletingBusinessID(id)
+                const response = await BusinessService.DeleteBusiness(id);
+
+                if (response.status === 200) {
+                    setBusinesses(prevBusinesses => {
+                        if (!prevBusinesses)
+                            return null
+
+                        return prevBusinesses?.filter(b => b.id !== id)
+                    })
+                }
+            }
         } catch (error) {
-            console.error('Failed to delete business', error);
+            console.error('Ошибка при удалении ', error);
+        } finally {
+            setDeletingBusinessID('')
         }
     };
     
@@ -48,12 +72,12 @@ const BusinessesList = () => {
                     <BusinessCard
                         key={business.id}
                         business={business}
-                        onEdit={() => handleEdit(business.id)}
+                        onEdit={() => handleEdit(business)}
                         onDelete={() => handleDelete(business.id)}
+                        isDeleting={deletingBusinessID === business.id}
                     />
                 ))}
             </div>}
-            
         </>
     );
 };

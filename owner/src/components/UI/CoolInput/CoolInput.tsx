@@ -2,15 +2,15 @@ import React from "react";
 import { UseFormRegisterReturn, FieldError } from "react-hook-form";
 import { v4 as uuidv4 } from 'uuid';
 
-import "./AuthBox.scss";
+import "./CoolInput.scss";
 
-interface AuthBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface CoolInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
     register: UseFormRegisterReturn;
     error?: FieldError;
 }
 
-const AuthBox: React.FC<AuthBoxProps> = ({
+const CoolInput: React.FC<CoolInputProps> = ({
     label,
     register,
     error,
@@ -21,16 +21,16 @@ const AuthBox: React.FC<AuthBoxProps> = ({
 
     return (
         <div>
-            <div className={`auth__box ${error ? "auth__box-error" : ""}`}>
-                <div className="auth__box-group">
+            <div className={`cool__input ${error ? "cool__input-error" : ""}`}>
+                <div className="cool__input-group">
                     <input
                         {...rest}
                         {...register}
-                        className="auth__box-input"
+                        className="cool__input-input"
                         placeholder=""
                         id={inputID}
                     />
-                    <label htmlFor={inputID} className="auth__box-label">
+                    <label htmlFor={inputID} className="cool__input-label">
                         {label}
                     </label>
                 </div>
@@ -40,4 +40,4 @@ const AuthBox: React.FC<AuthBoxProps> = ({
     );
 };
 
-export default AuthBox;
+export default CoolInput;

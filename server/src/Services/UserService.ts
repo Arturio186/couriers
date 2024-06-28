@@ -81,8 +81,6 @@ class UserService implements IUserService {
             throw APIError.BadRequest('Неверный пароль');
         }
 
-        console.log(user)
-
         const userDTO = new UserDTO(user);
         const tokens = JWTManager.GenerateTokens({...userDTO});
 

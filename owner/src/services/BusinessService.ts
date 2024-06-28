@@ -8,17 +8,15 @@ export default class BusinessService {
         return $api.post<IBusiness>('/businesses/login', { name })
     }
 
-    static async GetMyBusinesses(): Promise<IBusiness[]> {
-        const response = await $api.get<IBusiness[]>('/businesses/my');
-        return response.data;
+    static async GetMyBusinesses(): Promise<AxiosResponse<IBusiness[]>> {
+        return await $api.get<IBusiness[]>('/businesses/my');
     }
 
-    static async GetBusiness(id: string): Promise<IBusiness> {
-        const response = await $api.get<IBusiness>(`/businesses/${id}`)
-        return response.data;
+    static async GetBusiness(id: string): Promise<AxiosResponse<IBusiness>> {
+        return await $api.get<IBusiness>(`/businesses/${id}`);
     }
 
-    static async DeleteBusiness(id: string): Promise<void> {
-        await $api.delete(`/businesses/${id}`);
+    static async DeleteBusiness(id: string): Promise<AxiosResponse<number>> {
+        return await $api.delete(`/businesses/${id}`);
     }
 }

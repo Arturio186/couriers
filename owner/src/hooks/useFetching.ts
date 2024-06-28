@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
+import { AxiosResponse } from 'axios';
 
-const useFetching = <T>(response: Promise<T>) => {
+const useFetching = <T>(fetchFunc: () => Promise<AxiosResponse<T>>) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -9,20 +10,20 @@ const useFetching = <T>(response: Promise<T>) => {
         setLoading(true);
         setError(null);
         try {
-            const result = await response;
-            setData(result);
+            const response = await fetchFunc();
+            setData(response.data);
         } catch (err) {
             setError("Failed to fetch data");
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [fetchFunc]);
 
     useEffect(() => {
         fetchData();
     }, [fetchData]);
 
-    return { data, loading, error, refetch: fetchData };
+    return { data, setData, loading, error, refetch: fetchData };
 };
 
 export default useFetching;

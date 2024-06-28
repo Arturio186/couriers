@@ -12,10 +12,10 @@ import NotFound from "#pages/NotFound/NotFound";
 import Businesses from "#pages/Businesses/Businesses";
 import Business from "#pages/Business/Business";
 
-import { DASHBOARD_ROUTE, BUSINESSES_ROUTE } from "#utils/consts";
+import { DASHBOARD_ROUTE, BUSINESSES_ROUTE, STATISTIC_ROUTE } from "#utils/consts";
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "#utils/consts";
 
-import { FaCity, FaUser } from "react-icons/fa";
+import { FaCity, FaUser, FaChartBar } from "react-icons/fa";
 
 
 export const privateRoutes: IRoute[] = [
@@ -26,6 +26,7 @@ export const privateRoutes: IRoute[] = [
             { path: BUSINESSES_ROUTE, element: <Businesses />, title: "Сети", icon: <FaCity /> },
             { path: `${BUSINESSES_ROUTE}/:id`, element: <Business />, title: "Сеть" },
             { path: DASHBOARD_ROUTE, element: <p>Dashboard</p>, title: "Личный кабинет", icon: <FaUser /> },
+            { path: STATISTIC_ROUTE, element: <p>Statistic</p>, title: "Статистика", icon: <FaChartBar /> },
             { path: "*", element: <NotFound />, title: "Страница не найдена" }
         ],
     },

@@ -8,7 +8,7 @@ import { AppDispatch } from "#store/store";
 import { registration } from "#store/userSlice";
 import { LOGIN_ROUTE } from "#utils/consts";
 
-import AuthBox from "#components/UI/AuthBox/AuthBox";
+import CoolInput from "#components/UI/CoolInput/CoolInput";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
 
 interface IRegisterField {
@@ -38,7 +38,7 @@ const RegisterForm = () => {
             <h1 className="auth__title">Регистрация</h1>
 
             <div className="auth__content">
-                <AuthBox
+                <CoolInput
                     label="Имя"
                     type="text"
                     register={register("name", {
@@ -47,7 +47,7 @@ const RegisterForm = () => {
                     error={errors.name}
                 />
 
-                <AuthBox
+                <CoolInput
                     label="Email"
                     type="email"
                     register={register("email", {
@@ -60,7 +60,7 @@ const RegisterForm = () => {
                     error={errors.email}
                 />
 
-                <AuthBox
+                <CoolInput
                     label="Пароль"
                     type="password"
                     register={register("password", {
@@ -69,7 +69,7 @@ const RegisterForm = () => {
                     error={errors.password}
                 />
 
-                <AuthBox
+                <CoolInput
                     label="Повторите пароль"
                     type="password"
                     register={register("confirmPassword", {

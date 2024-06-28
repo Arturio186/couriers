@@ -22,10 +22,6 @@ const Business = () => {
         } else {
             document.title = 'Загрузка...';
         }
-
-        return () => {
-            document.title = 'Couriers'; // Установите заголовок по умолчанию, если нужно
-        };
     }, [business]);
 
     if (loading) {
@@ -39,7 +35,6 @@ const Business = () => {
     return (
         <div>
             <h1>Информация о бизнесе</h1>
-            <p>ID бизнеса: {business?.id}</p>
             <p>Название: {business?.name}</p>
         </div>
     );
