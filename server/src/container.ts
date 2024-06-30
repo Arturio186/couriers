@@ -22,11 +22,11 @@ const roleService = new RoleService(RoleModel)
 const userService = new UserService(UserModel, refreshSessionService, roleService)
 const userController = new UserController(userService)
 
-const businessService = new BusinessService(BusinessModel, UserModel)
-const businessController = new BusinessController(businessService)
-
 const branchService = new BranchService(BranchModel, BusinessModel)
 const branchController = new BranchController(branchService)
+
+const businessService = new BusinessService(BusinessModel, UserModel, branchService)
+const businessController = new BusinessController(businessService)
 
 
 const container = {

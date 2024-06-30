@@ -1,17 +1,21 @@
 import IUserModel from "../Interfaces/User/IUserModel";
 import IBusinessModel from "../Interfaces/Business/IBusinessModel";
 import IBusinessService from "../Interfaces/Business/IBusinessService";
+import IBranchService from "../Interfaces/Branch/IBranchService";
 
 import APIError from "../Exceptions/APIError";
 import BusinessDTO from "../DTO/BusinessDTO";
+import BranchDTO from "../DTO/BranchDTO";
 
 class BusinessService implements IBusinessService {
     private readonly BusinessModel: IBusinessModel;
     private readonly UserModel: IUserModel;
+    private readonly BranchService: IBranchService;
 
-    constructor(businessModel: IBusinessModel, userModel: IUserModel) {
+    constructor(businessModel: IBusinessModel, userModel: IUserModel, branchService: IBranchService) {
         this.BusinessModel = businessModel;
         this.UserModel = userModel;
+        this.BranchService = branchService;
     }
 
     public SaveBusiness = async (name: string, ownerID: string) => {
@@ -54,7 +58,7 @@ class BusinessService implements IBusinessService {
     public GetOwnerBusinesses = async (userID: string) => {
         const ownerBusinesses = (
             await this.BusinessModel.FindAll({ owner_id: userID })
-        ).map((business) => new BusinessDTO(business));
+        ).map(business => new BusinessDTO(business));
 
         return ownerBusinesses;
     };
@@ -66,7 +70,12 @@ class BusinessService implements IBusinessService {
             throw APIError.BadRequest("Бизнес не найден");
         }
 
-        return new BusinessDTO(business);
+        const branches = await this.BranchService.GetBranchesByBusinessID(business.id, userID);
+
+        return {
+            business: new BusinessDTO(business),
+            branches
+        }
     }
 
 }

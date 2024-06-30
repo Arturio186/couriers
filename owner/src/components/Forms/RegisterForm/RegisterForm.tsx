@@ -41,7 +41,7 @@ const RegisterForm = () => {
 
             navigate("/");
         }
-        catch (error : any) {
+        catch (error: any) {
             setAuthError(error || "Ошибка при аутентификации")
         }
         finally {

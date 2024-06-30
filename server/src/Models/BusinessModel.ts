@@ -5,6 +5,7 @@ import IBusinessModel from "../Interfaces/Business/IBusinessModel";
 
 class BusinessModel implements IBusinessModel {
     private readonly tableName = "businesses";
+    private readonly branchTableName = "branches";
 
     public Create = async (buisness: IBusiness): Promise<IBusiness> => {
         const [newBusiness] = await db(this.tableName).insert(buisness).returning<IBusiness[]>("*");
