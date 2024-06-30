@@ -4,25 +4,27 @@ import './Business.scss'
 
 import BusinessService from "#services/BusinessService";
 import useFetching from "#hooks/useFetching";
-import IBusiness from "#interfaces/IBusiness";
 import Loader from "#components/UI/Loader/Loader";
+import IBusinessWithBranches from "#interfaces/IBusinessWithBranches";
+import BranchTable from "#components/Tables/BranchTable/BranchTable";
+import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 const Business = () => {
     const { id } = useParams<{ id: string }>();
 
-    const { data: business, loading, error } = useFetching<IBusiness>(
+    const { data, loading, error } = useFetching<IBusinessWithBranches>(
         useCallback(() => BusinessService.GetBusiness(id ? id : ""), [id])
     );
 
     useEffect(() => {
-        if (business) {
-            document.title = `Сеть ${business.name}`;
+        if (data) {
+            document.title = `Сеть ${data.business.name}`;
 
-            console.log(business)
+            console.log(data)
         } else {
             document.title = 'Загрузка...';
         }
-    }, [business]);
+    }, [data]);
 
     if (loading) {
         return <Loader />
@@ -33,10 +35,15 @@ const Business = () => {
     }
     
     return (
-        <div>
-            <h1>Информация о бизнесе</h1>
-            <p>Название: {business?.name}</p>
-        </div>
+        <>
+            <h1>{data?.business.name}</h1>
+
+            <h3 className="table__title">Филиалы</h3>
+
+            <CoolButton>Добавить филиал</CoolButton>
+
+            <BranchTable branches={data?.branches} />
+        </>
     );
 };
 

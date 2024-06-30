@@ -1,14 +1,11 @@
 import { FC, useState } from "react";
 import "./BusinessesList.scss";
 
-
-
 import BusinessService from "#services/BusinessService";
 
 import BusinessCard from "#components/BusinessCard/BusinessCard";
 import Loader from "#components/UI/Loader/Loader";
 import Modal from "#components/UI/Modal/Modal";
-import Toast from "#components/UI/Toast/Toast";
 
 import IBusiness from "#interfaces/IBusiness";
 import EditBusinessForm from "#components/Forms/EditBusinessForm/EditBusinessForm";
