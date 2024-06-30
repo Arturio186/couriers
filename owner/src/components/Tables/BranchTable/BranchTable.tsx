@@ -37,7 +37,7 @@ const BranchTable: FC<BranchTableProps> = ({ branches }) => {
                                             {branch.name}
                                         </Link>
                                     </td>
-                                    <td>{branch.city_name}</td>
+                                    <td>{branch.city_name} {branch.region !== "" && `(${branch.region})`}</td>
                                     <td className="actions">
                                         <button><FaEdit /></button>
                                         <button><FaRegTrashAlt /></button>

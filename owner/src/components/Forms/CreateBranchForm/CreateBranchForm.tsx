@@ -2,11 +2,15 @@ import { FC, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Select from "react-select";
 
-
 import "./CreateBranchForm.scss";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
+
+interface Option {
+    value: string;
+    label: string;
+}
 
 interface CreateBranchField {
     name: string;
@@ -30,14 +34,20 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible }) => {
         label: string;
     } | null>(null);
 
-    const cityOptions = [
+    const [cityOptions, setCityOptions] = useState<Option[]>([
         { value: "branch1", label: "Филиал 1" },
         { value: "branch2", label: "Филиал 2" },
-    ];
+    ])
 
     const onSubmit: SubmitHandler<CreateBranchField> = async (data) => {
         try {
+            if (!selectedCity) {
+                alert("Выберите город")
+                return
+            }
+
             console.log(data);
+            console.log(selectedCity)
         } catch (error) {
             console.log(error);
         } finally {

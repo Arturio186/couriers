@@ -33,21 +33,13 @@ class BranchModel implements IBranchModel {
         return db(this.tableName)
             .join(this.cityTableName, `${this.cityTableName}.id`, '=', `${this.tableName}.city_id`)
             .where(conditions)
-            .select(`${this.tableName}.*`, `${this.cityTableName}.name as city_name`)
+            .select(`${this.tableName}.*`, `${this.cityTableName}.name as city_name`, `${this.cityTableName}.region as region`)
             .orderBy("created_at", "desc");
     }
 
     public FindOne = async (conditions: Partial<IBranch>): Promise<IBranch | undefined> => {
         return db(this.tableName).where(conditions).first();
     }
-
-    /*
-     return db(this.tableName)
-                .join('roles', 'roles.id', '=', 'users.role_id')
-                .where(qualifiedConditions)
-                .select('users.*', 'roles.name as role')
-                .first();
-    */
 }
 
 export default new BranchModel();
