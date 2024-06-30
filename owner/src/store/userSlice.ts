@@ -82,28 +82,13 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(login.pending, (state) => {
-                state.isLoading = true;
-            })
             .addCase(login.fulfilled, (state, action) => {
-                state.isLoading = false;
                 state.isAuth = true;
                 state.data = action.payload.user;
-            })
-            .addCase(login.rejected, (state, action) => {
-                state.isLoading = false;
-            })
-            .addCase(registration.pending, (state) => {
-                state.isLoading = true;
             })
             .addCase(registration.fulfilled, (state, action) => {
-                state.isLoading = false;
                 state.isAuth = true;
                 state.data = action.payload.user;
-            })
-            .addCase(registration.rejected, (state, action) => {
-                state.isLoading = false;
-                console.log(action.payload);
             })
             .addCase(logout.pending, (state) => {
                 state.isLoading = true;
@@ -119,19 +104,14 @@ const userSlice = createSlice({
             })
             .addCase(checkAuth.pending, (state) => {
                 state.isLoading = true;
-                console.log("Начал загрузку")
             })
             .addCase(checkAuth.fulfilled, (state, action) => {
-                console.log("Получил данные")
                 state.isLoading = false;
                 state.isAuth = true;
                 state.data = action.payload.user;
-                
-                console.log(action.payload.user)
             })
             .addCase(checkAuth.rejected, (state, action) => {
                 state.isLoading = false;
-                console.log(action.payload);
             });
     },
 });

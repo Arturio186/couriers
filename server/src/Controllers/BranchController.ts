@@ -17,7 +17,6 @@ class BranchController implements IBranchController {
             const branches = await this.BranchService.GetBranchesByBusinessID(business_id.toString(), res.locals.user.id);
 
             res.status(200).json(branches)
-
         }
         catch (error) {
             next(error)

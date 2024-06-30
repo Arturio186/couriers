@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from 'react-redux'
 import "./LoginForm.scss";
@@ -10,6 +11,8 @@ import { REGISTER_ROUTE } from "#utils/consts";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
+import Loader from "#components/UI/Loader/Loader";
+
 
 interface ILoginField {
     email: string;
@@ -23,10 +26,25 @@ const LoginForm = () => {
         formState: { errors },
     } = useForm<ILoginField>({ mode: "onBlur" });
 
+    const [authError, setAuthError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<ILoginField> = async (data) => {
-        dispatch(login({ email: data.email, password: data.password }));
+        setIsLoading(true)
+
+        try {
+            await dispatch(login({ email: data.email, password: data.password })).unwrap();
+
+            navigate("/");
+        }
+        catch (error : any) {
+            setAuthError(error || "Ошибка при аутентификации")
+        }
+        finally {
+            setIsLoading(false)
+        }
     };
 
     return (
@@ -52,12 +70,26 @@ const LoginForm = () => {
                     type="password"
                     register={register("password", {
                         required: "Введите пароль",
+                        minLength: {
+                            value: 6,
+                            message: "Пароль должен быть не менее 6 символов",
+                        },
+                        maxLength: {
+                            value: 32,
+                            message: "Пароль должен быть не более 32 символов",
+                        },
                     })}
                     error={errors.password}
                 />
             </div>
 
-            <AuthButton>Войти</AuthButton>
+            <AuthButton
+                disabled={isLoading}
+            >
+                {isLoading ? <Loader /> : "Войти"}
+            </AuthButton>
+            
+            {authError && <p className="auth__error">{authError}</p>}
 
             <p className="auth__redirect">
                 Нет аккаунта?{" "}

@@ -1,6 +1,6 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import "./CreateBusinessForm.scss";
+import "./EditBusinessForm.scss";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
@@ -9,16 +9,18 @@ import BusinessService from "#services/BusinessService";
 
 import IBusiness from "#interfaces/IBusiness";
 
-interface CreateBusinessField {
+interface EditBusinessField {
     name: string;
 }
 
-interface CreateBusinessFormProps {
+interface EditBusinessFormProps {
+    business: IBusiness;
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>
     setBusinesses: React.Dispatch<React.SetStateAction<IBusiness[] | null>>;
 }
 
-const CreateBusinessForm: FC<CreateBusinessFormProps> = ({ 
+const EditBusinessForm: FC<EditBusinessFormProps> = ({
+    business,
     setModalVisible,
     setBusinesses
 }) => {
@@ -26,34 +28,42 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<CreateBusinessField>({ mode: "onBlur" });
+        setValue
+    } = useForm<EditBusinessField>({ mode: "onBlur" });
 
-    const [isCreating, setIsCreating] = useState<boolean>(false);
+    const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
-    const onSubmit: SubmitHandler<CreateBusinessField> = async (data) => {
+    useEffect(() => {
+        setValue('name', business.name);
+    }, [business]);
+
+
+    const onSubmit: SubmitHandler<EditBusinessField> = async (data) => {
         try {
-            if (isCreating) 
+            if (isUpdating) 
                 return
 
-            setIsCreating(true)
+            setIsUpdating(true)
 
-            const response = await BusinessService.CreateBusiness(data.name)
+            const response = await BusinessService.UpdateBusiness(business.id, data.name)
 
             if (response.status === 200) {
                 setBusinesses(prev => {
-                    if (!prev) {
-                        return [response.data]
-                    }
-                    else {
-                        return [response.data, ...prev]
-                    }
+                    if (!prev) return null
+
+                    return prev?.map(b => {
+                        if (b.id === business.id) {
+                            b = response.data;
+                        }
+                        return b
+                    })
                 })
             }
         }
         catch (error) {
             console.log(error)
         } finally {
-            setIsCreating(false)
+            setIsUpdating(false)
             setModalVisible(false)
         }
     };
@@ -61,7 +71,7 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
     return (
         <>
             <form className="modal__form" onSubmit={handleSubmit(onSubmit)}>
-                <h4>Создание новой сети</h4>
+                <h4>Изменение информации о сети</h4>
 
                 <CoolInput
                     label="Название"
@@ -72,10 +82,10 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
                     error={errors.name}
                 />
 
-                <CoolButton disabled={isCreating}>Создать</CoolButton>
+                <CoolButton disabled={isUpdating}>Изменить</CoolButton>
             </form>
         </>
     );
 };
 
-export default CreateBusinessForm;
+export default EditBusinessForm; 

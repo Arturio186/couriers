@@ -1,5 +1,5 @@
 $white-color: hsl(0, 0%, 100%);
-$small-font-size: .813rem;
+$small-font-size: .750rem;
 $font-medium: 500;
 
 .cool__input {
@@ -57,5 +57,8 @@ $font-medium: 500;
 }
 
 .error__message {
-    color: red;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-top: 5px;
+    color: #ff0000;
 }

@@ -11,6 +11,7 @@ import Modal from "#components/UI/Modal/Modal";
 import Toast from "#components/UI/Toast/Toast";
 
 import IBusiness from "#interfaces/IBusiness";
+import EditBusinessForm from "#components/Forms/EditBusinessForm/EditBusinessForm";
 
 interface BusinessesListProps {
     businesses: IBusiness[] | null;
@@ -29,7 +30,6 @@ const BusinessesList : FC<BusinessesListProps> = ({
     const [deletingBusinessID, setDeletingBusinessID] = useState<string>('')
     const [businessEditModal, setBusinessEditModal] = useState<boolean>(false);
     const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null)
-    const [toastMessage, setToastMessage] = useState<string | null>(null);
 
     if (loading) {
         return <Loader />
@@ -75,10 +75,18 @@ const BusinessesList : FC<BusinessesListProps> = ({
             <Modal
                 visible={businessEditModal}
                 setVisible={setBusinessEditModal}
-            >
-                {targetBusiness && <p className="message">Изменение бизнеса {targetBusiness.id}</p>}
+            >   
+                {targetBusiness && 
+                    <EditBusinessForm
+                        business={targetBusiness}
+                        setBusinesses={setBusinesses}
+                        setModalVisible={setBusinessEditModal}
+                    />
+                }
             </Modal>
+
             {businesses?.length == 0 && <p className="message">Нет ни одной сети</p>}
+
             {businesses && <div className="businesses-list">
                 {businesses.map((business) => (
                     <BusinessCard
@@ -91,9 +99,6 @@ const BusinessesList : FC<BusinessesListProps> = ({
                 ))}
             </div>
             }
-            {toastMessage && (
-                <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
-            )}
         </>
     );
 };

@@ -23,6 +23,7 @@ export const privateRoutes: IRoute[] = [
         path: "/",
         element: <MainLayout />,
         children: [
+            { path: "/", element: <Navigate to={BUSINESSES_ROUTE} />, title: "Переадресация" },
             { path: BUSINESSES_ROUTE, element: <Businesses />, title: "Сети", icon: <FaCity /> },
             { path: `${BUSINESSES_ROUTE}/:id`, element: <Business />, title: "Сеть" },
             { path: DASHBOARD_ROUTE, element: <p>Dashboard</p>, title: "Личный кабинет", icon: <FaUser /> },
@@ -43,5 +44,5 @@ export const publicRoutes: IRoute[] = [
             { path: REGISTER_ROUTE, element: <Register />, title: "Регистрация" },
         ],
     },
-    {path: '*', element: <Navigate to={LOGIN_ROUTE}/>, title: "Переадресация"}
+    {path: '*', element: <Navigate to={LOGIN_ROUTE} />, title: "Переадресация"}
 ];

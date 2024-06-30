@@ -16,7 +16,7 @@ const Business = () => {
 
     useEffect(() => {
         if (business) {
-            document.title = `Сеть "${business.name}"`;
+            document.title = `Сеть ${business.name}`;
         } else {
             document.title = 'Загрузка...';
         }

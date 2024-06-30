@@ -27,7 +27,7 @@ const CoolInput: React.FC<CoolInputProps> = ({
                         {...rest}
                         {...register}
                         className="cool__input-input"
-                        placeholder=""
+                        placeholder=" "
                         id={inputID}
                     />
                     <label htmlFor={inputID} className="cool__input-label">
