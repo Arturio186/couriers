@@ -1,5 +1,5 @@
 .branch__table {
-    width: 60%;
+    width: 90%;
 
     table {
         width: 100%;
@@ -27,22 +27,32 @@
 
         tr {
             display: grid;
-            grid-template-columns: 9fr 1fr;
+            grid-template-columns: 5fr 5fr 1fr;
 
             &:nth-child(even) {
-                background-color: #2a2a2a; // Slightly lighter for alternate rows
+                background-color: #2a2a2a;
             }
 
             &:hover {
-                background-color: #444444; // Highlight on hover
+                background-color: #444444;
                 transition: background-color 0.3s ease;
+            }
+
+            .branch__link {
+                text-decoration: none;
+                color: #fff;
+
+                transition: color 0.3s ease;
+
+                &:hover {
+                    color: #8e7aff;
+                }
             }
 
             .actions {
                 display: flex;
                 flex-direction: row;
-                justify-content: space-between;
-                gap: 2rem;
+                justify-content: space-around;
 
                 button {
                     background: none;

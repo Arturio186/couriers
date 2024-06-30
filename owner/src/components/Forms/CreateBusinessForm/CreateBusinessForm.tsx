@@ -59,22 +59,20 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
     };
 
     return (
-        <>
-            <form className="modal__form" onSubmit={handleSubmit(onSubmit)}>
-                <h4>Создание новой сети</h4>
+        <form className="modal__form" onSubmit={handleSubmit(onSubmit)}>
+            <h4>Создание новой сети</h4>
 
-                <CoolInput
-                    label="Название"
-                    type="text"
-                    register={register("name", {
-                        required: "Введите название",
-                    })}
-                    error={errors.name}
-                />
+            <CoolInput
+                label="Название"
+                type="text"
+                register={register("name", {
+                    required: "Введите название",
+                })}
+                error={errors.name}
+            />
 
-                <CoolButton disabled={isCreating}>Создать</CoolButton>
-            </form>
-        </>
+            <CoolButton disabled={isCreating}>Создать</CoolButton>
+        </form>
     );
 };
 

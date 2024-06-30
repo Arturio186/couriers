@@ -4,6 +4,7 @@ import "./BranchTable.scss";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 import IBranch from "#interfaces/IBranch";
+import { Link } from "react-router-dom";
 
 interface BranchTableProps {
     branches?: IBranch[];
@@ -24,13 +25,19 @@ const BranchTable: FC<BranchTableProps> = ({ branches }) => {
                         <thead>
                             <tr>
                                 <th>Название</th>
+                                <th>Город</th>
                                 <th>Действия</th>
                             </tr>
                         </thead>
                         <tbody>
                             {branches.map((branch) => (
                                 <tr key={branch.id}>
-                                    <td>{branch.name}</td>
+                                    <td>
+                                        <Link to="/" className="branch__link">
+                                            {branch.name}
+                                        </Link>
+                                    </td>
+                                    <td>{branch.city_name}</td>
                                     <td className="actions">
                                         <button><FaEdit /></button>
                                         <button><FaRegTrashAlt /></button>

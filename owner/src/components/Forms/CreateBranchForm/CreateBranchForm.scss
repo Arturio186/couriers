@@ -1,0 +1,23 @@
+/* styles.scss */
+.darkSelectContainer {
+    background-color: #2b2b2b;
+    border-color: #555555;
+    min-height: 40px;
+    box-shadow: none;
+}
+
+.darkSelectOption {
+    background-color: #2b2b2b;
+}
+
+.darkSelectOption:hover {
+    background-color: #555;
+}
+
+.darkSelectSingleValue {
+    color: #ffffff;
+}
+
+.darkSelectPlaceholder {
+    color: #999999;
+}
