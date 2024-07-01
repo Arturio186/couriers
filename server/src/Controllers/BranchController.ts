@@ -22,6 +22,19 @@ class BranchController implements IBranchController {
             next(error)
         }
     }
+
+    public Store = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { name, business_id, city_id } = req.body;
+
+            const branch = await this.BranchService.SaveBranch(name, business_id, city_id, res.locals.user.id)
+
+            res.status(200).json(branch)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default BranchController;

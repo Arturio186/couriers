@@ -26,7 +26,7 @@ const roleService = new RoleService(RoleModel)
 const userService = new UserService(UserModel, refreshSessionService, roleService)
 const userController = new UserController(userService)
 
-const branchService = new BranchService(BranchModel, BusinessModel)
+const branchService = new BranchService(BranchModel, BusinessModel, CityModel)
 const branchController = new BranchController(branchService)
 
 const businessService = new BusinessService(BusinessModel, UserModel, branchService)

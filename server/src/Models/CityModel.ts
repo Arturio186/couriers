@@ -14,6 +14,10 @@ class CityModel implements ICityModel {
 
         return cities;
     }
+
+    public FindOne = async (conditions: Partial<ICity>) => {
+        return db(this.tableName).where(conditions).first();
+    };
 }
 
 export default new CityModel();

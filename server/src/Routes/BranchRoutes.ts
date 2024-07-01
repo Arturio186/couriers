@@ -13,10 +13,21 @@ export default (branchController: IBranchController) => {
         "/",
         AuthMiddleware,
         OwnerMiddleware,
-        query('business_id').isUUID(),
+        query("business_id").isUUID(),
         ValidationMiddleware,
         branchController.GetByBusiness
-    )
+    );
+
+    router.post(
+        "/create",
+        AuthMiddleware,
+        OwnerMiddleware,
+        body("name").notEmpty(),
+        body("business_id").notEmpty().isUUID(),
+        body("city_id").notEmpty().isNumeric(),
+        ValidationMiddleware,
+        branchController.Store
+    );
 
     return router;
 };

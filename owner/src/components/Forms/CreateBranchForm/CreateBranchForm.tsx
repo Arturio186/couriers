@@ -1,8 +1,11 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Select from "react-select";
-
 import "./CreateBranchForm.scss";
+
+import useDebouncing from "#hooks/useDebouncing";
+
+import CityService from "#services/CityService";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
@@ -29,15 +32,35 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible }) => {
     } = useForm<CreateBranchField>({ mode: "onBlur" });
 
     const [isCreating, setIsCreating] = useState<boolean>(false);
-    const [selectedCity, setSelectedCity] = useState<{
-        value: string;
-        label: string;
-    } | null>(null);
+    const [selectedCity, setSelectedCity] = useState<{ value: string; label: string } | null>(null);
+    const [cityOptions, setCityOptions] = useState<Option[]>([])
 
-    const [cityOptions, setCityOptions] = useState<Option[]>([
-        { value: "branch1", label: "Филиал 1" },
-        { value: "branch2", label: "Филиал 2" },
-    ])
+    const [searchCity, setSearchCity] = useState<string>("");
+    const debouncedSearchCity = useDebouncing(searchCity, 500);
+
+    const fetchCities = async () => {
+        try {
+            const response = await CityService.FindCities(searchCity);
+            
+            const newOptions = response.data.map((city) => {
+                    return {
+                        value: city.id.toString(),
+                        label: `${city.name} ` + (city.region === "" ? "" : `(${city.region})`)
+                    }
+                }
+            )
+
+            setCityOptions(newOptions)
+        } catch (error) {
+            console.error("Ошибка при получении списка городов: ", error);
+        }
+    };
+
+    useEffect(() => {
+        if (debouncedSearchCity) {
+            fetchCities();
+        }
+    }, [debouncedSearchCity]);
 
     const onSubmit: SubmitHandler<CreateBranchField> = async (data) => {
         try {
@@ -45,9 +68,9 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible }) => {
                 alert("Выберите город")
                 return
             }
-
             console.log(data);
             console.log(selectedCity)
+
         } catch (error) {
             console.log(error);
         } finally {
@@ -70,6 +93,7 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible }) => {
             />
 
             <Select
+                onInputChange={(value) => setSearchCity(value)}
                 options={cityOptions}
                 value={selectedCity}
                 onChange={(selectedOption) => setSelectedCity(selectedOption)}
