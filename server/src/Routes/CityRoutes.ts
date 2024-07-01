@@ -11,7 +11,7 @@ export default (cityController: ICityController) => {
     router.get(
         "/find",
         AuthMiddleware,
-        query('name').notEmpty().isString(),
+        query('name').isString(),
         ValidationMiddleware,
         cityController.FindByName
     )

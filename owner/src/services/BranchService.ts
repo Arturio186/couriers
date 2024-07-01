@@ -3,8 +3,12 @@ import { AxiosResponse } from 'axios';
 
 import IBranch from "#interfaces/IBranch";
 
-export default class BusinessService {
-    static async GetMyBusinesses(business_id: string): Promise<AxiosResponse<IBranch[]>> {
-        return await $api.get<IBranch[]>(`/branches?business_id=${business_id}`);
+export default class BranchService {
+    static async CreateBranch(name: string, business_id: string, city_id: number): Promise<AxiosResponse<IBranch>> {
+        return $api.post<IBranch>('/branches', { 
+            name,
+            business_id,
+            city_id
+         })
     }
 }

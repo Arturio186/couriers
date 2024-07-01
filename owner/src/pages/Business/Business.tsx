@@ -7,16 +7,18 @@ import useFetching from "#hooks/useFetching";
 
 import IBusinessWithBranches from "#interfaces/IBusinessWithBranches";
 
+import CreateBranchForm from "#components/Forms/CreateBranchForm/CreateBranchForm";
+
 import Loader from "#components/UI/Loader/Loader";
 import BranchTable from "#components/Tables/BranchTable/BranchTable";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 import Modal from "#components/UI/Modal/Modal";
-import CreateBranchForm from "#components/Forms/CreateBranchForm/CreateBranchForm";
+
 
 const Business = () => {
     const { id } = useParams<{ id: string }>();
 
-    const { data, loading, error } = useFetching<IBusinessWithBranches>(
+    const { data, loading, error, refetch } = useFetching<IBusinessWithBranches>(
         useCallback(() => BusinessService.GetBusiness(id ? id : ""), [id])
     );
 
@@ -25,8 +27,6 @@ const Business = () => {
     useEffect(() => {
         if (data) {
             document.title = `Сеть ${data.business.name}`;
-
-            console.log(data)
         } else {
             document.title = 'Загрузка...';
         }
@@ -47,6 +47,8 @@ const Business = () => {
                 setVisible={setBranchCreateModal}
             >
                 <CreateBranchForm
+                    refetchBranches={refetch}
+                    business={data?.business}
                     setModalVisible={setBranchCreateModal}
                 />
             </Modal>

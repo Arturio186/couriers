@@ -19,7 +19,7 @@ export default (branchController: IBranchController) => {
     );
 
     router.post(
-        "/create",
+        "/",
         AuthMiddleware,
         OwnerMiddleware,
         body("name").notEmpty(),
@@ -28,6 +28,8 @@ export default (branchController: IBranchController) => {
         ValidationMiddleware,
         branchController.Store
     );
+
+
 
     return router;
 };

@@ -6,9 +6,12 @@ import "./CreateBranchForm.scss";
 import useDebouncing from "#hooks/useDebouncing";
 
 import CityService from "#services/CityService";
+import BranchService from "#services/BranchService";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
+
+import IBusiness from "#interfaces/IBusiness";
 
 interface Option {
     value: string;
@@ -21,10 +24,12 @@ interface CreateBranchField {
 }
 
 interface CreateBranchFormProps {
+    business?: IBusiness;
+    refetchBranches: (...args: any[]) => Promise<void>
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible }) => {
+const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business, refetchBranches }) => {
     const {
         register,
         handleSubmit,
@@ -62,14 +67,27 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible }) => {
         }
     }, [debouncedSearchCity]);
 
+    useEffect(() => {
+        fetchCities();
+    }, [])
+
     const onSubmit: SubmitHandler<CreateBranchField> = async (data) => {
         try {
             if (!selectedCity) {
                 alert("Выберите город")
                 return
             }
-            console.log(data);
-            console.log(selectedCity)
+
+            if (!business) {
+                alert("Бизнес не найден")
+                return
+            }
+
+            const response = await BranchService.CreateBranch(data.name, business.id, Number(selectedCity.value))
+
+            if (response.status === 200) {
+                await refetchBranches()
+            }
 
         } catch (error) {
             console.log(error);
