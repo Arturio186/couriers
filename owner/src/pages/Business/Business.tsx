@@ -59,7 +59,11 @@ const Business = () => {
 
             <CoolButton onClick={() => setBranchCreateModal(true)}>Добавить филиал</CoolButton>
 
-            <BranchTable branches={data?.branches} />
+            <BranchTable
+                business={data?.business}
+                branches={data?.branches}
+                refetchBranches={refetch}
+            />
         </>
     );
 };

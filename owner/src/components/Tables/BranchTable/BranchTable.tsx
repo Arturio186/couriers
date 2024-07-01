@@ -1,19 +1,47 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import "./BranchTable.scss";
 
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 import IBranch from "#interfaces/IBranch";
+import IBusiness from "#interfaces/IBusiness";
+
+import BranchService from "#services/BranchService";
+
 import { Link } from "react-router-dom";
 
 interface BranchTableProps {
+    business?: IBusiness;
     branches?: IBranch[];
+    refetchBranches: (...args: any[]) => Promise<void>
 }
 
-const BranchTable: FC<BranchTableProps> = ({ branches }) => {
+const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches }) => {
+    const [isDeleting, setIsDeliting] = useState<boolean>(false)
+
     if (!branches) {
         return null;
     }
+
+    const handleDelete = async (id: string) => {
+        try {
+            if (isDeleting) return
+        
+            if (!business) return
+            
+            if (confirm("Вы уверены, что хотите удалить филиал?")) {
+                const response = await BranchService.DeleteBranch(business.id, id);
+
+                if (response.status === 200) {
+                    await refetchBranches()
+                }
+            }
+        } catch (error) {
+            console.error('Ошибка при удалении ', error);
+        } finally {
+            setIsDeliting(false)
+        }
+    };
 
     return (
         <>
@@ -40,7 +68,10 @@ const BranchTable: FC<BranchTableProps> = ({ branches }) => {
                                     <td>{branch.city_name} {branch.region !== "" && `(${branch.region})`}</td>
                                     <td className="actions">
                                         <button><FaEdit /></button>
-                                        <button><FaRegTrashAlt /></button>
+                                        <button
+                                            disabled={isDeleting}
+                                            onClick={() => handleDelete(branch.id)}
+                                        ><FaRegTrashAlt /></button>
                                     </td>
                                 </tr>
                             ))}

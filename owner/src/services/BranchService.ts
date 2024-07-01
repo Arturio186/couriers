@@ -11,4 +11,13 @@ export default class BranchService {
             city_id
          })
     }
+
+    static async DeleteBranch(business_id: string, branch_id: string): Promise<AxiosResponse<number>> {
+        return await $api.delete("/branches", {
+            data: {
+                business_id,
+                branch_id,
+            },
+        });
+    }
 }
