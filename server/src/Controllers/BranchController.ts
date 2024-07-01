@@ -35,6 +35,19 @@ class BranchController implements IBranchController {
             next(error)
         }
     }
+
+    public Destroy = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { business_id, branch_id } = req.body;
+
+            await this.BranchService.RemoveBranch(business_id, branch_id, res.locals.user.id)
+
+            res.status(200).json({message: "Success"})
+        }
+        catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default BranchController;
