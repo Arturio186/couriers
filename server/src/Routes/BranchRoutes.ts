@@ -39,6 +39,18 @@ export default (branchController: IBranchController) => {
         branchController.Destroy
     )
 
+    router.put(
+        "/",
+        AuthMiddleware,
+        OwnerMiddleware,
+        body("business_id").notEmpty().isUUID(),
+        body("branch_id").notEmpty().isUUID(),
+        body("name").notEmpty(),
+        body("city_id").notEmpty().isNumeric(),
+        ValidationMiddleware,
+        branchController.Update
+    );
+
 
 
     return router;

@@ -36,6 +36,19 @@ class BranchController implements IBranchController {
         }
     }
 
+    public Update = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { business_id, branch_id, name, city_id } = req.body;
+
+            const updatedBranch = await this.BranchService.UpdateBranch(business_id, branch_id, name, city_id, res.locals.user.id)
+
+            res.status(200).json(updatedBranch)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
     public Destroy = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { business_id, branch_id } = req.body;

@@ -65,7 +65,25 @@ class BranchService implements IBranchService {
         }
         
         return await this.BranchModel.Delete({ id: branchID })
-    };  
+    }; 
+    
+    public UpdateBranch = async (businessID: string, branchID: string, name: string, cityID: number, userID: string) => {
+        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        const branch = await this.BranchModel.FindOne({ id: branchID })
+
+        if (!branch) {
+            throw APIError.BadRequest("Филиал не найден");
+        }
+
+        const updatedBranch = await this.BranchModel.Update({ id: branchID }, { name, city_id: cityID })
+
+        return new BranchDTO(updatedBranch)
+    };
 }
 
 export default BranchService;
