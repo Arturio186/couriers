@@ -8,7 +8,10 @@ import IBusiness from "#interfaces/IBusiness";
 
 import BranchService from "#services/BranchService";
 
+import Modal from "#components/UI/Modal/Modal";
+
 import { Link } from "react-router-dom";
+import EditBranchForm from "#components/Forms/EditBranchForm/EditBranchForm";
 
 interface BranchTableProps {
     business?: IBusiness;
@@ -18,10 +21,17 @@ interface BranchTableProps {
 
 const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches }) => {
     const [isDeleting, setIsDeliting] = useState<boolean>(false)
+    const [branchEditModal, setBranchEditModal] = useState<boolean>(false)
+    const [targetBranch, setTargetBranch] = useState<IBranch | null>(null)
 
     if (!branches) {
         return null;
     }
+
+    const handleEdit = (branch: IBranch) => {
+        setTargetBranch(branch)
+        setBranchEditModal(true)
+    };
 
     const handleDelete = async (id: string) => {
         try {
@@ -45,6 +55,17 @@ const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches
 
     return (
         <>
+            <Modal
+                visible={branchEditModal}
+                setVisible={setBranchEditModal}
+            >
+                <EditBranchForm 
+                    business={business}
+                    branch={targetBranch}
+                    refetchBranches={refetchBranches}
+                    setModalVisible={setBranchEditModal}
+                />
+            </Modal>
             {branches.length === 0 ? (
                 <p className="message">Филалы отсутствуют</p>
             ) : (
@@ -67,11 +88,18 @@ const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches
                                     </td>
                                     <td>{branch.city_name} {branch.region !== "" && `(${branch.region})`}</td>
                                     <td className="actions">
-                                        <button><FaEdit /></button>
+                                        <button
+                                            onClick={() => handleEdit(branch)}
+                                        >
+                                            <FaEdit />
+                                        </button>
+
                                         <button
                                             disabled={isDeleting}
                                             onClick={() => handleDelete(branch.id)}
-                                        ><FaRegTrashAlt /></button>
+                                        >
+                                            <FaRegTrashAlt />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

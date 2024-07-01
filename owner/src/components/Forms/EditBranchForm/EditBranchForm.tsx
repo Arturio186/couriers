@@ -11,31 +11,35 @@ import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 import IBusiness from "#interfaces/IBusiness";
+import IBranch from "#interfaces/IBranch";
 
 interface Option {
     value: string;
     label: string;
 }
 
-interface CreateBranchField {
+interface EditBranchField {
     name: string;
 }
 
-interface CreateBranchFormProps {
+interface EditBranchFormProps {
     business?: IBusiness;
+    branch: IBranch | null;
     refetchBranches: (...args: any[]) => Promise<void>
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business, refetchBranches }) => {
+const EditBranchForm : FC<EditBranchFormProps> = ({ business, branch, refetchBranches, setModalVisible }) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<CreateBranchField>({ mode: "onBlur" });
+        setValue
+    } = useForm<EditBranchField>({ mode: "onBlur" });
 
-    const [isCreating, setIsCreating] = useState<boolean>(false);
-    const [selectedCity, setSelectedCity] = useState<{ value: string; label: string } | null>(null);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [selectedCity, setSelectedCity] = useState<{ value: string; label: string } | null>();
+
     const [cityOptions, setCityOptions] = useState<Option[]>([])
 
     const [searchCity, setSearchCity] = useState<string>("");
@@ -60,6 +64,14 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
     };
 
     useEffect(() => {
+        setSelectedCity({ 
+            value: branch ? branch.city_id.toString() : "-1",
+            label: `${branch?.city_name} ` + (branch?.region === "" ? "" : `(${branch?.region})`) 
+        });
+        setValue('name', branch ? branch.name : "")
+    }, [branch]);
+
+    useEffect(() => {
         if (debouncedSearchCity) {
             fetchCities();
         }
@@ -69,7 +81,7 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
         fetchCities();
     }, [])
 
-    const onSubmit: SubmitHandler<CreateBranchField> = async (data) => {
+    const onSubmit: SubmitHandler<EditBranchField> = async (data) => {
         try {
             if (!selectedCity) {
                 alert("Выберите город")
@@ -81,29 +93,44 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
                 return
             }
 
-            const response = await BranchService.CreateBranch(data.name, business.id, Number(selectedCity.value))
+            if (!branch) {
+                alert("Филиал не найден")
+                return
+            }
+
+            console.log({
+                data,
+                selectedCity, 
+                business,
+                branch
+            })
+
+            const response = await BranchService.UpdateBranch(business.id, branch.id, data.name, Number(selectedCity.value))
 
             if (response.status === 200) {
+                console.log(response.data)
                 await refetchBranches()
             }
 
         } catch (error) {
             console.log(error);
         } finally {
-            setIsCreating(false);
+            setIsEditing(false);
             setModalVisible(false);
         }
     };
 
+
+    
     return (
         <form className="modal__form" onSubmit={handleSubmit(onSubmit)}>
-            <h4>Создание нового филиала</h4>
+            <h4>Изменение информации о филиале</h4>
 
             <CoolInput
                 label="Название"
                 type="text"
                 register={register("name", {
-                    required: "Введите название",
+                    required: "Введите название"
                 })}
                 error={errors.name}
             />
@@ -117,28 +144,28 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
                 styles={{
                     control: (provided) => ({
                         ...provided,
-                        backgroundColor: "#2b2b2b", // Background color
-                        borderColor: "#555555", // Border color
-                        minHeight: "40px", // Control height
-                        boxShadow: "none", // Remove default box shadow
+                        backgroundColor: "#2b2b2b", 
+                        borderColor: "#555555", 
+                        minHeight: "40px", 
+                        boxShadow: "none", 
                         "&:hover": {
-                            borderColor: "#555555", // Hover border color
+                            borderColor: "#555555", 
                         },
                     }),
                     option: (provided, state) => ({
                         ...provided,
-                        backgroundColor: state.isSelected ? "#444" : "#2b2b2b", // Selected and default background color
+                        backgroundColor: state.isSelected ? "#444" : "#2b2b2b", 
                         "&:hover": {
-                            backgroundColor: "#555", // Hover background color
+                            backgroundColor: "#555", 
                         },
                     }),
                     singleValue: (provided) => ({
                         ...provided,
-                        color: "#ffffff", // Text color
+                        color: "#ffffff",
                     }),
                     placeholder: (provided) => ({
                         ...provided,
-                        color: "#999999", // Placeholder color
+                        color: "#999999",
                     }),
                     menu: (provided) => ({
                         ...provided, 
@@ -151,9 +178,9 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
                 }}
             />
 
-            <CoolButton disabled={isCreating}>Создать</CoolButton>
+            <CoolButton disabled={isEditing}>Изменить</CoolButton>
         </form>
     );
 };
 
-export default CreateBranchForm;
+export default EditBranchForm;

@@ -20,4 +20,13 @@ export default class BranchService {
             },
         });
     }
+
+    static async UpdateBranch(business_id: string, branch_id: string, name: string, city_id: number): Promise<AxiosResponse<IBranch>> {
+        return $api.put("/branches", {
+            business_id, 
+            branch_id,
+            name,
+            city_id
+        })
+    }
 }
