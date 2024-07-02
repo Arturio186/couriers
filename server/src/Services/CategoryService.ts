@@ -29,6 +29,22 @@ class CategoryService implements ICategoryService {
         return new CategoryDTO(createdCategory)
     };
 
+    public RemoveCategory = async (businessID: string, categoryID: string, userID: string) => {
+        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        const category = await this.CategoryModel.FindOne({ id: categoryID })
+
+        if (!category) {
+            throw APIError.BadRequest("Категория не найдена");
+        }
+
+        return await this.CategoryModel.Delete({ id: categoryID })
+    };
+
     public GetCategories = async (businessID: string, page: number, limit: number, userID: string) => {
         const business = await this.BusinessModel.FindOne({ id: businessID })
 

@@ -10,6 +10,31 @@ class CategoryController implements ICategoryController {
         this.CategoryService = categoryService
     }
 
+    public Store = async (req: Request, res: Response, next: NextFunction) => { 
+        try {
+            const { business_id, name } = req.body;
+
+            const createdCategory = await this.CategoryService.SaveCategory(business_id, name, res.locals.user.id)
+
+            res.status(200).json(createdCategory)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+    public Destroy = async (req: Request, res: Response, next: NextFunction) => { 
+        try {
+            const { business_id, category_id } = req.body;
+
+            await this.CategoryService.RemoveCategory(business_id, category_id, res.locals.user.id)
+
+            res.status(200).json("Success")
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
     public GetCategories = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { business_id, page, limit } = req.query
@@ -22,19 +47,6 @@ class CategoryController implements ICategoryController {
             ) 
             
             res.status(200).json(response)
-        }
-        catch (error) {
-            next(error)
-        }
-    }
-
-    public Store = async (req: Request, res: Response, next: NextFunction) => { 
-        try {
-            const { business_id, name } = req.body;
-
-            const createdCategory = await this.CategoryService.SaveCategory(business_id, name, res.locals.user.id)
-
-            res.status(200).json(createdCategory)
         }
         catch (error) {
             next(error)

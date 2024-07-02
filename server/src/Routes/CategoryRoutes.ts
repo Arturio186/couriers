@@ -29,5 +29,15 @@ export default (categoryController: ICategoryController) => {
         categoryController.Store
     )
 
+    router.delete(
+        "/",
+        AuthMiddleware,
+        OwnerMiddleware,
+        body('business_id').isUUID(),
+        body('category_id').isUUID(),
+        ValidationMiddleware,
+        categoryController.Destroy
+    )
+
     return router;
 };

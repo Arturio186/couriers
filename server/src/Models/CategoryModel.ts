@@ -11,6 +11,14 @@ class CategoryModel implements ICategoryModel {
 
         return newCategory;
     }
+
+    public Delete = async (conditions: Partial<ICategory>) => {
+        return db(this.tableName).where(conditions).del();
+    };
+
+    public FindOne = async (conditions: Partial<ICategory>) => {
+        return db(this.tableName).where(conditions).first();
+    };
   
     public FindCategoriesWithOffset = async (business_id: string, page: number, limit: number): Promise<ICategory[]> => {
         const offset = (page - 1) * limit;
