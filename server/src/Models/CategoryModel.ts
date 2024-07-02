@@ -12,6 +12,18 @@ class CategoryModel implements ICategoryModel {
         return newCategory;
     }
 
+    public Update = async (conditions: Partial<ICategory>, data: Partial<ICategory>) => {
+        const [updatedCategory] = await db(this.tableName)
+            .where(conditions)
+            .update({
+                ...data,
+                updated_at: db.fn.now()
+            })
+            .returning<ICategory[]>('*');
+
+        return updatedCategory;
+    };
+
     public Delete = async (conditions: Partial<ICategory>) => {
         return db(this.tableName).where(conditions).del();
     };
