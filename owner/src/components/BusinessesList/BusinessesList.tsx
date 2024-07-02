@@ -52,7 +52,7 @@ const BusinessesList : FC<BusinessesListProps> = ({
                         return prevBusinesses?.filter(b => b.id !== id)
                     })
 
-                    dispatch(addToast("Сеть успешно удален"))
+                    dispatch(addToast("Сеть успешно удалена"))
                 }
             }
         } catch (error) {

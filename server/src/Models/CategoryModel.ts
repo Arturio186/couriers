@@ -5,6 +5,12 @@ import ICategoryModel from "../Interfaces/Category/ICategoryModel";
 
 class CategoryModel implements ICategoryModel {
     private readonly tableName = "categories";
+
+    public Create = async (category: ICategory): Promise<ICategory> => {
+        const [newCategory] = await db(this.tableName).insert(category).returning<ICategory[]>("*");
+
+        return newCategory;
+    }
   
     public FindCategoriesWithOffset = async (business_id: string, page: number, limit: number): Promise<ICategory[]> => {
         const offset = (page - 1) * limit;

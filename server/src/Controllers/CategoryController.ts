@@ -27,6 +27,19 @@ class CategoryController implements ICategoryController {
             next(error)
         }
     }
+
+    public Store = async (req: Request, res: Response, next: NextFunction) => { 
+        try {
+            const { business_id, name } = req.body;
+
+            const createdCategory = await this.CategoryService.SaveCategory(business_id, name, res.locals.user.id)
+
+            res.status(200).json(createdCategory)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default CategoryController;

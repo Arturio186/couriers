@@ -54,7 +54,7 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
                     }
                 })
 
-                dispatch(addToast(`Бизнес ${response.data.name} успешно создан`));
+                dispatch(addToast(`Сеть ${response.data.name} успешно создана`));
             }
         }
         catch (error) {

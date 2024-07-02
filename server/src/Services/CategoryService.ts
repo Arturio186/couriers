@@ -14,6 +14,21 @@ class CategoryService implements ICategoryService {
         this.BusinessModel = businessModel;
     }
 
+    public SaveCategory = async (businessID: string, name: string, userID: string) => {
+        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        const createdCategory = await this.CategoryModel.Create({
+            name: name,
+            business_id: businessID
+        })
+
+        return new CategoryDTO(createdCategory)
+    };
+
     public GetCategories = async (businessID: string, page: number, limit: number, userID: string) => {
         const business = await this.BusinessModel.FindOne({ id: businessID })
 

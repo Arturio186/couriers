@@ -36,6 +36,10 @@ const CategoriesTable: FC<CategoriesTableProps> = ({ business, targetCategory, s
         }
     }, [data])
 
+    useEffect(() => {
+        setTargetCategory(null)
+    }, [business])
+
     const handleSelectCategory = (category: ICategory) => {
         setTargetCategory(prev => prev?.id === category.id ? null : category)
     }

@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { query } from "express-validator";
+import { body, query } from "express-validator";
 import ICategoryController from "../Interfaces/Category/ICategoryController";
 
 import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
 import AuthMiddleware from "../Middlewares/AuthMiddleware";
+import OwnerMiddleware from "../Middlewares/OwnerMiddleware";
 
 export default (categoryController: ICategoryController) => {
     const router = Router();
@@ -16,6 +17,16 @@ export default (categoryController: ICategoryController) => {
         query('limit').notEmpty().isNumeric(),
         ValidationMiddleware,
         categoryController.GetCategories
+    )
+
+    router.post(
+        "/",
+        AuthMiddleware,
+        OwnerMiddleware,
+        body('business_id').isUUID(),
+        body('name').notEmpty(),
+        ValidationMiddleware,
+        categoryController.Store
     )
 
     return router;
