@@ -108,10 +108,8 @@ const EditBranchForm : FC<EditBranchFormProps> = ({ business, branch, refetchBra
             const response = await BranchService.UpdateBranch(business.id, branch.id, data.name, Number(selectedCity.value))
 
             if (response.status === 200) {
-                console.log(response.data)
                 await refetchBranches()
             }
-
         } catch (error) {
             console.log(error);
         } finally {

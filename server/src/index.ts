@@ -9,11 +9,26 @@ import ErrorMiddleware from "./Middlewares/ErrorMiddleware";
 
 config();
 
+const allowedOrigins = process.env.CLIENT_URLS.split(",");
+
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (allowedOrigins.includes(origin) || !origin) {
+                callback(null, true);
+                console.log(origin)
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+    })
+);
 app.use("/api", router);
 app.use(ErrorMiddleware);
 
