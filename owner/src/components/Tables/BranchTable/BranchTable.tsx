@@ -82,7 +82,7 @@ const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches
                             {branches.map((branch) => (
                                 <tr key={branch.id}>
                                     <td>
-                                        <Link to="/" className="branch__link">
+                                        <Link to={`/branches/${branch.id}`} className="branch__link">
                                             {branch.name}
                                         </Link>
                                     </td>

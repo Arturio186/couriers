@@ -1,6 +1,9 @@
 import { FC, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import "./CreateBusinessForm.scss";
+
+import { addToast } from "#store/toastSlice";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
@@ -8,6 +11,7 @@ import CoolButton from "#components/UI/CoolButton/CoolButton";
 import BusinessService from "#services/BusinessService";
 
 import IBusiness from "#interfaces/IBusiness";
+
 
 interface CreateBusinessField {
     name: string;
@@ -29,6 +33,7 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
     } = useForm<CreateBusinessField>({ mode: "onBlur" });
 
     const [isCreating, setIsCreating] = useState<boolean>(false);
+    const dispatch = useDispatch()
 
     const onSubmit: SubmitHandler<CreateBusinessField> = async (data) => {
         try {
@@ -48,6 +53,8 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
                         return [response.data, ...prev]
                     }
                 })
+
+                dispatch(addToast(`Бизнес ${response.data.name} успешно создан`));
             }
         }
         catch (error) {

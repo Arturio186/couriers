@@ -14,7 +14,6 @@ import BranchTable from "#components/Tables/BranchTable/BranchTable";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 import Modal from "#components/UI/Modal/Modal";
 
-
 const Business = () => {
     const { id } = useParams<{ id: string }>();
 
@@ -55,7 +54,7 @@ const Business = () => {
 
             <h1>{data?.business.name}</h1>
 
-            <h3 className="table__title">Филиалы</h3>
+            <h3>Филиалы</h3>
 
             <CoolButton onClick={() => setBranchCreateModal(true)}>Добавить филиал</CoolButton>
 

@@ -13,28 +13,15 @@ import EditBusinessForm from "#components/Forms/EditBusinessForm/EditBusinessFor
 interface BusinessesListProps {
     businesses: IBusiness[] | null;
     setBusinesses: React.Dispatch<React.SetStateAction<IBusiness[] | null>>;
-    loading: boolean;
-    error: string | null;
-
 }
 
 const BusinessesList : FC<BusinessesListProps> = ({
     businesses,
-    setBusinesses,
-    loading,
-    error
+    setBusinesses
 }) => {
     const [deletingBusinessID, setDeletingBusinessID] = useState<string>('')
     const [businessEditModal, setBusinessEditModal] = useState<boolean>(false);
     const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null)
-
-    if (loading) {
-        return <Loader />
-    }
-
-    if (error) {
-        return <div>{error}</div>;
-    }
 
     const handleEdit = (business: IBusiness) => {
         setTargetBusiness(business)

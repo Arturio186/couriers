@@ -1,24 +1,30 @@
-import { FC, useEffect } from "react";
-import "./Toast.scss";
+import React, { useEffect } from 'react';
+import './Toast.scss';
 
 interface ToastProps {
     message: string;
-    duration?: number;
     onClose: () => void;
 }
 
-const Toast: FC<ToastProps> = ({ message, duration = 3000, onClose }) => {
+const Toast: React.FC<ToastProps> = ({ message, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(() => {
             onClose();
-        }, duration);
+        }, 3000);
 
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [duration, onClose]);
+        return () => clearTimeout(timer);
+    }, [onClose]);
 
-    return <div className="toast">{message}</div>;
+    return (
+        <div className="toast">
+            <div className="toast-content">
+                <span className="toast-message">{message}</span>
+                <button className="toast-close" onClick={onClose}>
+                    &times;
+                </button>
+            </div>
+        </div>
+    );
 };
 
 export default Toast;

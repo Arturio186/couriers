@@ -11,12 +11,13 @@ import Register from "#pages/Register/Register";
 import NotFound from "#pages/NotFound/NotFound";
 import Businesses from "#pages/Businesses/Businesses";
 import Business from "#pages/Business/Business";
+import Branch from "#pages/Branch/Branch";
+import Products from "#pages/Products/Products";
 
-import { DASHBOARD_ROUTE, BUSINESSES_ROUTE, STATISTIC_ROUTE } from "#utils/consts";
+import { DASHBOARD_ROUTE, BUSINESSES_ROUTE, STATISTIC_ROUTE, PRODUCTS_ROUTE, BRANCH_ROUTE } from "#utils/consts";
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "#utils/consts";
 
-import { FaCity, FaUser, FaChartBar } from "react-icons/fa";
-
+import { FaCity, FaUser, FaChartBar, FaShoppingBasket } from "react-icons/fa";
 
 export const privateRoutes: IRoute[] = [
     {
@@ -24,10 +25,12 @@ export const privateRoutes: IRoute[] = [
         element: <MainLayout />,
         children: [
             { path: "/", element: <Navigate to={BUSINESSES_ROUTE} />, title: "Переадресация" },
-            { path: BUSINESSES_ROUTE, element: <Businesses />, title: "Сети", icon: <FaCity /> },
             { path: `${BUSINESSES_ROUTE}/:id`, element: <Business />, title: "Сеть" },
-            { path: DASHBOARD_ROUTE, element: <p>Dashboard</p>, title: "Личный кабинет", icon: <FaUser /> },
+            { path: `${BRANCH_ROUTE}/:id`, element: <Branch />, title: "Филиал" },
+            { path: BUSINESSES_ROUTE, element: <Businesses />, title: "Сети", icon: <FaCity /> },
+            { path: PRODUCTS_ROUTE, element: <Products />, title: "Товары", icon: <FaShoppingBasket /> },
             { path: STATISTIC_ROUTE, element: <p>Statistic</p>, title: "Статистика", icon: <FaChartBar /> },
+            { path: DASHBOARD_ROUTE, element: <p>Dashboard</p>, title: "Личный кабинет", icon: <FaUser /> },
             { path: "*", element: <NotFound />, title: "Страница не найдена" }
         ],
     },

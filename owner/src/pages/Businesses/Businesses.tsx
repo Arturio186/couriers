@@ -7,6 +7,7 @@ import CreateBusinessForm from "#components/Forms/CreateBusinessForm/CreateBusin
 import BusinessesList from "#components/BusinessesList/BusinessesList";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 import Modal from "#components/UI/Modal/Modal";
+import Loader from "#components/UI/Loader/Loader";
 
 import BusinessService from "#services/BusinessService";
 
@@ -23,6 +24,14 @@ const Businesses = () => {
         loading,
         error,
     } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses);
+
+    if (loading) {
+        return <Loader />
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
 
     return (
         <>
@@ -45,8 +54,6 @@ const Businesses = () => {
             <BusinessesList
                 businesses={businesses}
                 setBusinesses={setBusinesses}
-                loading={loading}
-                error={error}
             />
         </>
     );

@@ -11,11 +11,8 @@ import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 import IBusiness from "#interfaces/IBusiness";
+import Option from "#interfaces/Option";
 
-interface Option {
-    value: string;
-    label: string;
-}
 
 interface CreateBranchField {
     name: string;

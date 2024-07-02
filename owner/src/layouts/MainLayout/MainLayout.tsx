@@ -6,10 +6,12 @@ import { privateRoutes } from "#routes/routes";
 import useDocumentTitle from "#hooks/useDocumentTitle";
 
 import SideBar from "#components/UI/SideBar/SideBar";
+import ToastContainer from "#components/UI/ToastContainer/ToastContainer";
 
 const MainLayout: FC = () => {
-    useDocumentTitle(privateRoutes);
     const [isOpen, setIsOpen] = useState(false);
+    
+    useDocumentTitle(privateRoutes);
 
     return (
         <>
@@ -17,6 +19,7 @@ const MainLayout: FC = () => {
             <div className={`main-content ${isOpen ? "shifted" : ""}`}>
                 <Outlet />
             </div>
+            <ToastContainer />
         </>
     );
 };
