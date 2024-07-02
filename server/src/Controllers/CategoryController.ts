@@ -1,0 +1,32 @@
+import { Request, Response, NextFunction } from "express";
+
+import ICategoryController from "../Interfaces/Category/ICategoryController";
+import ICategoryService from "../Interfaces/Category/ICategoryService";
+
+class CategoryController implements ICategoryController {
+    private readonly CategoryService: ICategoryService
+
+    constructor(categoryService: ICategoryService) {
+        this.CategoryService = categoryService
+    }
+
+    public GetCategories = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { business_id, page, limit } = req.query
+
+            const response = await this.CategoryService.GetCategories(
+                String(business_id), 
+                Number(page), 
+                Number(limit), 
+                res.locals.user.id
+            ) 
+            
+            res.status(200).json(response)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+}
+
+export default CategoryController;

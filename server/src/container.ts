@@ -19,6 +19,9 @@ import BranchController from "./Controllers/BranchController";
 import CityModel from "./Models/CityModel";
 import CityService from "./Services/CityService";
 import CityController from "./Controllers/CityController";
+import CategoryService from "./Services/CategoryService";
+import CategoryModel from "./Models/CategoryModel";
+import CategoryController from "./Controllers/CategoryController";
 
 const refreshSessionService = new RefreshSessionService(RefreshSessionModel)
 const roleService = new RoleService(RoleModel)
@@ -35,12 +38,15 @@ const businessController = new BusinessController(businessService)
 const cityService = new CityService(CityModel)
 const cityController = new CityController(cityService)
 
+const categoryService = new CategoryService(CategoryModel, BusinessModel)
+const categoryController = new CategoryController(categoryService)
 
 const container = {
     userController,
     businessController,
     branchController,
-    cityController
+    cityController,
+    categoryController
 }
 
 export default container;

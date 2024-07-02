@@ -6,4 +6,5 @@ export default interface IBusinessModel {
     Delete: (conditions: Partial<IBusiness>) => Promise<number>
     FindAll: (conditions: Partial<IBusiness>) => Promise<IBusiness[] | undefined>
     FindOne: (conditions: Partial<IBusiness>) => Promise<IBusiness | undefined>
+    FindUserInStaffs: (userID: string) => Promise<{ business_id: string; user_id: string } | undefined>
 }

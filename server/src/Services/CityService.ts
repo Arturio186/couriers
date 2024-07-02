@@ -1,7 +1,6 @@
 import ICityService from "../Interfaces/City/ICityService";
 import ICityModel from "../Interfaces/City/ICityModel";
 
-import APIError from "../Exceptions/APIError";
 import CityDTO from "../DTO/CityDTO";
 
 

@@ -6,6 +6,7 @@ import IBusinessModel from "../Interfaces/Business/IBusinessModel";
 class BusinessModel implements IBusinessModel {
     private readonly tableName = "businesses";
     private readonly branchTableName = "branches";
+    private readonly staffTable = "branch_user"
 
     public Create = async (buisness: IBusiness): Promise<IBusiness> => {
         const [newBusiness] = await db(this.tableName).insert(buisness).returning<IBusiness[]>("*");
@@ -36,6 +37,10 @@ class BusinessModel implements IBusinessModel {
     public FindOne = async (conditions: Partial<IBusiness>): Promise<IBusiness | undefined> => {
         return db(this.tableName).where(conditions).first();
     }
+
+    public FindUserInStaffs = async (userID: string): Promise<{ business_id: string; user_id: string } | undefined> => {
+        return db(this.staffTable).where({ user_id: userID }).first()
+    };
 }
 
 export default new BusinessModel();
