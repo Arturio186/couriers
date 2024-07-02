@@ -6,25 +6,29 @@ import useFetching from "#hooks/useFetching";
 
 import BusinessService from "#services/BusinessService";
 
+import Modal from "#components/UI/Modal/Modal";
 import Loader from "#components/UI/Loader/Loader";
+import CoolButton from "#components/UI/CoolButton/CoolButton";
+import CategoriesTable from "#components/Tables/CategoriesTable/CategoriesTable";
 
 import IBusiness from "#interfaces/IBusiness";
 import Option from "#interfaces/Option";
+import ICategory from "#interfaces/ICategory";
 
 import darkSelectConfig from "#utils/darkSelectConfig";
-import CategoriesTable from "#components/Tables/CategoriesTable/CategoriesTable";
-
 
 const Catalog = () => {
     const {
         data: businesses,
-        setData: setBusinesses,
         loading,
         error,
+        refetch
     } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses);
 
     const [businessOptions, setBusinessOptions] = useState<Option[]>([])
     const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null)
+    const [targetCategory, setTargetCategory] = useState<ICategory | null>(null)
+    const [categoryCreateModal, setCategoryCreateModal] = useState<boolean>(false);
 
     useEffect(() => {
         if (businesses) {
@@ -55,23 +59,38 @@ const Catalog = () => {
 
     return (
         <>
+            {targetBusiness && <Modal
+                visible={categoryCreateModal}
+                setVisible={setCategoryCreateModal}
+            >
+                Hello
+            </Modal>}
+
             <h2>Каталог</h2>
 
             <Select
                 options={businessOptions}
                 onChange={handleBusinessChange}
                 placeholder="Выберите сеть..."
-                styles={{ 
-                    ...darkSelectConfig,
-                    
-                 }}
+                styles={darkSelectConfig}
             />
 
-            <h3>Категории</h3>
+            {targetBusiness && <>
+                <h3>Категории</h3>
 
-            {targetBusiness && <CategoriesTable 
-                business={targetBusiness}
-            />}
+                <CoolButton onClick={() => setCategoryCreateModal(true)}>Добавить категорию</CoolButton>
+
+                <CategoriesTable 
+                    business={targetBusiness}
+                    targetCategory={targetCategory}
+                    setTargetCategory={setTargetCategory}
+                />
+            </>}
+
+            {targetCategory && <>
+                <h3>Товары</h3>
+
+            </>}
         </>
     )   
     
