@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Select, { SingleValue } from "react-select";
-import './Products.scss'
+import './Catalog.scss'
 
 import useFetching from "#hooks/useFetching";
 
@@ -15,7 +15,7 @@ import darkSelectConfig from "#utils/darkSelectConfig";
 import CategoriesTable from "#components/Tables/CategoriesTable/CategoriesTable";
 
 
-const Products = () => {
+const Catalog = () => {
     const {
         data: businesses,
         setData: setBusinesses,
@@ -55,7 +55,7 @@ const Products = () => {
 
     return (
         <>
-            <h2>Товары</h2>
+            <h2>Каталог</h2>
 
             <Select
                 options={businessOptions}
@@ -77,4 +77,4 @@ const Products = () => {
     
 };
 
-export default Products;
+export default Catalog;

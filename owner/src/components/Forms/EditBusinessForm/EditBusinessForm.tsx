@@ -8,6 +8,8 @@ import CoolButton from "#components/UI/CoolButton/CoolButton";
 import BusinessService from "#services/BusinessService";
 
 import IBusiness from "#interfaces/IBusiness";
+import { useDispatch } from "react-redux";
+import { addToast } from "#store/toastSlice";
 
 interface EditBusinessField {
     name: string;
@@ -32,6 +34,8 @@ const EditBusinessForm: FC<EditBusinessFormProps> = ({
     } = useForm<EditBusinessField>({ mode: "onBlur" });
 
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
+    
+    const dispatch = useDispatch()
 
     useEffect(() => {
         setValue('name', business.name);
@@ -58,6 +62,8 @@ const EditBusinessForm: FC<EditBusinessFormProps> = ({
                         return b
                     })
                 })
+
+                dispatch(addToast("Сеть успешно изменена"))
             }
         }
         catch (error) {

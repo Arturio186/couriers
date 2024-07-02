@@ -1,14 +1,19 @@
 import { FC, useState } from "react";
+import { useDispatch } from "react-redux";
 import "./BusinessesList.scss";
+
+import { addToast } from "#store/toastSlice";
 
 import BusinessService from "#services/BusinessService";
 
 import BusinessCard from "#components/BusinessCard/BusinessCard";
-import Loader from "#components/UI/Loader/Loader";
 import Modal from "#components/UI/Modal/Modal";
+
+
 
 import IBusiness from "#interfaces/IBusiness";
 import EditBusinessForm from "#components/Forms/EditBusinessForm/EditBusinessForm";
+
 
 interface BusinessesListProps {
     businesses: IBusiness[] | null;
@@ -22,6 +27,7 @@ const BusinessesList : FC<BusinessesListProps> = ({
     const [deletingBusinessID, setDeletingBusinessID] = useState<string>('')
     const [businessEditModal, setBusinessEditModal] = useState<boolean>(false);
     const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null)
+    const dispatch = useDispatch()
 
     const handleEdit = (business: IBusiness) => {
         setTargetBusiness(business)
@@ -45,6 +51,8 @@ const BusinessesList : FC<BusinessesListProps> = ({
 
                         return prevBusinesses?.filter(b => b.id !== id)
                     })
+
+                    dispatch(addToast("Сеть успешно удален"))
                 }
             }
         } catch (error) {

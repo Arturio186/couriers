@@ -12,7 +12,7 @@ import NotFound from "#pages/NotFound/NotFound";
 import Businesses from "#pages/Businesses/Businesses";
 import Business from "#pages/Business/Business";
 import Branch from "#pages/Branch/Branch";
-import Products from "#pages/Products/Products";
+import Catalog from "#pages/Catalog/Catalog";
 
 import { DASHBOARD_ROUTE, BUSINESSES_ROUTE, STATISTIC_ROUTE, PRODUCTS_ROUTE, BRANCH_ROUTE } from "#utils/consts";
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "#utils/consts";
@@ -28,7 +28,7 @@ export const privateRoutes: IRoute[] = [
             { path: `${BUSINESSES_ROUTE}/:id`, element: <Business />, title: "Сеть" },
             { path: `${BRANCH_ROUTE}/:id`, element: <Branch />, title: "Филиал" },
             { path: BUSINESSES_ROUTE, element: <Businesses />, title: "Сети", icon: <FaCity /> },
-            { path: PRODUCTS_ROUTE, element: <Products />, title: "Товары", icon: <FaShoppingBasket /> },
+            { path: PRODUCTS_ROUTE, element: <Catalog />, title: "Каталог", icon: <FaShoppingBasket /> },
             { path: STATISTIC_ROUTE, element: <p>Statistic</p>, title: "Статистика", icon: <FaChartBar /> },
             { path: DASHBOARD_ROUTE, element: <p>Dashboard</p>, title: "Личный кабинет", icon: <FaUser /> },
             { path: "*", element: <NotFound />, title: "Страница не найдена" }

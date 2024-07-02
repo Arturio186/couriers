@@ -1,14 +1,19 @@
 import { FC, useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import Select from "react-select";
 
 import useDebouncing from "#hooks/useDebouncing";
+
+import { addToast } from "#store/toastSlice";
 
 import CityService from "#services/CityService";
 import BranchService from "#services/BranchService";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
+
+import darkSelectConfig from "#utils/darkSelectConfig";
 
 import IBusiness from "#interfaces/IBusiness";
 import IBranch from "#interfaces/IBranch";
@@ -44,6 +49,8 @@ const EditBranchForm : FC<EditBranchFormProps> = ({ business, branch, refetchBra
 
     const [searchCity, setSearchCity] = useState<string>("");
     const debouncedSearchCity = useDebouncing(searchCity, 500);
+
+    const dispatch = useDispatch()
 
     const fetchCities = async () => {
         try {
@@ -109,6 +116,7 @@ const EditBranchForm : FC<EditBranchFormProps> = ({ business, branch, refetchBra
 
             if (response.status === 200) {
                 await refetchBranches()
+                dispatch(addToast("Сеть успешно изменена"))
             }
         } catch (error) {
             console.log(error);
@@ -139,41 +147,7 @@ const EditBranchForm : FC<EditBranchFormProps> = ({ business, branch, refetchBra
                 value={selectedCity}
                 onChange={(selectedOption) => setSelectedCity(selectedOption)}
                 placeholder="Выберите город..."
-                styles={{
-                    control: (provided) => ({
-                        ...provided,
-                        backgroundColor: "#2b2b2b", 
-                        borderColor: "#555555", 
-                        minHeight: "40px", 
-                        boxShadow: "none", 
-                        "&:hover": {
-                            borderColor: "#555555", 
-                        },
-                    }),
-                    option: (provided, state) => ({
-                        ...provided,
-                        backgroundColor: state.isSelected ? "#444" : "#2b2b2b", 
-                        "&:hover": {
-                            backgroundColor: "#555", 
-                        },
-                    }),
-                    singleValue: (provided) => ({
-                        ...provided,
-                        color: "#ffffff",
-                    }),
-                    placeholder: (provided) => ({
-                        ...provided,
-                        color: "#999999",
-                    }),
-                    menu: (provided) => ({
-                        ...provided, 
-                        backgroundColor: "#2b2b2b",
-                    }),
-                    input: (provided) => ({
-                        ...provided,
-                        color: "#fff",
-                    })
-                }}
+                styles={darkSelectConfig}
             />
 
             <CoolButton disabled={isEditing}>Изменить</CoolButton>

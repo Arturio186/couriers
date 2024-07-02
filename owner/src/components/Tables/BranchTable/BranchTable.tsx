@@ -1,17 +1,19 @@
 import { FC, useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import "./BranchTable.scss";
 
-import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
-
-import IBranch from "#interfaces/IBranch";
-import IBusiness from "#interfaces/IBusiness";
+import { addToast } from "#store/toastSlice";
 
 import BranchService from "#services/BranchService";
 
 import Modal from "#components/UI/Modal/Modal";
-
-import { Link } from "react-router-dom";
 import EditBranchForm from "#components/Forms/EditBranchForm/EditBranchForm";
+
+import IBranch from "#interfaces/IBranch";
+import IBusiness from "#interfaces/IBusiness";
+
 
 interface BranchTableProps {
     business?: IBusiness;
@@ -23,6 +25,8 @@ const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches
     const [isDeleting, setIsDeliting] = useState<boolean>(false)
     const [branchEditModal, setBranchEditModal] = useState<boolean>(false)
     const [targetBranch, setTargetBranch] = useState<IBranch | null>(null)
+
+    const dispatch = useDispatch()
 
     if (!branches) {
         return null;
@@ -44,6 +48,7 @@ const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches
 
                 if (response.status === 200) {
                     await refetchBranches()
+                    dispatch(addToast("Филиал успешно удален"))
                 }
             }
         } catch (error) {

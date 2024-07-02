@@ -10,9 +10,12 @@ import BranchService from "#services/BranchService";
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 
+import darkSelectConfig from "#utils/darkSelectConfig";
+
 import IBusiness from "#interfaces/IBusiness";
 import Option from "#interfaces/Option";
-
+import { useDispatch } from "react-redux";
+import { addToast } from "#store/toastSlice";
 
 interface CreateBranchField {
     name: string;
@@ -37,6 +40,8 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
 
     const [searchCity, setSearchCity] = useState<string>("");
     const debouncedSearchCity = useDebouncing(searchCity, 500);
+
+    const dispatch = useDispatch()
 
     const fetchCities = async () => {
         try {
@@ -82,6 +87,7 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
 
             if (response.status === 200) {
                 await refetchBranches()
+                dispatch(addToast(`Бизнес ${data.name} успешно создан`))
             }
 
         } catch (error) {
@@ -111,41 +117,7 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
                 value={selectedCity}
                 onChange={(selectedOption) => setSelectedCity(selectedOption)}
                 placeholder="Выберите город..."
-                styles={{
-                    control: (provided) => ({
-                        ...provided,
-                        backgroundColor: "#2b2b2b", // Background color
-                        borderColor: "#555555", // Border color
-                        minHeight: "40px", // Control height
-                        boxShadow: "none", // Remove default box shadow
-                        "&:hover": {
-                            borderColor: "#555555", // Hover border color
-                        },
-                    }),
-                    option: (provided, state) => ({
-                        ...provided,
-                        backgroundColor: state.isSelected ? "#444" : "#2b2b2b", // Selected and default background color
-                        "&:hover": {
-                            backgroundColor: "#555", // Hover background color
-                        },
-                    }),
-                    singleValue: (provided) => ({
-                        ...provided,
-                        color: "#ffffff", // Text color
-                    }),
-                    placeholder: (provided) => ({
-                        ...provided,
-                        color: "#999999", // Placeholder color
-                    }),
-                    menu: (provided) => ({
-                        ...provided, 
-                        backgroundColor: "#2b2b2b",
-                    }),
-                    input: (provided) => ({
-                        ...provided,
-                        color: "#fff",
-                    })
-                }}
+                styles={darkSelectConfig}
             />
 
             <CoolButton disabled={isCreating}>Создать</CoolButton>
