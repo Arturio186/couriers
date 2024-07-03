@@ -16,6 +16,7 @@ import Option from "#interfaces/Option";
 import ICategory from "#interfaces/ICategory";
 
 import darkSelectConfig from "#utils/darkSelectConfig";
+import CreateCategoryForm from "#components/Forms/CreateCategoryForm/CreateCategoryForm";
 
 const Catalog = () => {
     const {
@@ -67,7 +68,11 @@ const Catalog = () => {
                 visible={categoryCreateModal}
                 setVisible={setCategoryCreateModal}
             >
-                Hello
+                <CreateCategoryForm
+                    business={targetBusiness}
+                    setModalVisible={setCategoryCreateModal}
+                    setCategories={setCategories}
+                />
             </Modal>}
 
             <h2>Каталог</h2>

@@ -5,5 +5,5 @@ export default interface ICategoryModel {
     Update: (conditions: Partial<ICategory>, data: Partial<ICategory>) => Promise<ICategory>
     Delete: (conditions: Partial<ICategory>) => Promise<number>
     FindOne: (conditions: Partial<ICategory>) => Promise<ICategory | undefined>
-    GetAll: (business_id: string) => Promise<ICategory[]>
+    FindAll: (conditions: Partial<ICategory>) => Promise<ICategory[]>
 }

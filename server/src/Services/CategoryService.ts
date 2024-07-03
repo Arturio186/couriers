@@ -29,17 +29,17 @@ class CategoryService implements ICategoryService {
         return new CategoryDTO(createdCategory)
     };
 
-    public UpdateCategory = async (businessID: string, categoryID: string, name: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
-
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
-        }
-
+    public UpdateCategory = async (categoryID: string, name: string, userID: string) => {
         const category = await this.CategoryModel.FindOne({ id: categoryID })
 
         if (!category) {
             throw APIError.BadRequest("Категория не найдена");
+        }
+
+        const business = await this.BusinessModel.FindOne({ id: category.business_id, owner_id: userID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
         }
 
         const updatedBranch = await this.CategoryModel.Update({ id: categoryID }, { name })
@@ -47,17 +47,17 @@ class CategoryService implements ICategoryService {
         return new CategoryDTO(updatedBranch)
     };
 
-    public RemoveCategory = async (businessID: string, categoryID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
-
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
-        }
-
+    public RemoveCategory = async (categoryID: string, userID: string) => {
         const category = await this.CategoryModel.FindOne({ id: categoryID })
 
         if (!category) {
             throw APIError.BadRequest("Категория не найдена");
+        }
+
+        const business = await this.BusinessModel.FindOne({ id: category.business_id, owner_id: userID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
         }
 
         return await this.CategoryModel.Delete({ id: categoryID })
@@ -75,7 +75,7 @@ class CategoryService implements ICategoryService {
         }
 
         const categories = (
-            await this.CategoryModel.GetAll(businessID)
+            await this.CategoryModel.FindAll({ business_id: businessID })
         ).map(category => new CategoryDTO(category))
         
         return categories

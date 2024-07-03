@@ -6,7 +6,7 @@ import IBusinessWithBranches from "#interfaces/IBusinessWithBranches";
 
 export default class BusinessService {
     static async CreateBusiness(name: string): Promise<AxiosResponse<IBusiness>> {
-        return $api.post<IBusiness>('/businesses/create', { name })
+        return $api.post<IBusiness>('/businesses', { name })
     }
 
     static async DeleteBusiness(id: string): Promise<AxiosResponse<number>> {

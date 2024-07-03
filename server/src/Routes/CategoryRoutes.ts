@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { body, query } from "express-validator";
+import { body, param, query } from "express-validator";
 import ICategoryController from "../Interfaces/Category/ICategoryController";
 
 import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
@@ -28,21 +28,19 @@ export default (categoryController: ICategoryController) => {
     )
 
     router.delete(
-        "/",
+        "/:category_id",
         AuthMiddleware,
         OwnerMiddleware,
-        body('business_id').isUUID(),
-        body('category_id').isUUID(),
+        param('category_id').isUUID(),
         ValidationMiddleware,
         categoryController.Destroy
     )
 
     router.put(
-        "/",
+        "/:category_id",
         AuthMiddleware,
         OwnerMiddleware,
-        body('business_id').isUUID(),
-        body('category_id').isUUID(),
+        param('category_id').isUUID(),
         body('name').notEmpty(),
         ValidationMiddleware,
         categoryController.Update

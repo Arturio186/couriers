@@ -1,6 +1,9 @@
 import { FC, useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import './CategoriesTable.scss'
+
+import { addToast } from "#store/toastSlice";
 
 import useFetching from "#hooks/useFetching";
 
@@ -10,6 +13,7 @@ import Loader from "#components/UI/Loader/Loader";
 
 import IBusiness from "#interfaces/IBusiness";
 import ICategory from "#interfaces/ICategory";
+
 
 interface CategoriesTableProps {
     business: IBusiness;
@@ -26,7 +30,11 @@ const CategoriesTable: FC<CategoriesTableProps> = ({
     categories,
     setCategories
 }) => {
-    const { data, loading, error, refetch } = useFetching<ICategory[]>(
+    const dispatch = useDispatch()
+
+    const [isDeleting, setIsDeliting] = useState<boolean>(false);
+
+    const { data, loading, error } = useFetching<ICategory[]>(
         useCallback(() => CategoryService.GetCategories(business), [business])
     );
 
@@ -44,8 +52,28 @@ const CategoriesTable: FC<CategoriesTableProps> = ({
         setTargetCategory(prev => prev?.id === category.id ? null : category)
     }
 
-    const handleDelete = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, category: ICategory) => {
+    const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, category: ICategory) => {
         event.stopPropagation()
+
+        try {
+            if (isDeleting) return
+        
+            if (!business) return
+            
+            if (confirm("Вы уверены, что хотите удалить категорию?")) {
+                const response = await CategoryService.DeleteCategory(category.id);
+
+                if (response.status === 200) {
+                    setCategories(prev => prev.filter(c => c.id !== category.id))
+                    dispatch(addToast("Категория успешно удалена"))
+                }
+            }
+        } catch (error) {
+            console.error('Ошибка при удалении ', error);
+            dispatch(addToast("Ошибка при удалении категории"))
+        } finally {
+            setIsDeliting(false)
+        }
     }
 
     const handleEdit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, category: ICategory) => {

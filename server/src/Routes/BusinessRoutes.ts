@@ -11,7 +11,7 @@ export default (businessController: IBusinessController) => {
     const router = Router();
 
     router.post(
-        "/create",
+        "/",
         AuthMiddleware,
         OwnerMiddleware,
         body("name").notEmpty(),

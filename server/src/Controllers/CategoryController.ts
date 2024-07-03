@@ -28,10 +28,9 @@ class CategoryController implements ICategoryController {
 
     public Destroy = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { business_id, category_id } = req.body;
+            const { category_id } = req.params
 
             await this.CategoryService.RemoveCategory(
-                business_id,
                 category_id,
                 res.locals.user.id
             );
@@ -44,10 +43,10 @@ class CategoryController implements ICategoryController {
 
     public Update = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { business_id, category_id, name } = req.body;
+            const { category_id } = req.params;
+            const { name } = req.body;
 
             const updatedCategory = await this.CategoryService.UpdateCategory(
-                business_id,
                 category_id,
                 name,
                 res.locals.user.id

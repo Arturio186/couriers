@@ -32,9 +32,10 @@ class CategoryModel implements ICategoryModel {
         return db(this.tableName).where(conditions).first();
     };
   
-    public GetAll = async (business_id: string): Promise<ICategory[]> => {
+    public FindAll = async (conditions: Partial<ICategory>): Promise<ICategory[]> => {
         const categories = await db(this.tableName)
-            .where({ business_id })
+            .where(conditions)
+            .orderBy("created_at", "desc");
 
         return categories;
     };
