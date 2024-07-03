@@ -63,7 +63,7 @@ class CategoryService implements ICategoryService {
         return await this.CategoryModel.Delete({ id: categoryID })
     };
 
-    public GetCategories = async (businessID: string, page: number, limit: number, userID: string) => {
+    public GetCategories = async (businessID: string, userID: string) => {
         const business = await this.BusinessModel.FindOne({ id: businessID })
 
         if (business.owner_id !== userID) {
@@ -74,15 +74,11 @@ class CategoryService implements ICategoryService {
             }
         }
 
-        const maxPage = await this.CategoryModel.GetMaxPages(businessID, limit)
         const categories = (
-            await this.CategoryModel.FindCategoriesWithOffset(businessID, page, limit)
+            await this.CategoryModel.GetAll(businessID)
         ).map(category => new CategoryDTO(category))
         
-        return {
-            maxPage,
-            categories
-        }
+        return categories
     };
 }
 

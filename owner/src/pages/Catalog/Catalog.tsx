@@ -26,8 +26,12 @@ const Catalog = () => {
     } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses);
 
     const [businessOptions, setBusinessOptions] = useState<Option[]>([])
+
     const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null)
     const [targetCategory, setTargetCategory] = useState<ICategory | null>(null)
+    const [categories, setCategories] = useState<ICategory[]>([])
+    const [products, setProducts] = useState<string[]>([])
+
     const [categoryCreateModal, setCategoryCreateModal] = useState<boolean>(false);
 
     useEffect(() => {
@@ -84,6 +88,8 @@ const Catalog = () => {
                     business={targetBusiness}
                     targetCategory={targetCategory}
                     setTargetCategory={setTargetCategory}
+                    categories={categories}
+                    setCategories={setCategories}
                 />
             </>}
 

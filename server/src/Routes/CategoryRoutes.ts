@@ -13,8 +13,6 @@ export default (categoryController: ICategoryController) => {
         "/",
         AuthMiddleware,
         query('business_id').isUUID(),
-        query('page').notEmpty().isNumeric(),
-        query('limit').notEmpty().isNumeric(),
         ValidationMiddleware,
         categoryController.GetCategories
     )

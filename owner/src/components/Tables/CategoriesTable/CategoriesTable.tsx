@@ -9,30 +9,30 @@ import CategoryService from "#services/CategoryService";
 import Loader from "#components/UI/Loader/Loader";
 
 import IBusiness from "#interfaces/IBusiness";
-import CategoriesResponse from "#interfaces/response/CategoriesResponse";
 import ICategory from "#interfaces/ICategory";
-import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 interface CategoriesTableProps {
     business: IBusiness;
     targetCategory: ICategory | null;
     setTargetCategory: React.Dispatch<React.SetStateAction<ICategory | null>>
+    categories: ICategory[];
+    setCategories: React.Dispatch<React.SetStateAction<ICategory[]>>
 }
 
-const CategoriesTable: FC<CategoriesTableProps> = ({ business, targetCategory, setTargetCategory }) => {
-    const [page, setPage] = useState<number>(1);
-    const [limit, setLimit] = useState<number>(10);
-    const [categories, setCategories] = useState<ICategory[]>([])
-    const [maxPage, setMaxPage] = useState<number>(1);
-
-    const { data, loading, error, refetch } = useFetching<CategoriesResponse>(
-        useCallback(() => CategoryService.GetCategories(business, limit, page), [business, page, limit])
+const CategoriesTable: FC<CategoriesTableProps> = ({ 
+    business, 
+    targetCategory, 
+    setTargetCategory,
+    categories,
+    setCategories
+}) => {
+    const { data, loading, error, refetch } = useFetching<ICategory[]>(
+        useCallback(() => CategoryService.GetCategories(business), [business])
     );
 
     useEffect(() => {
         if (data) {
-            setCategories(data.categories)
-            setMaxPage(data.maxPage);
+            setCategories(data)
         }
     }, [data])
 
@@ -51,12 +51,6 @@ const CategoriesTable: FC<CategoriesTableProps> = ({ business, targetCategory, s
     const handleEdit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, category: ICategory) => {
         event.stopPropagation()
     }
-
-    const handlePageChange = (newPage: number) => {
-        if (newPage >= 1 && newPage <= maxPage) {
-            setPage(newPage);
-        }
-    };
 
     if (loading) {
         return <Loader />;
@@ -108,11 +102,6 @@ const CategoriesTable: FC<CategoriesTableProps> = ({ business, targetCategory, s
                             ))}
                         </tbody>
                     </table>
-                    <div className="pagination">
-                        <CoolButton onClick={() => handlePageChange(page - 1)} disabled={page === 1}>Назад</CoolButton>
-                        <span>Страница {page} из {maxPage}</span>
-                        <CoolButton onClick={() => handlePageChange(page + 1)} disabled={page === maxPage}>Вперед</CoolButton>
-                    </div>
                 </section>
             )}
         </>

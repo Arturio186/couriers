@@ -4,9 +4,9 @@
     table {
         width: 100%;
         text-align: left;
-        table-layout: fixed; /* Это фиксирует ширину столбцов */
+        table-layout: fixed;
 
-        max-height: calc(100vh - 16rem);
+        max-height: calc(100vh - 25rem);
         overflow-y: scroll;
 
         border-radius: 16px;
@@ -75,11 +75,9 @@
             }
         }
 
-        
-
         tbody {
             display: block;
-            max-height: calc(100vh - 16rem);
+            max-height: calc(100vh - 25rem);
             overflow-y: auto;
 
             &::-webkit-scrollbar {
@@ -91,28 +89,6 @@
                 border: none;
                 border-radius: 20px;
             }
-        }
-    }
-
-    .pagination {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        background-color: #333;
-        color: #fff;
-        border-top: 1px solid #444;
-
-        button:disabled {
-
-            
-            cursor: not-allowed;
-            opacity: 0.5;
-            
-        }
-
-        span {
-            font-size: 1rem;
         }
     }
 }
