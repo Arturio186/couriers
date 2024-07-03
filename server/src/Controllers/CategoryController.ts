@@ -62,12 +62,12 @@ class CategoryController implements ICategoryController {
         try {
             const { business_id } = req.query;
 
-            const response = await this.CategoryService.GetCategories(
+            const categories = await this.CategoryService.GetCategories(
                 String(business_id),
                 res.locals.user.id
             );
 
-            res.status(200).json(response);
+            res.status(200).json(categories);
         } catch (error) {
             next(error);
         }

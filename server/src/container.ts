@@ -22,6 +22,9 @@ import CityController from "./Controllers/CityController";
 import CategoryService from "./Services/CategoryService";
 import CategoryModel from "./Models/CategoryModel";
 import CategoryController from "./Controllers/CategoryController";
+import ProductService from "./Services/ProductService";
+import ProductModel from "./Models/ProductModel";
+import ProductController from "./Controllers/ProductController";
 
 const refreshSessionService = new RefreshSessionService(RefreshSessionModel)
 const roleService = new RoleService(RoleModel)
@@ -41,12 +44,16 @@ const cityController = new CityController(cityService)
 const categoryService = new CategoryService(CategoryModel, BusinessModel)
 const categoryController = new CategoryController(categoryService)
 
+const productService = new ProductService(ProductModel, CategoryModel, BusinessModel)
+const productController = new ProductController(productService)
+
 const container = {
     userController,
     businessController,
     branchController,
     cityController,
-    categoryController
+    categoryController,
+    productController
 }
 
 export default container;

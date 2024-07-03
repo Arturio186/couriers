@@ -66,11 +66,15 @@ class CategoryService implements ICategoryService {
     public GetCategories = async (businessID: string, userID: string) => {
         const business = await this.BusinessModel.FindOne({ id: businessID })
 
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
         if (business.owner_id !== userID) {
             const staffRow = await this.BusinessModel.FindUserInStaffs(userID)
 
             if (!staffRow) {
-                throw APIError.BadRequest("Бизнес не найден");
+                throw APIError.Forbidden("Нет доступа к бизнесу");
             }
         }
 
