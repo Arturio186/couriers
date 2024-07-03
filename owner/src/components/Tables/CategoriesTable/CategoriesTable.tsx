@@ -13,6 +13,8 @@ import Loader from "#components/UI/Loader/Loader";
 
 import IBusiness from "#interfaces/IBusiness";
 import ICategory from "#interfaces/ICategory";
+import Modal from "#components/UI/Modal/Modal";
+import EditCategoryForm from "#components/Forms/EditCategoryForm/EditCategoryForm";
 
 
 interface CategoriesTableProps {
@@ -32,7 +34,9 @@ const CategoriesTable: FC<CategoriesTableProps> = ({
 }) => {
     const dispatch = useDispatch()
 
+    const [categoryEditModal, setCategoryEditModal] = useState<boolean>(false);
     const [isDeleting, setIsDeliting] = useState<boolean>(false);
+    const [editingCategory, setEditingCategory] = useState<ICategory | null>(null)
 
     const { data, loading, error } = useFetching<ICategory[]>(
         useCallback(() => CategoryService.GetCategories(business), [business])
@@ -43,10 +47,6 @@ const CategoriesTable: FC<CategoriesTableProps> = ({
             setCategories(data)
         }
     }, [data])
-
-    useEffect(() => {
-        setTargetCategory(null)
-    }, [business])
 
     const handleSelectCategory = (category: ICategory) => {
         setTargetCategory(prev => prev?.id === category.id ? null : category)
@@ -78,6 +78,8 @@ const CategoriesTable: FC<CategoriesTableProps> = ({
 
     const handleEdit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, category: ICategory) => {
         event.stopPropagation()
+        setEditingCategory(category)
+        setCategoryEditModal(true)
     }
 
     if (loading) {
@@ -90,6 +92,17 @@ const CategoriesTable: FC<CategoriesTableProps> = ({
 
     return (
         <>
+
+            {editingCategory && <Modal
+                visible={categoryEditModal}
+                setVisible={setCategoryEditModal}
+            >
+                <EditCategoryForm 
+                    category={editingCategory}
+                    setCategories={setCategories}
+                    setModalVisible={setCategoryEditModal}
+                />
+            </Modal>}
             {categories.length === 0 ? (
                 <p className="message">Категории отсутствуют</p>
             ) : (       

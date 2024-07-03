@@ -45,12 +45,17 @@ const Catalog = () => {
         }
     }, [businesses]);
 
+    useEffect(() => {
+        setTargetCategory(null)
+    }, [targetBusiness, categories])
+
     const handleBusinessChange = (option: SingleValue<Option>) => {
         if (option) {
             const business = businesses?.find(b => b.id === option.value)
             setTargetBusiness(business ? business : null);
         } else {
             setTargetBusiness(null);
+            setTargetCategory(null);
         }
     }
 
