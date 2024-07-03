@@ -19,6 +19,16 @@ class ProductService implements IProductService {
         this.BusinessService = businessService;
     }
 
+    public FindProduct = async (productID: string) => {
+        const product = await this.ProductModel.FindOne({ id: productID })
+
+        if (!product) {
+            throw APIError.BadRequest("Продукт не найден");
+        }
+
+        return product;
+    }
+
     public SaveProduct = async (categoryID: string, name: string, price: number, userID: string) => {
         const category = await this.CategoryService.FindCategory(categoryID);
 
@@ -38,11 +48,7 @@ class ProductService implements IProductService {
     }
 
     public UpdateProduct = async (productID: string, name: string, price: number, userID: string) => {
-        const product = await this.ProductModel.FindOne({ id: productID })
-
-        if (!product) {
-            throw APIError.BadRequest("Продукт не найден");
-        }
+        const product = await this.FindProduct(productID)
 
         const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(product.business_id, userID);
 
@@ -56,11 +62,7 @@ class ProductService implements IProductService {
     }
 
     public RemoveProduct = async (productID: string, userID: string) => {
-        const product = await this.ProductModel.FindOne({ id: productID })
-
-        if (!product) {
-            throw APIError.BadRequest("Продукт не найден");
-        }
+        const product = await this.FindProduct(productID)
 
         const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(product.business_id, userID);
 
@@ -74,10 +76,11 @@ class ProductService implements IProductService {
     public GetProducts = async (categoryID: string, userID: string) => {
         const category = await this.CategoryService.FindCategory(categoryID)
 
-        const isCorrectStaff = await !this.BusinessService.IsUserWorkInBusiness(category.business_id, userID)
+        const isCorrectStaff = await this.BusinessService.IsUserWorkInBusiness(category.business_id, userID)
 
-        if (!isCorrectStaff)
+        if (!isCorrectStaff) {
             throw APIError.Forbidden("Нет доступа к бизнесу");
+        }
 
         const products = (
             await this.ProductModel.FindAll({ category_id: category.id })

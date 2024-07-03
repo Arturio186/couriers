@@ -29,4 +29,8 @@ export default class BranchService {
             city_id
         })
     }
+
+    static async GetBranches(business_id: string): Promise<AxiosResponse<IBranch[]>> {
+        return $api.get(`/branches?business_id=${business_id}`)
+    }
 }

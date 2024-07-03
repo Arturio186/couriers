@@ -31,19 +31,19 @@ import ProductController from "./Controllers/ProductController";
 const refreshSessionService = new RefreshSessionService(RefreshSessionModel)
 const roleService = new RoleService(RoleModel)
 
-const userService = new UserService(UserModel, refreshSessionService, roleService)
-const userController = new UserController(userService)
-
-const branchService = new BranchService(BranchModel, BusinessModel, CityModel)
-const branchController = new BranchController(branchService)
-
-const businessService = new BusinessService(BusinessModel, UserModel, branchService)
-const businessController = new BusinessController(businessService)
-
 const cityService = new CityService(CityModel)
 const cityController = new CityController(cityService)
 
-const categoryService = new CategoryService(CategoryModel, BusinessModel)
+const userService = new UserService(UserModel, refreshSessionService, roleService)
+const userController = new UserController(userService)
+
+const businessService = new BusinessService(BusinessModel)
+const businessController = new BusinessController(businessService)
+
+const branchService = new BranchService(BranchModel, businessService, cityService)
+const branchController = new BranchController(branchService)
+
+const categoryService = new CategoryService(CategoryModel, businessService)
 const categoryController = new CategoryController(categoryService)
 
 const productService = new ProductService(ProductModel, categoryService, businessService)

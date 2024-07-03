@@ -1,29 +1,27 @@
-import IUserModel from "../Interfaces/User/IUserModel";
 import IBusinessModel from "../Interfaces/Business/IBusinessModel";
 import IBusinessService from "../Interfaces/Business/IBusinessService";
-import IBranchService from "../Interfaces/Branch/IBranchService";
 
 import APIError from "../Exceptions/APIError";
 import BusinessDTO from "../DTO/BusinessDTO";
 
 class BusinessService implements IBusinessService {
     private readonly BusinessModel: IBusinessModel;
-    private readonly UserModel: IUserModel;
-    private readonly BranchService: IBranchService;
 
-    constructor(businessModel: IBusinessModel, userModel: IUserModel, branchService: IBranchService) {
+    constructor(businessModel: IBusinessModel) {
         this.BusinessModel = businessModel;
-        this.UserModel = userModel;
-        this.BranchService = branchService;
+    }
+
+    public FindBusiness = async (businessID: string) => {
+        const business = await this.BusinessModel.FindOne({ id: businessID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        return business;
     }
 
     public SaveBusiness = async (name: string, ownerID: string) => {
-        const owner = await this.UserModel.FindOne({ id: ownerID });
-
-        if (!owner) {
-            throw APIError.BadRequest("Пользователь не найден");
-        }
-
         const createdBusiness = await this.BusinessModel.Create({
             name,
             owner_id: ownerID,
@@ -33,10 +31,10 @@ class BusinessService implements IBusinessService {
     };
     
     public UpdateBusiness = async (name: string, businessID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+        const isCorrectOwner = await this.IsOwnerHaveBusiness(businessID, userID);
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
         const updatedBusiness = await this.BusinessModel.Update({ id: businessID }, { name })
@@ -45,10 +43,10 @@ class BusinessService implements IBusinessService {
     };
 
     public RemoveBusiness = async (businessID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+        const isCorrectOwner = await this.IsOwnerHaveBusiness(businessID, userID);
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
         
         return await this.BusinessModel.Delete({ id: businessID })
@@ -63,36 +61,24 @@ class BusinessService implements IBusinessService {
     };
 
     public GetBusiness = async (userID: string, businessID: string) => {
-        const business = await this.BusinessModel.FindOne({ owner_id: userID, id: businessID })
+        const business = await this.FindBusiness(businessID)
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
-        }
+        const isCorrectStaff = await this.IsUserWorkInBusiness(business.id, userID)
 
-        const branches = await this.BranchService.GetBranchesByBusinessID(business.id, userID);
+        if (!isCorrectStaff)
+            throw APIError.Forbidden("Нет доступа к бизнесу");
 
-        return {
-            business: new BusinessDTO(business),
-            branches
-        }
+        return new BusinessDTO(business)
     }
 
     public IsOwnerHaveBusiness = async (businessID: string, ownerID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID })
-
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
-        }
+        const business = await this.FindBusiness(businessID)
 
         return business.owner_id === ownerID; 
     }
 
     public IsUserWorkInBusiness = async (businessID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID })
-
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
-        }
+        const business = await this.FindBusiness(businessID)
 
         if (business.owner_id !== userID) {
             const staffRow = await this.BusinessModel.FindUserInStaffs(userID)
@@ -104,7 +90,6 @@ class BusinessService implements IBusinessService {
 
         return true;
     }
-
 }
 
 export default BusinessService;

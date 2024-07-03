@@ -6,6 +6,7 @@ import BusinessService from "#services/BusinessService";
 import useFetching from "#hooks/useFetching";
 
 import IBusinessWithBranches from "#interfaces/IBusinessWithBranches";
+import IBusiness from "#interfaces/IBusiness";
 
 import CreateBranchForm from "#components/Forms/CreateBranchForm/CreateBranchForm";
 
@@ -17,7 +18,7 @@ import Modal from "#components/UI/Modal/Modal";
 const Business = () => {
     const { id } = useParams<{ id: string }>();
 
-    const { data, loading, error, refetch } = useFetching<IBusinessWithBranches>(
+    const { data, loading, error, refetch } = useFetching<IBusiness>(
         useCallback(() => BusinessService.GetBusiness(id ? id : ""), [id])
     );
 
@@ -25,7 +26,7 @@ const Business = () => {
 
     useEffect(() => {
         if (data) {
-            document.title = `Сеть ${data.business.name}`;
+            document.title = `Сеть ${data.name}`;
         } else {
             document.title = 'Загрузка...';
         }
@@ -45,24 +46,23 @@ const Business = () => {
                 visible={branchCreateModal}
                 setVisible={setBranchCreateModal}
             >
-                <CreateBranchForm
+                 {data && <CreateBranchForm
                     refetchBranches={refetch}
-                    business={data?.business}
+                    business={data}
                     setModalVisible={setBranchCreateModal}
-                />
+                />}
             </Modal>
 
-            <h1>{data?.business.name}</h1>
+            {data && <h1>{data.name}</h1>}
 
             <h3>Филиалы</h3>
 
             <CoolButton onClick={() => setBranchCreateModal(true)}>Добавить филиал</CoolButton>
 
-            <BranchTable
-                business={data?.business}
-                branches={data?.branches}
+            {data && <BranchTable
+                business={data}
                 refetchBranches={refetch}
-            />
+            />}
         </>
     );
 };

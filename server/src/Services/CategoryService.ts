@@ -2,26 +2,26 @@ import APIError from "../Exceptions/APIError";
 
 import ICategoryService from "../Interfaces/Category/ICategoryService";
 import ICategoryModel from "../Interfaces/Category/ICategoryModel";
-import IBusinessModel from "../Interfaces/Business/IBusinessModel";
 
 import ICategory from "../Interfaces/Category/ICategory";
 
 import CategoryDTO from "../DTO/CategoryDTO";
+import IBusinessService from "../Interfaces/Business/IBusinessService";
 
 class CategoryService implements ICategoryService {
     private readonly CategoryModel: ICategoryModel;
-    private readonly BusinessModel: IBusinessModel;
+    private readonly BusinessService: IBusinessService;
 
-    constructor(categoryModel: ICategoryModel, businessModel: IBusinessModel) {
+    constructor(categoryModel: ICategoryModel, businessService: IBusinessService) {
         this.CategoryModel = categoryModel;
-        this.BusinessModel = businessModel;
+        this.BusinessService = businessService;
     }
 
     public SaveCategory = async (businessID: string, name: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(businessID, userID);
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
         const createdCategory = await this.CategoryModel.Create({
@@ -33,16 +33,12 @@ class CategoryService implements ICategoryService {
     };
 
     public UpdateCategory = async (categoryID: string, name: string, userID: string) => {
-        const category = await this.CategoryModel.FindOne({ id: categoryID })
+        const category = await this.FindCategory(categoryID)
 
-        if (!category) {
-            throw APIError.BadRequest("Категория не найдена");
-        }
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(category.business_id, userID);
 
-        const business = await this.BusinessModel.FindOne({ id: category.business_id, owner_id: userID })
-
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
         const updatedCategory = await this.CategoryModel.Update({ id: categoryID }, { name })
@@ -51,34 +47,22 @@ class CategoryService implements ICategoryService {
     };
 
     public RemoveCategory = async (categoryID: string, userID: string) => {
-        const category = await this.CategoryModel.FindOne({ id: categoryID })
+        const category = await this.FindCategory(categoryID)
 
-        if (!category) {
-            throw APIError.BadRequest("Категория не найдена");
-        }
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(category.business_id, userID);
 
-        const business = await this.BusinessModel.FindOne({ id: category.business_id, owner_id: userID })
-
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
         return await this.CategoryModel.Delete({ id: categoryID })
     };
 
     public GetCategories = async (businessID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID })
+        const isCorrectStaff = await this.BusinessService.IsUserWorkInBusiness(businessID, userID)
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
-        }
-
-        if (business.owner_id !== userID) {
-            const staffRow = await this.BusinessModel.FindUserInStaffs(userID)
-
-            if (!staffRow) {
-                throw APIError.Forbidden("Нет доступа к бизнесу");
-            }
+        if (!isCorrectStaff) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
         const categories = (

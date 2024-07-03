@@ -1,27 +1,37 @@
 import IBranchModel from "../Interfaces/Branch/IBranchModel";
-import IBusinessModel from "../Interfaces/Business/IBusinessModel";
 import IBranchService from "../Interfaces/Branch/IBranchService";
+import IBusinessService from "../Interfaces/Business/IBusinessService";
 
 import APIError from "../Exceptions/APIError";
 import BranchDTO from "../DTO/BranchDTO";
-import ICityModel from "../Interfaces/City/ICityModel";
+import ICityService from "../Interfaces/City/ICityService";
 
 class BranchService implements IBranchService {
     private readonly BranchModel: IBranchModel;
-    private readonly BusinessModel: IBusinessModel;
-    private readonly CityModel: ICityModel;
+    private readonly BusinessService: IBusinessService;
+    private readonly CityService: ICityService;
 
-    constructor(branchModel: IBranchModel, businessModel: IBusinessModel, cityModel: ICityModel) {
+    constructor(branchModel: IBranchModel, businessService: IBusinessService, cityService: ICityService) {
         this.BranchModel = branchModel;
-        this.BusinessModel = businessModel;
-        this.CityModel = cityModel;
+        this.BusinessService = businessService;
+        this.CityService = cityService;
+    }
+
+    public FindBranch = async (branchID: string) => {
+        const branch = await this.BranchModel.FindOne({ id: branchID })
+
+        if (!branch) {
+            throw APIError.BadRequest("Филиал не найден");
+        }
+
+        return branch;
     }
 
     public GetBranchesByBusinessID = async (businessID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(businessID, userID);
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
         const branches = await this.BranchModel.FindAll({ business_id: businessID })
@@ -30,57 +40,45 @@ class BranchService implements IBranchService {
     };
 
     public SaveBranch = async (name: string, businessID: string, cityID: number, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(businessID, userID);
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
-        const city = await this.CityModel.FindOne({ id: cityID })
-
-        if (!city) {
-            throw APIError.BadRequest("Город не найден")
-        }
+        const city = await this.CityService.FindCity(cityID)
 
         const createdBranch = await this.BranchModel.Create({
             name,
-            business_id: business.id,
-            city_id: cityID,
+            business_id: businessID,
+            city_id: city.id,
         })
 
         return new BranchDTO(createdBranch)
     }
 
     public RemoveBranch = async (businessID: string, branchID: string, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(businessID, userID);
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
-        const branch = await this.BranchModel.FindOne({ id: branchID })
-
-        if (!branch) {
-            throw APIError.BadRequest("Филиал не найден");
-        }
+        const branch = await this.FindBranch(branchID)
         
-        return await this.BranchModel.Delete({ id: branchID })
+        return await this.BranchModel.Delete({ id: branch.id })
     }; 
     
     public UpdateBranch = async (businessID: string, branchID: string, name: string, cityID: number, userID: string) => {
-        const business = await this.BusinessModel.FindOne({ id: businessID, owner_id: userID })
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(businessID, userID);
 
-        if (!business) {
-            throw APIError.BadRequest("Бизнес не найден");
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
-        const branch = await this.BranchModel.FindOne({ id: branchID })
+        const branch = await this.FindBranch(branchID)
 
-        if (!branch) {
-            throw APIError.BadRequest("Филиал не найден");
-        }
-
-        const updatedBranch = await this.BranchModel.Update({ id: branchID }, { name, city_id: cityID })
+        const updatedBranch = await this.BranchModel.Update({ id: branch.id }, { name, city_id: cityID })
 
         return new BranchDTO(updatedBranch)
     };

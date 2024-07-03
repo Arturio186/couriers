@@ -1,14 +1,17 @@
-import { FC, useState } from "react";
+import { FC, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import "./BranchTable.scss";
+
+import useFetching from "#hooks/useFetching";
 
 import { addToast } from "#store/toastSlice";
 
 import BranchService from "#services/BranchService";
 
 import Modal from "#components/UI/Modal/Modal";
+import Loader from "#components/UI/Loader/Loader";
 import EditBranchForm from "#components/Forms/EditBranchForm/EditBranchForm";
 
 import IBranch from "#interfaces/IBranch";
@@ -16,21 +19,21 @@ import IBusiness from "#interfaces/IBusiness";
 
 
 interface BranchTableProps {
-    business?: IBusiness;
-    branches?: IBranch[];
+    business: IBusiness;
     refetchBranches: (...args: any[]) => Promise<void>
 }
 
-const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches }) => {
+const BranchTable: FC<BranchTableProps> = ({ business, refetchBranches }) => {
     const [isDeleting, setIsDeliting] = useState<boolean>(false)
     const [branchEditModal, setBranchEditModal] = useState<boolean>(false)
     const [targetBranch, setTargetBranch] = useState<IBranch | null>(null)
 
     const dispatch = useDispatch()
 
-    if (!branches) {
-        return null;
-    }
+    const { data, loading, error, refetch } = useFetching<IBranch[]>(
+        useCallback(() => BranchService.GetBranches(business.id), [business])
+    );
+
 
     const handleEdit = (branch: IBranch) => {
         setTargetBranch(branch)
@@ -58,6 +61,14 @@ const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches
         }
     };
 
+    if (loading) {
+        return <Loader />
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
     return (
         <>
             <Modal
@@ -71,7 +82,7 @@ const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches
                     setModalVisible={setBranchEditModal}
                 />
             </Modal>
-            {branches.length === 0 ? (
+            {data?.length === 0 ? (
                 <p className="message">Филалы отсутствуют</p>
             ) : (
                 <section className="branch__table">
@@ -84,7 +95,7 @@ const BranchTable: FC<BranchTableProps> = ({ business, branches, refetchBranches
                             </tr>
                         </thead>
                         <tbody>
-                            {branches.map((branch) => (
+                            {data?.map((branch) => (
                                 <tr key={branch.id}>
                                     <td>
                                         <Link to={`/branches/${branch.id}`} className="branch__link">

@@ -21,7 +21,7 @@ export default class BusinessService {
         return await $api.get<IBusiness[]>('/businesses/my');
     }
 
-    static async GetBusiness(id: string): Promise<AxiosResponse<IBusinessWithBranches>> {
-        return await $api.get<IBusinessWithBranches>(`/businesses/${id}`);
+    static async GetBusiness(id: string): Promise<AxiosResponse<IBusiness>> {
+        return await $api.get<IBusiness>(`/businesses/${id}`);
     }
 }

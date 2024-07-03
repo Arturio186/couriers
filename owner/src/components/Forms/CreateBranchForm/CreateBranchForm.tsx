@@ -22,7 +22,7 @@ interface CreateBranchField {
 }
 
 interface CreateBranchFormProps {
-    business?: IBusiness;
+    business: IBusiness;
     refetchBranches: (...args: any[]) => Promise<void>
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
