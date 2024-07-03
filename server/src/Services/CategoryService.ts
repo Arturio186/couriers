@@ -3,6 +3,9 @@ import APIError from "../Exceptions/APIError";
 import ICategoryService from "../Interfaces/Category/ICategoryService";
 import ICategoryModel from "../Interfaces/Category/ICategoryModel";
 import IBusinessModel from "../Interfaces/Business/IBusinessModel";
+
+import ICategory from "../Interfaces/Category/ICategory";
+
 import CategoryDTO from "../DTO/CategoryDTO";
 
 class CategoryService implements ICategoryService {
@@ -42,9 +45,9 @@ class CategoryService implements ICategoryService {
             throw APIError.BadRequest("Бизнес не найден");
         }
 
-        const updatedBranch = await this.CategoryModel.Update({ id: categoryID }, { name })
+        const updatedCategory = await this.CategoryModel.Update({ id: categoryID }, { name })
 
-        return new CategoryDTO(updatedBranch)
+        return new CategoryDTO(updatedCategory)
     };
 
     public RemoveCategory = async (categoryID: string, userID: string) => {
@@ -84,6 +87,16 @@ class CategoryService implements ICategoryService {
         
         return categories
     };
+
+    public FindCategory = async (categoryID: string): Promise<ICategory> => {
+        const category = await this.CategoryModel.FindOne({ id: categoryID })
+
+        if (!category) {
+            throw APIError.BadRequest("Категория не найдена");
+        }
+
+        return category;
+    }
 }
 
 export default CategoryService;

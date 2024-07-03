@@ -30,7 +30,17 @@ class ProductModel implements IProductModel {
     };
 
     public FindOne = async (conditions: Partial<IProduct>) => {
-        return db(this.tableName).where(conditions).first();
+        const qualifiedConditions = {};
+
+        for (const [key, value] of Object.entries(conditions)) {
+            qualifiedConditions[`${this.tableName}.${key}`] = value;
+        }
+
+        return db(this.tableName)
+            .join(this.categoriesTableName, `${this.categoriesTableName}.id`, '=', `${this.tableName}.category_id`)
+            .where(qualifiedConditions)
+            .select(`${this.tableName}.*`, `${this.categoriesTableName}.business_id as business_id`)
+            .first();
     };
   
     public FindAll = async (conditions: Partial<IProduct>): Promise<IProduct[]> => {

@@ -10,4 +10,6 @@ export default interface IBusinessService {
         business: BusinessDTO,
         branches: BranchDTO[]
     }>
+    IsOwnerHaveBusiness: (businessID: string, ownerID: string) => Promise<boolean>;
+    IsUserWorkInBusiness: (businessID: string, userID: string) => Promise<boolean>;
 }

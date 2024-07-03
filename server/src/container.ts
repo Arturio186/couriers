@@ -19,9 +19,11 @@ import BranchController from "./Controllers/BranchController";
 import CityModel from "./Models/CityModel";
 import CityService from "./Services/CityService";
 import CityController from "./Controllers/CityController";
+
 import CategoryService from "./Services/CategoryService";
 import CategoryModel from "./Models/CategoryModel";
 import CategoryController from "./Controllers/CategoryController";
+
 import ProductService from "./Services/ProductService";
 import ProductModel from "./Models/ProductModel";
 import ProductController from "./Controllers/ProductController";
@@ -44,7 +46,7 @@ const cityController = new CityController(cityService)
 const categoryService = new CategoryService(CategoryModel, BusinessModel)
 const categoryController = new CategoryController(categoryService)
 
-const productService = new ProductService(ProductModel, CategoryModel, BusinessModel)
+const productService = new ProductService(ProductModel, categoryService, businessService)
 const productController = new ProductController(productService)
 
 const container = {

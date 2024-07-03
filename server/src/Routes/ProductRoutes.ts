@@ -17,5 +17,36 @@ export default (productController: IProductController) => {
         productController.GetProducts
     )
 
+    router.post(
+        "/",
+        AuthMiddleware,
+        OwnerMiddleware,
+        body('category_id').isUUID(),
+        body('name').notEmpty(),
+        body('price').isNumeric(),
+        ValidationMiddleware,
+        productController.Store
+    )
+
+    router.delete(
+        "/:product_id",
+        AuthMiddleware,
+        OwnerMiddleware,
+        param("product_id").isUUID(),
+        ValidationMiddleware,
+        productController.Destroy
+    )
+
+    router.put(
+        "/:product_id",
+        AuthMiddleware,
+        OwnerMiddleware,
+        param("product_id").isUUID(),
+        body('name').notEmpty(),
+        body('price').isNumeric(),
+        ValidationMiddleware,
+        productController.Update
+    )
+
     return router;
 };

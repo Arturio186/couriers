@@ -5,7 +5,6 @@ import IBranchService from "../Interfaces/Branch/IBranchService";
 
 import APIError from "../Exceptions/APIError";
 import BusinessDTO from "../DTO/BusinessDTO";
-import BranchDTO from "../DTO/BranchDTO";
 
 class BusinessService implements IBusinessService {
     private readonly BusinessModel: IBusinessModel;
@@ -76,6 +75,34 @@ class BusinessService implements IBusinessService {
             business: new BusinessDTO(business),
             branches
         }
+    }
+
+    public IsOwnerHaveBusiness = async (businessID: string, ownerID: string) => {
+        const business = await this.BusinessModel.FindOne({ id: businessID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        return business.owner_id === ownerID; 
+    }
+
+    public IsUserWorkInBusiness = async (businessID: string, userID: string) => {
+        const business = await this.BusinessModel.FindOne({ id: businessID })
+
+        if (!business) {
+            throw APIError.BadRequest("Бизнес не найден");
+        }
+
+        if (business.owner_id !== userID) {
+            const staffRow = await this.BusinessModel.FindUserInStaffs(userID)
+
+            if (!staffRow) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
