@@ -14,16 +14,17 @@ import CategoriesTable from "#components/Tables/CategoriesTable/CategoriesTable"
 import IBusiness from "#interfaces/IBusiness";
 import Option from "#interfaces/Option";
 import ICategory from "#interfaces/ICategory";
+import IProduct from "#interfaces/IProduct";
 
 import darkSelectConfig from "#utils/darkSelectConfig";
 import CreateCategoryForm from "#components/Forms/CreateCategoryForm/CreateCategoryForm";
+import ProductsTable from "#components/Tables/ProductsTable/ProductsTable";
 
 const Catalog = () => {
     const {
         data: businesses,
         loading,
-        error,
-        refetch
+        error
     } = useFetching<IBusiness[]>(BusinessService.GetMyBusinesses);
 
     const [businessOptions, setBusinessOptions] = useState<Option[]>([])
@@ -31,9 +32,10 @@ const Catalog = () => {
     const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null)
     const [targetCategory, setTargetCategory] = useState<ICategory | null>(null)
     const [categories, setCategories] = useState<ICategory[]>([])
-    const [products, setProducts] = useState<string[]>([])
+    const [products, setProducts] = useState<IProduct[]>([])
 
     const [categoryCreateModal, setCategoryCreateModal] = useState<boolean>(false);
+    const [productCreateModal, setProductCreateModal] = useState<boolean>(false);
 
     useEffect(() => {
         if (businesses) {
@@ -104,7 +106,23 @@ const Catalog = () => {
             </>}
 
             {targetCategory && <>
-                <h3>Товары</h3>
+                <Modal
+                    visible={productCreateModal}
+                    setVisible={setProductCreateModal}
+                >
+                    Create Product
+                </Modal>
+
+
+                <h3>Товары категории {targetCategory.name}</h3>
+                
+                <CoolButton onClick={() => setProductCreateModal(true)}>Добавить товар</CoolButton>
+
+                <ProductsTable
+                    targetCategory={targetCategory}
+                    products={products}
+                    setProducts={setProducts}
+                />
 
             </>}
         </>
