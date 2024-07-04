@@ -19,6 +19,7 @@ import IProduct from "#interfaces/IProduct";
 import darkSelectConfig from "#utils/darkSelectConfig";
 import CreateCategoryForm from "#components/Forms/CreateCategoryForm/CreateCategoryForm";
 import ProductsTable from "#components/Tables/ProductsTable/ProductsTable";
+import CreateProductForm from "#components/Forms/CreateProductForm/CreateProductForm";
 
 const Catalog = () => {
     const {
@@ -110,7 +111,11 @@ const Catalog = () => {
                     visible={productCreateModal}
                     setVisible={setProductCreateModal}
                 >
-                    Create Product
+                    <CreateProductForm
+                        category={targetCategory}
+                        setModalVisible={setProductCreateModal}
+                        setProducts={setProducts}
+                    />
                 </Modal>
 
 

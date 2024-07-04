@@ -28,6 +28,8 @@ const CreateCategoryForm: FC<CreateCategoryFormProps> = ({
     setModalVisible,
     setCategories 
 }) => {
+    const dispatch = useDispatch()
+
     const {
         register,
         handleSubmit,
@@ -35,8 +37,7 @@ const CreateCategoryForm: FC<CreateCategoryFormProps> = ({
     } = useForm<CreateCategoryField>({ mode: "onBlur" });
 
     const [isCreating, setIsCreating] = useState<boolean>(false);
-    const dispatch = useDispatch()
-
+    
     const onSubmit: SubmitHandler<CreateCategoryField> = async (data) => {
         try {
             if (isCreating) 
