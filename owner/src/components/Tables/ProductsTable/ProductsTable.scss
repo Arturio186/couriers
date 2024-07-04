@@ -61,5 +61,21 @@
                 }
             }
         }
+
+        tbody {
+            display: block;
+            max-height: calc(100vh - 25rem);
+            overflow-y: auto;
+
+            &::-webkit-scrollbar {
+                width: 2px;
+            }
+            
+            &::-webkit-scrollbar-thumb {
+                background-color: #9e9e9e;
+                border: none;
+                border-radius: 20px;
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import "./CreateProductForm.scss";
+import "./EditProductForm.scss";
 
 import { addToast } from "#store/toastSlice";
 
@@ -10,65 +10,67 @@ import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 import ProductService from "#services/ProductService";
 
-import ICategory from "#interfaces/ICategory";
 import IProduct from "#interfaces/IProduct";
 
-interface CreateProductField {
+interface EditProductField {
     name: string;
     price: number;
 }
 
-interface CreateProductFormProps {
-    category: ICategory;
+interface EditProductFormProps {
+    product: IProduct;
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
     setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
 }
 
-const CreateProductForm: FC<CreateProductFormProps> = ({
-    category,
-    setModalVisible,
+const EditProductForm: FC<EditProductFormProps> = ({ 
+    product,
     setProducts,
+    setModalVisible
 }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<CreateProductField>({ mode: "onBlur" });
+        setValue
+    } = useForm<EditProductField>({ mode: "onBlur" });
 
-    const [isCreating, setIsCreating] = useState<boolean>(false);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    const onSubmit: SubmitHandler<CreateProductField> = async (data) => {
+    useEffect(() => {
+        setValue('name', product.name);
+        setValue('price', product.price)
+    }, [product]);
+
+    const onSubmit: SubmitHandler<EditProductField> = async (data) => {
         try {
-            if (isCreating) return;
+            if (isEditing) return
 
-            setIsCreating(true);
+            setIsEditing(true)
 
-            const response = await ProductService.CreateProduct(
-                category.id,
-                data.name,
-                data.price
-            );
+            const response = await ProductService.EditProduct(product.id, data.name, data.price)
 
             if (response.status === 200) {
-                setProducts((prev) => [response.data, ...prev]);
-                dispatch(
-                    addToast(`Товар ${response.data.name} успешно добавлен`)
-                );
+                setProducts(prev => 
+                    prev.map(p => p.id === product.id ? response.data : p)
+                )
+                dispatch(addToast(`Товар успешно изменен`));
             }
-        } catch (error) {
-            dispatch(addToast(`Ошибка при добавлении товара`));
-            console.log(error);
+        }
+        catch (error) {
+            dispatch(addToast(`Ошибка при изменении товара`));
+            console.log(error)
         } finally {
-            setIsCreating(false);
-            setModalVisible(false);
+            setIsEditing(false)
+            setModalVisible(false)
         }
     };
 
     return (
         <form className="modal__form" onSubmit={handleSubmit(onSubmit)}>
-            <h4>Добавление нового товара</h4>
+            <h4>Изменение информации о товара</h4>
 
             <CoolInput
                 label="Название"
@@ -90,9 +92,9 @@ const CreateProductForm: FC<CreateProductFormProps> = ({
                 error={errors.price}
             />
 
-            <CoolButton disabled={isCreating}>Добавить</CoolButton>
+            <CoolButton disabled={isEditing}>Изменить</CoolButton>
         </form>
     );
 };
 
-export default CreateProductForm;
+export default EditProductForm;

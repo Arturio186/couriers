@@ -27,6 +27,8 @@ const EditCategoryForm: FC<EditCategoryFormProps> = ({
     setModalVisible,
     setCategories 
 }) => {
+    const dispatch = useDispatch()
+
     const {
         register,
         handleSubmit,
@@ -35,7 +37,6 @@ const EditCategoryForm: FC<EditCategoryFormProps> = ({
     } = useForm<EditCategoryField>({ mode: "onBlur" });
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const dispatch = useDispatch()
 
     useEffect(() => {
         setValue('name', category.name);
@@ -43,8 +44,7 @@ const EditCategoryForm: FC<EditCategoryFormProps> = ({
 
     const onSubmit: SubmitHandler<EditCategoryField> = async (data) => {
         try {
-            if (isEditing) 
-                return
+            if (isEditing) return
 
             setIsEditing(true)
 
@@ -52,13 +52,7 @@ const EditCategoryForm: FC<EditCategoryFormProps> = ({
 
             if (response.status === 200) {
                 setCategories(prev => 
-                    prev.map(c => {
-                        if (c.id === category.id) {
-                            return response.data;
-                        }
-
-                        return c;
-                    })
+                    prev.map(c => c.id === category.id ? response.data : c)
                 )
                 dispatch(addToast(`Категория успешно изменена`));
             }

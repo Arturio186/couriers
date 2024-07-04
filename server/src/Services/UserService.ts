@@ -50,7 +50,7 @@ class UserService implements IUserService {
         
         await this.RefreshSessionService.SaveToken(userDTO.id, tokens.refreshToken);
 
-        await MailSender.SendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`);
+        await MailSender.SendActivationMail(email, `${process.env.API_URL}/api/user/activate?link=${activationLink}`);
 
         return { ...tokens, user: userDTO };
     };

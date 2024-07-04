@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { body, param } from "express-validator";
+import { body, query } from "express-validator";
 
 import IUserController from "../Interfaces/User/IUserController";
 import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
@@ -17,8 +17,8 @@ export default (userController: IUserController) => {
         userController.Registration
     );
     router.get(
-        "/activate/:link",
-        param("link").notEmpty(),
+        "/activate",
+        query("link").notEmpty(),
         ValidationMiddleware,
         userController.Activate
     );

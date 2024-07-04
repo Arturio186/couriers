@@ -10,9 +10,11 @@ import useFetching from "#hooks/useFetching";
 import ProductService from "#services/ProductService";
 
 import Loader from "#components/UI/Loader/Loader";
+import Modal from "#components/UI/Modal/Modal";
 
 import ICategory from "#interfaces/ICategory";
 import IProduct from "#interfaces/IProduct";
+import EditProductForm from "#components/Forms/EditProductForm/EditProductForm";
 
 interface ProductsTableProps {
     targetCategory: ICategory;
@@ -28,6 +30,8 @@ const ProductsTable: FC<ProductsTableProps> = ({ targetCategory, products, setPr
     );
 
     const [isDeleting, setIsDeliting] = useState<boolean>(false);
+    const [productEditModal, setProductEditModal] = useState<boolean>(false);
+    const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
 
     useEffect(() => {
         if (data) {
@@ -36,9 +40,7 @@ const ProductsTable: FC<ProductsTableProps> = ({ targetCategory, products, setPr
         }
     }, [data])
 
-    const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => {
-        event.stopPropagation()
-
+    const handleDelete = async (product: IProduct) => {
         try {
             if (isDeleting) return
             
@@ -59,8 +61,9 @@ const ProductsTable: FC<ProductsTableProps> = ({ targetCategory, products, setPr
         
     }
 
-    const handleEdit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => {
-        event.stopPropagation()
+    const handleEdit = (product: IProduct) => {
+        setEditingProduct(product);
+        setProductEditModal(true);
     }
 
     if (loading) {
@@ -74,6 +77,17 @@ const ProductsTable: FC<ProductsTableProps> = ({ targetCategory, products, setPr
 
     return (
         <>
+            {editingProduct && <Modal
+                visible={productEditModal}
+                setVisible={setProductEditModal}
+            >
+                <EditProductForm 
+                    product={editingProduct}
+                    setProducts={setProducts}
+                    setModalVisible={setProductEditModal}
+                />
+            </Modal>}
+
             {products.length === 0 ? (
                 <p className="message">Товары отсутствуют</p>
             ) : (       
@@ -91,17 +105,17 @@ const ProductsTable: FC<ProductsTableProps> = ({ targetCategory, products, setPr
                                 <tr key={product.id}>
                                     <td>{product.name}</td>
 
-                                    <td>{Math.floor(product.price)} ₽</td>
+                                    <td>{product.price} ₽</td>
 
                                     <td className="actions">
                                         <button
-                                            onClick={(event) => handleEdit(event, product)}
+                                            onClick={() => handleEdit(product)}
                                         >
                                             <FaEdit />
                                         </button>
 
                                         <button
-                                            onClick={(event) => handleDelete(event, product)}
+                                            onClick={() => handleDelete(product)}
                                         >
                                             <FaRegTrashAlt />
                                         </button>

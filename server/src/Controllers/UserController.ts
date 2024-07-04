@@ -28,11 +28,11 @@ class UserController implements IUserController {
 
     public Activate = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const activationLink = req.params.link;
+            const { link } = req.query;
 
-            await this.UserService.Activate(activationLink);
+            await this.UserService.Activate(String(link));
             
-            return res.redirect(process.env.CLIENT_URL);
+            res.status(200).json('Email адрес подтвержден');
         }
         catch (error) {
             next(error)
