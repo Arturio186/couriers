@@ -2,7 +2,6 @@ import $api from "../http";
 import { AxiosResponse } from 'axios';
 
 import IBusiness from "#interfaces/IBusiness";
-import IBusinessWithBranches from "#interfaces/IBusinessWithBranches";
 
 export default class BusinessService {
     static async CreateBusiness(name: string): Promise<AxiosResponse<IBusiness>> {

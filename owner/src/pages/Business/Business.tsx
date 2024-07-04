@@ -5,7 +5,6 @@ import './Business.scss'
 import BusinessService from "#services/BusinessService";
 import useFetching from "#hooks/useFetching";
 
-import IBusinessWithBranches from "#interfaces/IBusinessWithBranches";
 import IBusiness from "#interfaces/IBusiness";
 
 import CreateBranchForm from "#components/Forms/CreateBranchForm/CreateBranchForm";

@@ -33,10 +33,6 @@ class UserService implements IUserService {
 
         const userRole = await this.RoleService.FindRole(role);
 
-        if (!userRole) {
-            throw APIError.BadRequest(`Роль ${role} не найдена`)
-        }
-
         const hashPassword = await bcrypt.hash(password, 5);
 
         const activationLink = v4();

@@ -39,7 +39,7 @@ class BusinessModel implements IBusinessModel {
     }
 
     public FindUserInStaffs = async (userID: string): Promise<{ business_id: string; user_id: string } | undefined> => {
-        return db(this.staffTable).where({ user_id: userID }).first()
+        return db(this.staffTable).where({ user_id: userID }).first() // Допилить, подумать. Возможно join по branch_id, оттуда тянем business_id, если совпадает => пропускаем
     };
 }
 
