@@ -27,6 +27,8 @@ const ProductsTable: FC<ProductsTableProps> = ({ targetCategory, products, setPr
         useCallback(() => ProductService.GetProducts(targetCategory), [targetCategory])
     );
 
+    const [isDeleting, setIsDeliting] = useState<boolean>(false);
+
     useEffect(() => {
         if (data) {
             setProducts(data)
@@ -36,6 +38,25 @@ const ProductsTable: FC<ProductsTableProps> = ({ targetCategory, products, setPr
 
     const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => {
         event.stopPropagation()
+
+        try {
+            if (isDeleting) return
+            
+            if (confirm(`Вы уверены, что хотите удалить товар ${product.name}?`)) {
+                const response = await ProductService.DeleteProduct(product.id);
+
+                if (response.status === 200) {
+                    setProducts(prev => prev.filter(p => p.id !== product.id))
+                    dispatch(addToast("Товар успешно удален"))
+                }
+            }
+        } catch (error) {
+            console.error('Ошибка при удалении ', error);
+            dispatch(addToast("Ошибка при удалении товара"))
+        } finally {
+            setIsDeliting(false)
+        }
+        
     }
 
     const handleEdit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => {

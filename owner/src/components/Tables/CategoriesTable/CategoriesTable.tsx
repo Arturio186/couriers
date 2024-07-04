@@ -34,13 +34,13 @@ const CategoriesTable: FC<CategoriesTableProps> = ({
 }) => {
     const dispatch = useDispatch()
 
-    const [categoryEditModal, setCategoryEditModal] = useState<boolean>(false);
-    const [isDeleting, setIsDeliting] = useState<boolean>(false);
-    const [editingCategory, setEditingCategory] = useState<ICategory | null>(null)
-
     const { data, loading, error } = useFetching<ICategory[]>(
         useCallback(() => CategoryService.GetCategories(business), [business])
     );
+
+    const [isDeleting, setIsDeliting] = useState<boolean>(false);
+    const [categoryEditModal, setCategoryEditModal] = useState<boolean>(false);
+    const [editingCategory, setEditingCategory] = useState<ICategory | null>(null)
 
     useEffect(() => {
         if (data) {
@@ -57,8 +57,6 @@ const CategoriesTable: FC<CategoriesTableProps> = ({
 
         try {
             if (isDeleting) return
-        
-            if (!business) return
             
             if (confirm("Вы уверены, что хотите удалить категорию?")) {
                 const response = await CategoryService.DeleteCategory(category.id);
