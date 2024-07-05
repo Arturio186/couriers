@@ -38,9 +38,10 @@ class BranchController implements IBranchController {
 
     public Update = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { business_id, branch_id, name, city_id } = req.body;
+            const { name, city_id } = req.body;
+            const { branch_id } = req.params;
 
-            const updatedBranch = await this.BranchService.UpdateBranch(business_id, branch_id, name, city_id, res.locals.user.id)
+            const updatedBranch = await this.BranchService.UpdateBranch(branch_id, name, city_id, res.locals.user.id)
 
             res.status(200).json(updatedBranch)
         }
@@ -51,9 +52,9 @@ class BranchController implements IBranchController {
 
     public Destroy = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { business_id, branch_id } = req.body;
+            const { branch_id } = req.params;
 
-            await this.BranchService.RemoveBranch(business_id, branch_id, res.locals.user.id)
+            await this.BranchService.RemoveBranch(branch_id, res.locals.user.id)
 
             res.status(200).json({message: "Success"})
         }

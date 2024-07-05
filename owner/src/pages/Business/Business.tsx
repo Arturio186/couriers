@@ -6,22 +6,23 @@ import BusinessService from "#services/BusinessService";
 import useFetching from "#hooks/useFetching";
 
 import IBusiness from "#interfaces/IBusiness";
+import IBranch from "#interfaces/IBranch";
 
 import CreateBranchForm from "#components/Forms/CreateBranchForm/CreateBranchForm";
-
-import Loader from "#components/UI/Loader/Loader";
 import BranchTable from "#components/Tables/BranchTable/BranchTable";
+import Loader from "#components/UI/Loader/Loader";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 import Modal from "#components/UI/Modal/Modal";
 
 const Business = () => {
     const { id } = useParams<{ id: string }>();
 
-    const { data, loading, error, refetch } = useFetching<IBusiness>(
+    const { data, loading, error } = useFetching<IBusiness>(
         useCallback(() => BusinessService.GetBusiness(id ? id : ""), [id])
     );
 
     const [branchCreateModal, setBranchCreateModal] = useState<boolean>(false);
+    const [branches, setBranches] = useState<IBranch[]>([])
 
     useEffect(() => {
         if (data) {
@@ -46,8 +47,8 @@ const Business = () => {
                 setVisible={setBranchCreateModal}
             >
                  {data && <CreateBranchForm
-                    refetchBranches={refetch}
                     business={data}
+                    setBranches={setBranches}
                     setModalVisible={setBranchCreateModal}
                 />}
             </Modal>
@@ -60,7 +61,8 @@ const Business = () => {
 
             {data && <BranchTable
                 business={data}
-                refetchBranches={refetch}
+                branches={branches}
+                setBranches={setBranches}
             />}
         </>
     );

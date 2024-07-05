@@ -12,19 +12,12 @@ export default class BranchService {
          })
     }
 
-    static async DeleteBranch(business_id: string, branch_id: string): Promise<AxiosResponse<number>> {
-        return await $api.delete("/branches", {
-            data: {
-                business_id,
-                branch_id,
-            },
-        });
+    static async DeleteBranch(branch_id: string): Promise<AxiosResponse<number>> {
+        return await $api.delete(`/branches/${branch_id}`);
     }
 
-    static async UpdateBranch(business_id: string, branch_id: string, name: string, city_id: number): Promise<AxiosResponse<IBranch>> {
-        return $api.put("/branches", {
-            business_id, 
-            branch_id,
+    static async UpdateBranch(branch_id: string, name: string, city_id: number): Promise<AxiosResponse<IBranch>> {
+        return $api.put(`/branches/${branch_id}`, {
             name,
             city_id
         })

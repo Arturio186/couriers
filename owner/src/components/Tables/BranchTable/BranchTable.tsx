@@ -1,4 +1,4 @@
-import { FC, useState, useCallback } from "react";
+import { FC, useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
@@ -20,19 +20,30 @@ import IBusiness from "#interfaces/IBusiness";
 
 interface BranchTableProps {
     business: IBusiness;
-    refetchBranches: (...args: any[]) => Promise<void>
+    branches: IBranch[];
+    setBranches: React.Dispatch<React.SetStateAction<IBranch[]>>;
 }
 
-const BranchTable: FC<BranchTableProps> = ({ business, refetchBranches }) => {
+const BranchTable: FC<BranchTableProps> = ({ 
+    business,
+    branches,
+    setBranches 
+}) => {
     const [isDeleting, setIsDeliting] = useState<boolean>(false)
     const [branchEditModal, setBranchEditModal] = useState<boolean>(false)
     const [targetBranch, setTargetBranch] = useState<IBranch | null>(null)
 
     const dispatch = useDispatch()
 
-    const { data, loading, error, refetch } = useFetching<IBranch[]>(
+    const { data, loading, error } = useFetching<IBranch[]>(
         useCallback(() => BranchService.GetBranches(business.id), [business])
     );
+
+    useEffect(() => {
+        if (data) {
+            setBranches(data)
+        }
+    }, [data])
 
 
     const handleEdit = (branch: IBranch) => {
@@ -40,22 +51,21 @@ const BranchTable: FC<BranchTableProps> = ({ business, refetchBranches }) => {
         setBranchEditModal(true)
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (branch: IBranch) => {
         try {
             if (isDeleting) return
-        
-            if (!business) return
             
             if (confirm("Вы уверены, что хотите удалить филиал?")) {
-                const response = await BranchService.DeleteBranch(business.id, id);
+                const response = await BranchService.DeleteBranch(branch.id);
 
                 if (response.status === 200) {
-                    await refetchBranches()
+                    setBranches(prev => prev.filter(b => b.id !== branch.id))
                     dispatch(addToast("Филиал успешно удален"))
                 }
             }
         } catch (error) {
             console.error('Ошибка при удалении ', error);
+            dispatch(addToast("Ошибка при удалении филиала"))
         } finally {
             setIsDeliting(false)
         }
@@ -75,14 +85,13 @@ const BranchTable: FC<BranchTableProps> = ({ business, refetchBranches }) => {
                 visible={branchEditModal}
                 setVisible={setBranchEditModal}
             >
-                <EditBranchForm 
-                    business={business}
+                {targetBranch && <EditBranchForm 
                     branch={targetBranch}
-                    refetchBranches={refetchBranches}
+                    setBranches={setBranches}
                     setModalVisible={setBranchEditModal}
-                />
+                />}
             </Modal>
-            {data?.length === 0 ? (
+            {branches.length === 0 ? (
                 <p className="message">Филалы отсутствуют</p>
             ) : (
                 <section className="branch__table">
@@ -95,7 +104,7 @@ const BranchTable: FC<BranchTableProps> = ({ business, refetchBranches }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data?.map((branch) => (
+                            {branches.map((branch) => (
                                 <tr key={branch.id}>
                                     <td>
                                         <Link to={`/branches/${branch.id}`} className="branch__link">
@@ -112,7 +121,7 @@ const BranchTable: FC<BranchTableProps> = ({ business, refetchBranches }) => {
 
                                         <button
                                             disabled={isDeleting}
-                                            onClick={() => handleDelete(branch.id)}
+                                            onClick={() => handleDelete(branch)}
                                         >
                                             <FaRegTrashAlt />
                                         </button>

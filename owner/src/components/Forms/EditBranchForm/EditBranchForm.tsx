@@ -15,7 +15,6 @@ import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 import darkSelectConfig from "#utils/darkSelectConfig";
 
-import IBusiness from "#interfaces/IBusiness";
 import IBranch from "#interfaces/IBranch";
 
 interface Option {
@@ -28,13 +27,12 @@ interface EditBranchField {
 }
 
 interface EditBranchFormProps {
-    business?: IBusiness;
-    branch: IBranch | null;
-    refetchBranches: (...args: any[]) => Promise<void>
+    branch: IBranch;
+    setBranches: React.Dispatch<React.SetStateAction<IBranch[]>>;
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const EditBranchForm : FC<EditBranchFormProps> = ({ business, branch, refetchBranches, setModalVisible }) => {
+const EditBranchForm : FC<EditBranchFormProps> = ({ branch, setBranches, setModalVisible }) => {
     const {
         register,
         handleSubmit,
@@ -91,31 +89,16 @@ const EditBranchForm : FC<EditBranchFormProps> = ({ business, branch, refetchBra
     const onSubmit: SubmitHandler<EditBranchField> = async (data) => {
         try {
             if (!selectedCity) {
-                alert("Выберите город")
+                dispatch(addToast("Выберите город!"))
                 return
             }
 
-            if (!business) {
-                alert("Бизнес не найден")
-                return
-            }
-
-            if (!branch) {
-                alert("Филиал не найден")
-                return
-            }
-
-            console.log({
-                data,
-                selectedCity, 
-                business,
-                branch
-            })
-
-            const response = await BranchService.UpdateBranch(business.id, branch.id, data.name, Number(selectedCity.value))
+            const response = await BranchService.UpdateBranch(branch.id, data.name, Number(selectedCity.value))
 
             if (response.status === 200) {
-                await refetchBranches()
+                setBranches(prev => 
+                    prev.map(b => b.id === branch.id ? { ...response.data, city_name: selectedCity.label, region: '' } : b)
+                )
                 dispatch(addToast("Сеть успешно изменена"))
             }
         } catch (error) {

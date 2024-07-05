@@ -30,21 +30,19 @@ export default (branchController: IBranchController) => {
     );
 
     router.delete(
-        "/",
+        "/:branch_id",
         AuthMiddleware,
         OwnerMiddleware,
-        body("business_id").notEmpty().isUUID(),
-        body("branch_id").notEmpty().isUUID(),
+        param("branch_id").notEmpty().isUUID(),
         ValidationMiddleware,
         branchController.Destroy
     )
 
     router.put(
-        "/",
+        "/:branch_id",
         AuthMiddleware,
         OwnerMiddleware,
-        body("business_id").notEmpty().isUUID(),
-        body("branch_id").notEmpty().isUUID(),
+        param("branch_id").notEmpty().isUUID(),
         body("name").notEmpty(),
         body("city_id").notEmpty().isNumeric(),
         ValidationMiddleware,

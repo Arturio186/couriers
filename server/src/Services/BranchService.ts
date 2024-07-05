@@ -57,26 +57,26 @@ class BranchService implements IBranchService {
         return new BranchDTO(createdBranch)
     }
 
-    public RemoveBranch = async (businessID: string, branchID: string, userID: string) => {
-        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(businessID, userID);
+    public RemoveBranch = async (branchID: string, userID: string) => {
+        const branch = await this.FindBranch(branchID)
+
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(branch.business_id, userID);
 
         if (!isCorrectOwner) {
             throw APIError.Forbidden("Нет доступа к бизнесу");
         }
-
-        const branch = await this.FindBranch(branchID)
         
         return await this.BranchModel.Delete({ id: branch.id })
     }; 
     
-    public UpdateBranch = async (businessID: string, branchID: string, name: string, cityID: number, userID: string) => {
-        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(businessID, userID);
+    public UpdateBranch = async (branchID: string, name: string, cityID: number, userID: string) => {
+        const branch = await this.FindBranch(branchID)
+
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(branch.business_id, userID);
 
         if (!isCorrectOwner) {
             throw APIError.Forbidden("Нет доступа к бизнесу");
         }
-
-        const branch = await this.FindBranch(branchID)
 
         const updatedBranch = await this.BranchModel.Update({ id: branch.id }, { name, city_id: cityID })
 

@@ -13,6 +13,7 @@ import CoolButton from "#components/UI/CoolButton/CoolButton";
 import darkSelectConfig from "#utils/darkSelectConfig";
 
 import IBusiness from "#interfaces/IBusiness";
+import IBranch from "#interfaces/IBranch";
 import Option from "#interfaces/Option";
 import { useDispatch } from "react-redux";
 import { addToast } from "#store/toastSlice";
@@ -23,11 +24,11 @@ interface CreateBranchField {
 
 interface CreateBranchFormProps {
     business: IBusiness;
-    refetchBranches: (...args: any[]) => Promise<void>
+    setBranches: React.Dispatch<React.SetStateAction<IBranch[]>>;
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business, refetchBranches }) => {
+const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business, setBranches }) => {
     const {
         register,
         handleSubmit,
@@ -74,23 +75,19 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
     const onSubmit: SubmitHandler<CreateBranchField> = async (data) => {
         try {
             if (!selectedCity) {
-                alert("Выберите город")
+                dispatch(addToast("Вы не выбрали город филиала"))
                 return
             }
-
-            if (!business) {
-                alert("Бизнес не найден")
-                return
-            }
-
+            
             const response = await BranchService.CreateBranch(data.name, business.id, Number(selectedCity.value))
 
             if (response.status === 200) {
-                await refetchBranches()
+                setBranches((prev) => [response.data, ...prev])
                 dispatch(addToast(`Бизнес ${data.name} успешно создан`))
             }
 
         } catch (error) {
+            dispatch(addToast(`Произошла ошибка при создании бизнеса`))
             console.log(error);
         } finally {
             setIsCreating(false);
