@@ -160,6 +160,18 @@ class UserService implements IUserService {
         })
     };
 
+    public DeleteAccount = async (password: string, userID: string) => {
+        const user = await this.UserModel.FindOne({ id: userID })
+
+        const isPassEquals = await bcrypt.compare(password, user.password);
+
+        if (!isPassEquals) {
+            throw APIError.BadRequest('Неверный пароль');
+        }
+
+        await this.UserModel.Delete({ id: user.id })
+    }
+
     public GetUserInfo = async (userID: string) => {
         const user = await this.UserModel.FindOne({ id: userID })
 

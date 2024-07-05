@@ -60,5 +60,13 @@ export default (userController: IUserController) => {
         userController.UpdatePassword
     )
 
+    router.delete(
+        "/delete-account",
+        AuthMiddleware,
+        body("password").notEmpty().isLength({ min: 6, max: 32 }),
+        ValidationMiddleware,
+        userController.DeleteAccount
+    )
+
     return router;
 };

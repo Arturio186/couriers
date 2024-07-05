@@ -116,6 +116,19 @@ class UserController implements IUserController {
             next(error)
         }
     }
+
+    public DeleteAccount = async (req: Request, res: Response, next: NextFunction) => { 
+        try {
+            const { password } = req.body;
+
+            await this.UserService.DeleteAccount(password, res.locals.user.id)
+
+            res.status(200).json("Success")
+        }
+        catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default UserController;

@@ -27,5 +27,7 @@ export default interface IUserService {
 
     UpdatePassword: (oldPassword: string, newPassword: string, userID: string) => Promise<void>
 
+    DeleteAccount: (password: string, userID: string) => Promise<void>
+
     GetUserInfo: (userID: string) => Promise<UserDTO>
 }   

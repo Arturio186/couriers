@@ -37,6 +37,10 @@ class UserModel implements IUserModel {
                 .select('users.*', 'roles.name as role')
                 .first();
     }
+
+    public Delete = async (conditions: Partial<IUser>) => {
+        return db(this.tableName).where(conditions).del();
+    };
 }
 
 export default new UserModel();

@@ -31,6 +31,14 @@ export default class AuthService {
         })
     }
 
+    static async DeleteAccount(password: string): Promise<AxiosResponse<string>> {
+        return $api.delete('/user/delete-account', {
+            data: {
+                password
+            }
+        })
+    }
+
     static async GetUserInfo(): Promise<AxiosResponse<IUser>> {
         return $api.get('/user')
     }

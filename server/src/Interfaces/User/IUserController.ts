@@ -9,4 +9,5 @@ export default interface IUserController {
     Edit: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Profile: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     UpdatePassword: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    DeleteAccount: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }
