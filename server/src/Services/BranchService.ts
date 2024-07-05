@@ -5,6 +5,7 @@ import IBusinessService from "../Interfaces/Business/IBusinessService";
 import APIError from "../Exceptions/APIError";
 import BranchDTO from "../DTO/BranchDTO";
 import ICityService from "../Interfaces/City/ICityService";
+import IBranchStaff from "../Interfaces/Branch/IBranchStaff";
 
 class BranchService implements IBranchService {
     private readonly BranchModel: IBranchModel;
@@ -81,6 +82,10 @@ class BranchService implements IBranchService {
         const updatedBranch = await this.BranchModel.Update({ id: branch.id }, { name, city_id: cityID })
 
         return new BranchDTO(updatedBranch)
+    };
+
+    public GetBranchesByUserID = async (userID: string) => {
+        return await this.BranchModel.GetUserBranches(userID)
     };
 }
 

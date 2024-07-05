@@ -5,4 +5,5 @@ export default interface IBranchController {
     Update: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Destroy: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     GetByBusiness: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    GetUserBranches: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

@@ -49,7 +49,12 @@ export default (branchController: IBranchController) => {
         branchController.Update
     );
 
-
+    router.get( // Эндпоинт для андроид приложения
+        "/my",
+        query("user_id").isUUID(),
+        ValidationMiddleware,
+        branchController.GetUserBranches
+    )
 
     return router;
 };
