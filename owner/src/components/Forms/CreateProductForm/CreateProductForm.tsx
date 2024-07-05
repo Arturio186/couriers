@@ -35,6 +35,7 @@ const CreateProductForm: FC<CreateProductFormProps> = ({
         register,
         handleSubmit,
         formState: { errors },
+        reset
     } = useForm<CreateProductField>({ mode: "onBlur" });
 
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -63,6 +64,7 @@ const CreateProductForm: FC<CreateProductFormProps> = ({
         } finally {
             setIsCreating(false);
             setModalVisible(false);
+            reset()
         }
     };
 

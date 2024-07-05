@@ -33,6 +33,7 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
         register,
         handleSubmit,
         formState: { errors },
+        reset
     } = useForm<CreateBranchField>({ mode: "onBlur" });
 
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -92,6 +93,7 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
         } finally {
             setIsCreating(false);
             setModalVisible(false);
+            reset()
         }
     };
 

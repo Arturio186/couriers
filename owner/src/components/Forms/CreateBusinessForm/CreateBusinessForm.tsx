@@ -30,6 +30,7 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
         register,
         handleSubmit,
         formState: { errors },
+        reset
     } = useForm<CreateBusinessField>({ mode: "onBlur" });
 
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -62,6 +63,7 @@ const CreateBusinessForm: FC<CreateBusinessFormProps> = ({
         } finally {
             setIsCreating(false)
             setModalVisible(false)
+            reset()
         }
     };
 

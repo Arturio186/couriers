@@ -34,6 +34,7 @@ const CreateCategoryForm: FC<CreateCategoryFormProps> = ({
         register,
         handleSubmit,
         formState: { errors },
+        reset
     } = useForm<CreateCategoryField>({ mode: "onBlur" });
 
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -58,6 +59,7 @@ const CreateCategoryForm: FC<CreateCategoryFormProps> = ({
         } finally {
             setIsCreating(false)
             setModalVisible(false)
+            reset()
         }
     };
 
