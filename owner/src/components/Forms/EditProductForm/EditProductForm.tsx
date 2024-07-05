@@ -34,7 +34,8 @@ const EditProductForm: FC<EditProductFormProps> = ({
         register,
         handleSubmit,
         formState: { errors },
-        setValue
+        setValue,
+        reset
     } = useForm<EditProductField>({ mode: "onBlur" });
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -65,6 +66,7 @@ const EditProductForm: FC<EditProductFormProps> = ({
         } finally {
             setIsEditing(false)
             setModalVisible(false)
+            reset()
         }
     };
 

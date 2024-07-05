@@ -1,6 +1,7 @@
 import $api from "../http";
 import { AxiosResponse } from 'axios';
 import { AuthResponse } from "#interfaces/response/AuthResponse";
+import IUser from "#interfaces/IUser";
 
 export default class AuthService {
     static async Login(email: string, password: string): Promise<AxiosResponse<AuthResponse>> {
@@ -13,5 +14,17 @@ export default class AuthService {
 
     static async Logout(): Promise<void> {
         return $api.post('/user/logout')
+    }
+
+    static async EditProfile(first_name: string, last_name: string, email: string): Promise<AxiosResponse<IUser>> {
+        return $api.patch('/user/edit-profile', {
+            first_name,
+            last_name,
+            email
+        })
+    }
+
+    static async GetUserInfo(): Promise<AxiosResponse<IUser>> {
+        return $api.get('/user')
     }
 }

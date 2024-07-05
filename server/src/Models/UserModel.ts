@@ -12,10 +12,16 @@ class UserModel implements IUserModel {
         return newUser;
     };
 
-    public Update = async (conditions: Partial<IUser>, data: Partial<IUser>): Promise<number> => {
-        return db(this.tableName)
+    public Update = async (conditions: Partial<IUser>, data: Partial<IUser>): Promise<IUser> => {
+        const [updatedUser] = await db(this.tableName)
                 .where(conditions)
-                .update(data);
+                .update({
+                    ...data,
+                    updated_at: db.fn.now()
+                })
+                .returning<IUser[]>('*');
+
+        return updatedUser;
     }
 
     public FindOne = async (conditions: Partial<IUser>): Promise<IUser | undefined> => {

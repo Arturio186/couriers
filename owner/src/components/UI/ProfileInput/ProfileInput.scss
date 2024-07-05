@@ -1,0 +1,25 @@
+$white-color: hsl(0, 0%, 80%);
+$small-font-size: .750rem;
+$font-medium: 500;
+
+.profile__input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 60%;
+}
+
+.profile__input-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: none;
+    color: $white-color;
+
+    border-radius: 0.3rem;
+    border: 1px solid $white-color;
+    outline: none;
+}
+
+.profile__input-label {
+    font-weight: bold;
+}

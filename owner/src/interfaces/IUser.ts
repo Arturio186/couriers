@@ -1,6 +1,8 @@
 export default interface IUser {
-    email: string;
     id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
     role: string;
     isActivated: boolean;
 }

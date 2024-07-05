@@ -13,6 +13,7 @@ import Businesses from "#pages/Businesses/Businesses";
 import Business from "#pages/Business/Business";
 import Branch from "#pages/Branch/Branch";
 import Catalog from "#pages/Catalog/Catalog";
+import Dashboard from "#pages/Dashboard/Dashboard";
 
 import { DASHBOARD_ROUTE, BUSINESSES_ROUTE, STATISTIC_ROUTE, CATALOG_ROUTE, BRANCH_ROUTE } from "#utils/consts";
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "#utils/consts";
@@ -30,7 +31,7 @@ export const privateRoutes: IRoute[] = [
             { path: BUSINESSES_ROUTE, element: <Businesses />, title: "Сети", icon: <FaCity /> },
             { path: CATALOG_ROUTE, element: <Catalog />, title: "Каталог", icon: <FaShoppingBasket /> },
             { path: STATISTIC_ROUTE, element: <p>Statistic</p>, title: "Статистика", icon: <FaChartBar /> },
-            { path: DASHBOARD_ROUTE, element: <p>Dashboard</p>, title: "Личный кабинет", icon: <FaUser /> },
+            { path: DASHBOARD_ROUTE, element: <Dashboard />, title: "Личный кабинет", icon: <FaUser /> },
             { path: "*", element: <NotFound />, title: "Страница не найдена" }
         ],
     },

@@ -1,6 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
-import APIError from "../Exceptions/APIError";
 
 import IUserService from "../Interfaces/User/IUserService";
 import IUserController from "../Interfaces/User/IUserController";
@@ -74,6 +72,32 @@ class UserController implements IUserController {
             res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
 
             res.status(200).json(userData);
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
+    public Edit = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { first_name, last_name, email } = req.body;
+
+            const updatedUser = await this.UserService.EditProfileInfo(first_name, last_name || "", email, res.locals.user.id)
+
+            console.log(updatedUser)
+
+            res.status(200).json(updatedUser)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
+    public Profile = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userInfo = await this.UserService.GetUserInfo(res.locals.user.id)
+
+            res.status(200).json(userInfo)
         }
         catch (error) {
             next(error)

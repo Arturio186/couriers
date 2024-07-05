@@ -23,6 +23,7 @@ export default interface IUserService {
 
     Logout: (refreshToken: string) => Promise<void>
 
-    
-    
+    EditProfileInfo: (firstName: string, lastName: string, email: string, userID: string) => Promise<UserDTO>
+
+    GetUserInfo: (userID: string) => Promise<UserDTO>
 }   

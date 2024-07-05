@@ -12,6 +12,7 @@ import UserDTO from "../DTO/UserDTO";
 
 import APIError from "../Exceptions/APIError";
 import IRoleService from "../Interfaces/Role/IRoleService";
+import IUser from "../Interfaces/User/IUser";
 
 class UserService implements IUserService {
     private readonly UserModel: IUserModel;
@@ -24,7 +25,7 @@ class UserService implements IUserService {
         this.RoleService = roleService;
     }
 
-    Registration = async (name: string, email: string, password: string, role: string) => {
+    public Registration = async (name: string, email: string, password: string, role: string) => {
         const candidate = await this.UserModel.FindOne({email});
 
         if (candidate) {
@@ -55,7 +56,7 @@ class UserService implements IUserService {
         return { ...tokens, user: userDTO };
     };
 
-    Activate = async (link: string) => {
+    public Activate = async (link: string) => {
         const user = await this.UserModel.FindOne({ activation_link: link })
 
         if (!user) {
@@ -65,7 +66,7 @@ class UserService implements IUserService {
         await this.UserModel.Update({ id: user.id }, { is_email_activated: true })
     }
 
-    Login = async (email: string, password: string) => {
+    public Login = async (email: string, password: string) => {
         const user = await this.UserModel.FindOne({email})
         if (!user) {
             throw APIError.BadRequest('Пользователь с таким email не найден')
@@ -85,11 +86,11 @@ class UserService implements IUserService {
         return {...tokens, user: userDTO}
     }
 
-    Logout = async (refreshToken: string) => {
+    public Logout = async (refreshToken: string) => {
         await this.RefreshSessionService.RemoveToken(refreshToken);
     }
 
-    Refresh = async (refreshToken: string) => {
+    public Refresh = async (refreshToken: string) => {
         if (!refreshToken) {
             throw APIError.Unauthorized();
         }
@@ -110,6 +111,39 @@ class UserService implements IUserService {
         return {...tokens, user: userDTO}
     }
 
+    public EditProfileInfo = async (firstName: string, lastName: string, email: string, userID: string) => {
+        const candidate = await this.UserModel.FindOne({ email });
+
+        const user = await this.UserModel.FindOne({ id: userID })
+
+        if (candidate && user.id !== candidate.id) {
+            throw APIError.BadRequest(`Пользователь с email ${email} уже существует!`);
+        }
+
+        const updatedFields: Partial<IUser> = {
+            first_name: firstName,
+            last_name: lastName,
+        }
+
+        if (user.email != email) {
+            const newActivationLink = v4();
+            updatedFields.email = email;
+            updatedFields.activation_link = newActivationLink;
+            updatedFields.is_email_activated = false;
+
+            await MailSender.SendActivationMail(email, `${process.env.API_URL}/api/user/activate?link=${newActivationLink}`);
+        }
+
+        const updatedUser = await this.UserModel.Update({ id: user.id }, updatedFields)
+
+        return new UserDTO(updatedUser)
+    }
+
+    public GetUserInfo = async (userID: string) => {
+        const user = await this.UserModel.FindOne({ id: userID })
+
+        return new UserDTO(user)
+    }
 
 }
 

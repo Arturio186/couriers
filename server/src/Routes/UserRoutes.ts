@@ -3,6 +3,7 @@ import { body, query } from "express-validator";
 
 import IUserController from "../Interfaces/User/IUserController";
 import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
+import AuthMiddleware from "../Middlewares/AuthMiddleware";
 
 export default (userController: IUserController) => {
     const router = Router();
@@ -33,6 +34,21 @@ export default (userController: IUserController) => {
 
     router.post("/logout", userController.Logout);
     router.get("/refresh", userController.Refresh);
+
+    router.get(
+        "/",
+        AuthMiddleware,
+        userController.Profile
+    )
+
+    router.patch("/edit-profile",
+        AuthMiddleware,
+        body("first_name").notEmpty().isLength({ max: 50 }),
+        body("last_name").isLength({ max: 50 }),
+        body("email").isEmail(),
+        ValidationMiddleware,
+        userController.Edit
+    )
 
     return router;
 };

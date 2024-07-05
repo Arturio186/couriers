@@ -59,6 +59,10 @@ const RegisterForm = () => {
                     type="text"
                     register={register("name", {
                         required: "Введите Ваше имя",
+                        maxLength: {
+                            value: 50,
+                            message: "Имя должен быть не более 50 символов",
+                        },
                     })}
                     error={errors.name}
                 />
