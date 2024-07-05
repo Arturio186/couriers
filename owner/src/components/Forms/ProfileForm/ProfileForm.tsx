@@ -40,7 +40,7 @@ const ProfileForm = () => {
 
     useEffect(() => {
         if (data) {
-            setUser(data)
+            dispatch(setUser(data))
             setValue('email', data.email)
             setValue('name', data.firstName)
             setValue('surname', data.lastName)
@@ -56,7 +56,9 @@ const ProfileForm = () => {
             const response = await AuthService.EditProfile(data.name, data.surname, data.email)
 
             if (response.status === 200) {
-                setUser(response.data)
+                dispatch(setUser(response.data))
+                console.log(response.data)
+                console.log(user)
                 dispatch(addToast(`Информация обновлена`));
             }
         }

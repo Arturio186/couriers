@@ -103,6 +103,19 @@ class UserController implements IUserController {
             next(error)
         }
     }
+
+    public UpdatePassword = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { old_password, new_password } = req.body;
+
+            await this.UserService.UpdatePassword(old_password, new_password, res.locals.user.id)
+
+            res.status(200).json("Success")
+        }
+        catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default UserController;

@@ -8,4 +8,5 @@ export default interface IUserController {
     Refresh: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Edit: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Profile: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    UpdatePassword: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

@@ -41,13 +41,23 @@ export default (userController: IUserController) => {
         userController.Profile
     )
 
-    router.patch("/edit-profile",
+    router.patch(
+        "/edit-profile",
         AuthMiddleware,
         body("first_name").notEmpty().isLength({ max: 50 }),
         body("last_name").isLength({ max: 50 }),
         body("email").isEmail(),
         ValidationMiddleware,
         userController.Edit
+    )
+
+    router.patch(
+        "/update-password",
+        AuthMiddleware,
+        body("old_password").notEmpty().isLength({ min: 6, max: 32 }),
+        body("new_password").notEmpty().isLength({ min: 6, max: 32 }),
+        ValidationMiddleware,
+        userController.UpdatePassword
     )
 
     return router;

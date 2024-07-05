@@ -24,6 +24,13 @@ export default class AuthService {
         })
     }
 
+    static async UpdatePassword(old_password: string, new_password: string): Promise<AxiosResponse<string>> {
+        return $api.patch('/user/update-password', {
+            old_password,
+            new_password
+        })
+    }
+
     static async GetUserInfo(): Promise<AxiosResponse<IUser>> {
         return $api.get('/user')
     }

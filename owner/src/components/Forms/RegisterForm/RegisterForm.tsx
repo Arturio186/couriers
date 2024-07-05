@@ -106,7 +106,7 @@ const RegisterForm = () => {
                             if (watch('password') != val) {
                               return "Пароли не совпадают!";
                             }
-                          },
+                        },
                     })}
                     error={errors.confirmPassword}
                 />

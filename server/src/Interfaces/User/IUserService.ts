@@ -25,5 +25,7 @@ export default interface IUserService {
 
     EditProfileInfo: (firstName: string, lastName: string, email: string, userID: string) => Promise<UserDTO>
 
+    UpdatePassword: (oldPassword: string, newPassword: string, userID: string) => Promise<void>
+
     GetUserInfo: (userID: string) => Promise<UserDTO>
 }   

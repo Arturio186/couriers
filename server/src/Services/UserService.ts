@@ -67,7 +67,8 @@ class UserService implements IUserService {
     }
 
     public Login = async (email: string, password: string) => {
-        const user = await this.UserModel.FindOne({email})
+        const user = await this.UserModel.FindOne({ email })
+
         if (!user) {
             throw APIError.BadRequest('Пользователь с таким email не найден')
         }
@@ -138,6 +139,26 @@ class UserService implements IUserService {
 
         return new UserDTO(updatedUser)
     }
+
+    public UpdatePassword = async (oldPassword: string, newPassword: string, userID: string) => {
+        if (oldPassword === newPassword) {
+            throw APIError.BadRequest(`Старый и новый пароли совпадают`);
+        }
+
+        const user = await this.UserModel.FindOne({ id: userID })
+
+        const isPassEquals = await bcrypt.compare(oldPassword, user.password);
+
+        if (!isPassEquals) {
+            throw APIError.BadRequest('Неверный пароль');
+        }
+
+        const hashPassword = await bcrypt.hash(newPassword, 5);
+
+        await this.UserModel.Update({ id: user.id }, {
+            password: hashPassword
+        })
+    };
 
     public GetUserInfo = async (userID: string) => {
         const user = await this.UserModel.FindOne({ id: userID })
