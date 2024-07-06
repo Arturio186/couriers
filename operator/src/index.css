@@ -1,6 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   
   box-sizing: border-box;
+
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  background-color: #111;
+}
+
+.message {
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+&::-webkit-scrollbar {
+  width: 2px;
+}
+
+&::-webkit-scrollbar-thumb {
+  background-color: #9e9e9e;
+  border: none;
+  border-radius: 20px;
 }

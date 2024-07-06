@@ -1,0 +1,64 @@
+$white-color: hsl(0, 0%, 100%);
+$small-font-size: .750rem;
+$font-medium: 500;
+
+.cool__input {
+    padding-right: 1rem;
+    border-bottom: 2px solid $white-color;
+}
+
+.cool__input-group {
+    position: relative;
+    width: 100%;
+}
+
+.cool__input-input {
+    width: 100%;
+    padding-block: 0.8rem;
+    background: none;
+    color: $white-color;
+    position: relative;
+    z-index: 1;
+
+    border: none;
+    outline: none;
+}
+
+.cool__input-input:focus + .cool__input-label {
+    top: -12px;
+    font-size: $small-font-size;
+}
+  
+.cool__input-input:not(:placeholder-shown).cool__input-input:not(:focus) + .cool__input-label {
+    top: -12px;
+    font-size: $small-font-size;
+}
+
+.cool__input-label {
+    position: absolute;
+    left: 0;
+    top: 13px;
+    font-weight: $font-medium;
+    transition: top 0.3s, font-size 0.3s;
+}
+
+.cool__input-input:focus + .cool__input-label {
+    top: -12px;
+    font-size: $small-font-size;
+}
+
+.cool__input-input:not(:placeholder-shown).cool__input-input:not(:focus) + .cool__input-label {
+    top: -12px;
+    font-size: $small-font-size;
+}
+
+.cool__input-error {
+    border-bottom: 2px solid red;
+}
+
+.error__message {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-top: 5px;
+    color: #ff0000;
+}

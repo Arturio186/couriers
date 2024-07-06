@@ -1,0 +1,20 @@
+$white-color: hsl(0, 0%, 100%);
+$white-color-hover: hsl(0, 0%, 90%);
+$font-medium: 500;
+
+.cool__button {
+    padding: 0.7rem;
+    border-radius: 0.5rem;
+    background-color: $white-color;
+    font-weight: $font-medium;
+    cursor: pointer;
+
+    transition: background-color 0.3s ease;
+
+    border: none;
+    outline: none;
+
+    &:hover {
+        background-color: $white-color-hover;
+    }
+}

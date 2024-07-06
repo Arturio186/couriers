@@ -1,11 +1,7 @@
-import { FC } from 'react';
- 
-const App : FC = () => {
-  return (
-    <>
-      owner
-    </>
-  )
-}
+import { FC } from "react";
 
-export default App
+const App: FC = () => {
+    return <>operator</>;
+};
+
+export default App;
