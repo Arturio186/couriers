@@ -7,17 +7,20 @@ import IUser from '#interfaces/IUser';
 import { AuthResponse } from '#interfaces/response/AuthResponse';
 
 import { API_URL } from '#utils/consts';
+import IBranch from '#interfaces/IBranch';
 
 interface UserState {
     data: IUser;
     isAuth: boolean;
     isLoading: boolean;
+    currentBranch: IBranch | null;
 }
 
 const initialState: UserState = {
     data: {} as IUser,
     isAuth: false,
     isLoading: false,
+    currentBranch: null
 };
 
 export const login = createAsyncThunk(
@@ -78,7 +81,10 @@ const userSlice = createSlice({
         setLoading(state, action: PayloadAction<boolean>) {
             state.isLoading = action.payload;
         },
-    },
+        setCurrentBranch(state, action: PayloadAction<IBranch>) {
+            state.currentBranch = action.payload;
+        }
+     },
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
@@ -115,6 +121,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { setAuth, setUser, setLoading } = userSlice.actions;
+export const { setAuth, setUser, setLoading, setCurrentBranch } = userSlice.actions;
 
 export default userSlice.reducer;

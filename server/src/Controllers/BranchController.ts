@@ -63,7 +63,13 @@ class BranchController implements IBranchController {
         }
     }
 
-    public GetUserBranches = async (req: Request, res: Response, next: NextFunction) => {
+    public GetUserBranches = async (req: Request, res: Response, next: NextFunction) => { 
+        const branches = await this.BranchService.GetBranchesByUserID(res.locals.user.id);
+
+        res.status(200).json(branches)
+    }
+
+    public GetAndroidUserBranches = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { user_id } = req.query
 

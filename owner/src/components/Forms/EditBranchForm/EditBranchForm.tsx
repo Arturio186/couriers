@@ -16,11 +16,7 @@ import CoolButton from "#components/UI/CoolButton/CoolButton";
 import darkSelectConfig from "#utils/darkSelectConfig";
 
 import IBranch from "#interfaces/IBranch";
-
-interface Option {
-    value: string;
-    label: string;
-}
+import Option from "#interfaces/Option";
 
 interface EditBranchField {
     name: string;

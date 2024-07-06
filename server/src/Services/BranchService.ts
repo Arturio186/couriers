@@ -6,6 +6,7 @@ import APIError from "../Exceptions/APIError";
 import BranchDTO from "../DTO/BranchDTO";
 import ICityService from "../Interfaces/City/ICityService";
 import IBranchStaff from "../Interfaces/Branch/IBranchStaff";
+import BranchStaffDTO from "../DTO/BranchStaffDTO";
 
 class BranchService implements IBranchService {
     private readonly BranchModel: IBranchModel;
@@ -85,7 +86,9 @@ class BranchService implements IBranchService {
     };
 
     public GetBranchesByUserID = async (userID: string) => {
-        return await this.BranchModel.GetUserBranches(userID)
+        return (await this.BranchModel.GetUserBranches(userID)).map(
+            branchStaff => new BranchStaffDTO(branchStaff)
+        )
     };
 }
 

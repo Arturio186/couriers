@@ -1,6 +1,6 @@
 import BranchDTO from "../../DTO/BranchDTO"
+import BranchStaffDTO from "../../DTO/BranchStaffDTO";
 import IBranch from "./IBranch";
-import IBranchStaff from "./IBranchStaff";
 
 export default interface IBranchService {
     FindBranch: (branchID: string) => Promise<IBranch>
@@ -9,5 +9,5 @@ export default interface IBranchService {
     UpdateBranch: (branchID: string, name: string, cityID: number, userID: string) => Promise<BranchDTO>;
     GetBranchesByBusinessID: (businessID: string, userID: string) => Promise<BranchDTO[]>;
 
-    GetBranchesByUserID: (userID: string) => Promise<IBranchStaff[]>
+    GetBranchesByUserID: (userID: string) => Promise<BranchStaffDTO[]>
 }

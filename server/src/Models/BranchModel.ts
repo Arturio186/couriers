@@ -6,7 +6,8 @@ import IBranchStaff from "../Interfaces/Branch/IBranchStaff";
 
 class BranchModel implements IBranchModel {
     private readonly tableName = "branches";
-    private readonly cityTableName = "cities"
+    private readonly businessesTableName = "businesses"
+    private readonly citiesTableName = "cities"
     private readonly staffTableName = "branch_user"
 
     public Create = async (branch: IBranch): Promise<IBranch> => {
@@ -33,9 +34,9 @@ class BranchModel implements IBranchModel {
 
     public FindAll = async (conditions: Partial<IBranch>) : Promise<IBranch[] | undefined> => {
         return db(this.tableName)
-            .join(this.cityTableName, `${this.cityTableName}.id`, '=', `${this.tableName}.city_id`)
+            .join(this.citiesTableName, `${this.citiesTableName}.id`, '=', `${this.tableName}.city_id`)
             .where(conditions)
-            .select(`${this.tableName}.*`, `${this.cityTableName}.name as city_name`, `${this.cityTableName}.region as region`)
+            .select(`${this.tableName}.*`, `${this.citiesTableName}.name as city_name`, `${this.citiesTableName}.region as region`)
             .orderBy("created_at", "desc");
     }
 
@@ -46,8 +47,15 @@ class BranchModel implements IBranchModel {
     public GetUserBranches = async (userID: string) => {
         return db(this.staffTableName)
             .join(this.tableName, `${this.staffTableName}.branch_id`, '=', `${this.tableName}.id`)
+            .join(this.citiesTableName, `${this.tableName}.city_id`, '=', `${this.citiesTableName}.id`)
+            .join(this.businessesTableName, `${this.tableName}.business_id`, '=', `${this.businessesTableName}.id`)
             .where({ user_id: userID })
-            .select(`${this.staffTableName}.*`, `${this.tableName}.name as branch_name`)
+            .select(
+                `${this.staffTableName}.*`,
+                `${this.tableName}.name as branch_name`,
+                `${this.businessesTableName}.name as business_name`,
+                `${this.citiesTableName}.coords as city_coords` 
+            )
     }
 }
 

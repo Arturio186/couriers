@@ -5,6 +5,7 @@ import AuthMiddleware from "../Middlewares/AuthMiddleware";
 import OwnerMiddleware from "../Middlewares/OwnerMiddleware";
 import IBranchController from "../Interfaces/Branch/IBranchController";
 import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
+import OperatorMiddleware from "../Middlewares/OperatorMiddleware";
 
 export default (branchController: IBranchController) => {
     const router = Router();
@@ -49,11 +50,18 @@ export default (branchController: IBranchController) => {
         branchController.Update
     );
 
-    router.get( // Эндпоинт для андроид приложения
+    router.get(
         "/my",
+        AuthMiddleware,
+        OperatorMiddleware,
+        branchController.GetUserBranches
+    )
+
+    router.get(
+        "/android-my",
         query("user_id").isUUID(),
         ValidationMiddleware,
-        branchController.GetUserBranches
+        branchController.GetAndroidUserBranches
     )
 
     return router;
