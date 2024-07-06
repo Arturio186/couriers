@@ -54,6 +54,7 @@ class BranchModel implements IBranchModel {
                 `${this.staffTableName}.*`,
                 `${this.tableName}.name as branch_name`,
                 `${this.businessesTableName}.name as business_name`,
+                `${this.businessesTableName}.id as business_id`,
                 `${this.citiesTableName}.coords as city_coords` 
             )
     }

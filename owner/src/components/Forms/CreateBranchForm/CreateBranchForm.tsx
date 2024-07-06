@@ -83,7 +83,7 @@ const CreateBranchForm: FC<CreateBranchFormProps> = ({ setModalVisible, business
             const response = await BranchService.CreateBranch(data.name, business.id, Number(selectedCity.value))
 
             if (response.status === 200) {
-                setBranches((prev) => [response.data, ...prev])
+                setBranches((prev) => [{ ...response.data, city_name: selectedCity.label, region: '' }, ...prev])
                 dispatch(addToast(`Бизнес ${data.name} успешно создан`))
             }
 

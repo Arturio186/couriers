@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import './SelectBranch.scss'
 
 import { setCurrentBranch } from "#store/userSlice";
-import { RootState, AppDispatch } from "#store/store";
+import { RootState } from "#store/store";
 
 import darkSelectConfig from "#utils/darkSelectConfig";
 
@@ -64,6 +64,7 @@ const SelectBranch: FC<SelectBranchProps> = ({ setModalVisible }) => {
             dispatch(setCurrentBranch({
                 id: branchStaff.branch_id,
                 name: branchStaff.branch_name,
+                business_id: branchStaff.business_id,
                 coords: branchStaff.city_coords
             }))
 
