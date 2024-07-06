@@ -11,6 +11,11 @@ $main-text-color: #fff;
 
     background-color: $background-color;
     color: $main-text-color;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
 }
 
 .main-content.shifted {
