@@ -7,7 +7,7 @@ import "./LoginForm.scss";
 import { AppDispatch } from "#store/store";
 
 import { login } from "#store/userSlice";
-import { BUSINESSES_ROUTE, REGISTER_ROUTE } from "#utils/consts";
+import { REGISTER_ROUTE } from "#utils/consts";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import AuthButton from "#components/UI/AuthButton/AuthButton";

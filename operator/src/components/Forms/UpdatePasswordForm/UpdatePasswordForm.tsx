@@ -1,13 +1,11 @@
-import { useEffect, useCallback, useState } from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "#store/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "#store/store";
 import "./UpdatePasswordForm.scss";
 
 import ProfileInput from "#components/UI/ProfileInput/ProfileInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
-
-import IUser from "#interfaces/IUser";
 
 import AuthService from "#services/AuthService";
 

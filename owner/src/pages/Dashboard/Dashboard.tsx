@@ -1,4 +1,3 @@
-import React from "react";
 import './Dashboard.scss'
 import ProfileForm from "#components/Forms/ProfileForm/ProfileForm";
 import UpdatePasswordForm from "#components/Forms/UpdatePasswordForm/UpdatePasswordForm";

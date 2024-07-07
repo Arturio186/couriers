@@ -1,7 +1,7 @@
-import { useEffect, useCallback, useState } from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "#store/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "#store/store";
 import "./DeleteAccountForm.scss";
 
 import ProfileInput from "#components/UI/ProfileInput/ProfileInput";

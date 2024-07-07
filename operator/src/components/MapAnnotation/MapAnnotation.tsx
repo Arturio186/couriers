@@ -1,4 +1,3 @@
-import React from 'react';
 import Blue from '#assets/Blue.svg'
 import Red from '#assets/Red.svg'
 import Green from '#assets/Green.svg'

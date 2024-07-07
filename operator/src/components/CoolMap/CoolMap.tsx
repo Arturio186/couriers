@@ -1,13 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {
-    YMaps,
-    Map,
-    Placemark,
-    Button,
-    Clusterer,
-    SearchControl,
-} from "@pbe/react-yandex-maps";
+import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 import io from "socket.io-client";
 import "./CoolMap.scss";
 
@@ -42,8 +35,8 @@ const CoolMap = () => {
     const [couriers, setCouriers] = useState<ICourier[]>([]);
 
     useEffect(() => {
-        console.log(couriers)
-    }, [couriers])
+        console.log(couriers);
+    }, [couriers]);
 
     useEffect(() => {
         if (user.currentBranch?.id) {
