@@ -1,14 +1,107 @@
-import React, { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { YMaps, Map, Placemark, Button, Clusterer, SearchControl } from "@pbe/react-yandex-maps";
-import './CoolMap.scss'
+import {
+    YMaps,
+    Map,
+    Placemark,
+    Button,
+    Clusterer,
+    SearchControl,
+} from "@pbe/react-yandex-maps";
+import io from "socket.io-client";
+import "./CoolMap.scss";
 
 import { RootState } from "#store/store";
 import MapAnnotation from "#components/MapAnnotation/MapAnnotation";
 
+interface ICourier {
+    id: string;
+    firstName: string;
+    lastName: string;
+    lat: number;
+    long: number;
+}
+
+interface CourierLocationMessage {
+    userId: string;
+    lat: number;
+    long: number;
+}
+
+interface CourierConnectionMessage {
+    userId: string;
+    userBranchId: string;
+    userFirstName: string;
+    userLastName: string;
+}
+
 const CoolMap = () => {
     const user = useSelector((state: RootState) => state.user);
     const mapRef = useRef<ymaps.Map | null>(null);
+
+    const [couriers, setCouriers] = useState<ICourier[]>([]);
+
+    useEffect(() => {
+        console.log(couriers)
+    }, [couriers])
+
+    useEffect(() => {
+        if (user.currentBranch?.id) {
+            const socket = io("http://localhost:3001", {
+                withCredentials: true,
+            });
+
+            socket.emit("new_operator", { branchId: user.currentBranch.id });
+
+            socket.on("location_update", (message: CourierLocationMessage) => {
+                console.log("Курьер отправил локацию:", message);
+
+                setCouriers((prev) => {
+                    return prev.map((courier) => {
+                        if (courier.id === message.userId) {
+                            (courier.lat = message.lat),
+                                (courier.long = message.long);
+                        }
+
+                        return courier;
+                    });
+                });
+            });
+
+            socket.on(
+                "courier_connected",
+                (message: CourierConnectionMessage) => {
+                    console.log("Подключился курьер:", message);
+
+                    setCouriers((prev) => [
+                        ...prev,
+                        {
+                            id: message.userId,
+                            firstName: message.userFirstName,
+                            lastName: message.userLastName,
+                            lat: -1,
+                            long: -1,
+                        },
+                    ]);
+                }
+            );
+
+            socket.on(
+                "courier_disconnected",
+                (message: CourierConnectionMessage) => {
+                    console.log("Курьер отключился:", message);
+
+                    setCouriers((prev) =>
+                        prev.filter((courier) => courier.id !== message.userId)
+                    );
+                }
+            );
+
+            return () => {
+                socket.disconnect();
+            };
+        }
+    }, [user.currentBranch?.id]);
 
     return (
         <YMaps
@@ -34,7 +127,31 @@ const CoolMap = () => {
                     }}
                     instanceRef={(map) => (mapRef.current = map)}
                     options={{ suppressMapOpenBlock: true }}
-                ></Map>
+                >
+                    {couriers.map((courier) => {
+                        if (courier.lat === -1 || courier.long === -1) {
+                            return null;
+                        }
+
+                        return (
+                            <Placemark
+                                key={courier.id}
+                                geometry={{
+                                    type: "Point",
+                                    coordinates: [courier.lat, courier.long],
+                                }}
+                                options={{
+                                    preset: "islands#circleIcon",
+                                    iconColor: "blue",
+                                }}
+                                properties={{
+                                    hintContent: `${courier.firstName} ${courier.lastName}`,
+                                    balloonContent: `${courier.firstName} ${courier.lastName}`,
+                                }}
+                            />
+                        );
+                    })}
+                </Map>
                 <MapAnnotation />
             </div>
         </YMaps>

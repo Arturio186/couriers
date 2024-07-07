@@ -21,6 +21,7 @@
     "react-router-dom": "^6.23.1",
     "react-select": "^5.8.0",
     "sass": "^1.77.1",
+    "socket.io-client": "^4.7.5",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "@types/react-dom": "^18.2.22",
     "@types/react-redux": "^7.1.33",
     "@types/redux": "^3.6.0",
+    "@types/socket.io-client": "^3.0.0",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
