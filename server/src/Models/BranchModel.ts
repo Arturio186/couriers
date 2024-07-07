@@ -53,8 +53,8 @@ class BranchModel implements IBranchModel {
             .select(
                 `${this.staffTableName}.*`,
                 `${this.tableName}.name as branch_name`,
-                `${this.businessesTableName}.name as business_name`,
                 `${this.businessesTableName}.id as business_id`,
+                `${this.businessesTableName}.name as business_name`,
                 `${this.citiesTableName}.coords as city_coords` 
             )
     }

@@ -4,7 +4,7 @@ import { FaSignOutAlt, FaBars } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import "./SideBar.scss"
 
-import {  AppDispatch } from "#store/store";
+import { AppDispatch } from "#store/store";
 import { logout } from "#store/userSlice";
 import { privateRoutes } from "#routes/routes"; 
 

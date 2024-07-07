@@ -8,25 +8,29 @@ import AuthRouter from "./AuthRouter";
 import GuestRouter from "./GuestRouter";
 import Loader from "#components/UI/Loader/Loader";
 
+import Forbidden from "#components/Forbidden/Forbidden";
+
 const AppRouter: FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector((state: RootState) => state.user);
     const [isFirstInit, setIsFirstInit] = useState<boolean>(true);
 
     useEffect(() => {
-        if (localStorage.getItem('token')) {
-            dispatch(checkAuth())
+        if (localStorage.getItem("token")) {
+            dispatch(checkAuth());
         }
 
-        setIsFirstInit(false)
-    }, [])
-
+        setIsFirstInit(false);
+    }, []);
 
     if (user.isLoading || isFirstInit) {
-        return <Loader />
+        return <Loader />;
     }
 
-    return user.isAuth ? <AuthRouter /> : <GuestRouter />;
+    return user.isAuth ? 
+        user.data.role === "operator" ? <AuthRouter /> : <Forbidden />
+        : 
+        <GuestRouter />;
 };
 
 export default AppRouter;

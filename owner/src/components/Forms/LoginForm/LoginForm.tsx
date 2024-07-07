@@ -37,7 +37,7 @@ const LoginForm = () => {
         try {
             await dispatch(login({ email: data.email, password: data.password })).unwrap();
 
-            navigate(BUSINESSES_ROUTE);
+            navigate("/");
         }
         catch (error : any) {
             setAuthError(error || "Ошибка при аутентификации")
