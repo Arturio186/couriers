@@ -16,3 +16,5 @@
 ## operator
 - npm i
 - npm run build
+
+# server.js - сервер для раздачи статики 
