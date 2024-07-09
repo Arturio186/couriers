@@ -56,9 +56,10 @@ const ProfileForm = () => {
             const response = await AuthService.EditProfile(data.name, data.surname, data.email)
 
             if (response.status === 200) {
-                dispatch(setUser(response.data))
-                console.log(response.data)
-                console.log(user)
+                dispatch(setUser({
+                    ...user.data,
+                    ...response.data
+                }))
                 dispatch(addToast(`Информация обновлена`));
             }
         }

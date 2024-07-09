@@ -48,7 +48,6 @@ export default (businessController: IBusinessController) => {
     router.get(
         "/:id",
         AuthMiddleware,
-        OwnerMiddleware,
         param("id").notEmpty().isUUID(),
         ValidationMiddleware,
         businessController.GetBusiness

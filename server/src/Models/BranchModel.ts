@@ -2,7 +2,6 @@ import db from "../Database/db";
 
 import IBranch from "../Interfaces/Branch/IBranch";
 import IBranchModel from "../Interfaces/Branch/IBranchModel";
-import IBranchStaff from "../Interfaces/Branch/IBranchStaff";
 
 class BranchModel implements IBranchModel {
     private readonly tableName = "branches";

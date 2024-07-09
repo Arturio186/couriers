@@ -38,8 +38,12 @@ class BusinessModel implements IBusinessModel {
         return db(this.tableName).where(conditions).first();
     }
 
-    public FindUserInStaffs = async (userID: string): Promise<{ business_id: string; user_id: string } | undefined> => {
-        return db(this.staffTable).where({ user_id: userID }).first() // Допилить, подумать. Возможно join по branch_id, оттуда тянем business_id, если совпадает => пропускаем
+    public FindUserInStaffs = async (userID: string, businessID: string): Promise<{ branch_id: string; user_id: string; business_id: string; } | undefined> => {
+        return db(this.staffTable)
+            .join(this.branchTableName, `${this.staffTable}.branch_id`, '=', `${this.branchTableName}.id`)
+            .where({ user_id: userID, business_id: businessID })
+            .select(`${this.staffTable}.*`, `${this.branchTableName}.business_id as business_id`)
+            .first()
     };
 }
 
