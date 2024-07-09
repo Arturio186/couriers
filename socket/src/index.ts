@@ -8,6 +8,8 @@ config();
 const app = express();
 const server = createServer(app);
 
+console.log(process.env.OPERATOR_URL)
+
 const io = new Server(server, {
     cors: {
         origin: process.env.OPERATOR_URL,
