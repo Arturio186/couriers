@@ -9,7 +9,7 @@ import ErrorMiddleware from "./Middlewares/ErrorMiddleware";
 
 config();
 
-const allowedOrigins = process.env.CLIENT_URLS.split(",");
+const allowedOrigins = process.env.CLIENTS_URLS.split(",");
 
 const app = express();
 
