@@ -1,0 +1,27 @@
+/* InviteLink.scss */
+
+.invite-link-container {
+    display: flex;
+    align-items: center;
+    background-color: #2e2e2e;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.invite-link-label {
+    color: #fff;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.invite-link-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #1e1e1e;
+    color: #fff;
+    margin-right: 10px;
+}

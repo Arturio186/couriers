@@ -64,9 +64,27 @@ class BranchController implements IBranchController {
     }
 
     public GetUserBranches = async (req: Request, res: Response, next: NextFunction) => { 
-        const branches = await this.BranchService.GetBranchesByUserID(res.locals.user.id);
+        try {
+            const branches = await this.BranchService.GetBranchesByUserID(res.locals.user.id);
 
-        res.status(200).json(branches)
+            res.status(200).json(branches)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
+    public GetBranch = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { branch_id } = req.params;
+
+            const branch = await this.BranchService.GetBranchInfo(String(branch_id))
+            
+            res.status(200).json(branch)
+        }
+        catch (error) {
+            next(error)
+        }
     }
 
     public GetAndroidUserBranches = async (req: Request, res: Response, next: NextFunction) => {
@@ -94,6 +112,25 @@ class BranchController implements IBranchController {
             next(error)
         }
     }
+
+    public GetStaff = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { branch_id, page, limit } = req.query;
+
+            const staffs = await this.BranchService.GetBranchStaff(
+                String(branch_id),
+                Number(page),
+                Number(limit),
+                res.locals.user.id
+            )
+
+            res.status(200).json(staffs)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 export default BranchController;

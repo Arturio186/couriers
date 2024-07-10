@@ -12,10 +12,11 @@ import CouriersMap from "#pages/CouriersMap/CouriersMap";
 import Dashboard from "#pages/Dashboard/Dashboard";
 import NotFound from "#pages/NotFound/NotFound";
 
-import { MAP_ROUTE, DASHBOARD_ROUTE } from "#utils/consts";
+import { MAP_ROUTE, DASHBOARD_ROUTE, INVITE_ROUTE } from "#utils/consts";
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "#utils/consts";
 
 import { FaLocationArrow, FaUser } from "react-icons/fa";
+import Invite from "#pages/Invite/Invite";
 
 
 export const privateRoutes: IRoute[] = [
@@ -26,6 +27,7 @@ export const privateRoutes: IRoute[] = [
             { path: "/", element: <Navigate to={MAP_ROUTE} />, title: "Переадресация" },
             { path: MAP_ROUTE, element: <CouriersMap />, title: "Карта", icon: <FaLocationArrow /> },
             { path: DASHBOARD_ROUTE, element: <Dashboard />, title: "Личный кабинет", icon: <FaUser /> },
+            { path: INVITE_ROUTE, element: <Invite />, title: "Приглашение в филиал" },
             { path: "/*", element: <NotFound />, title: "Страница не найдена" }
         ],
     },

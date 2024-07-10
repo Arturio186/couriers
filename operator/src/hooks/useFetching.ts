@@ -12,10 +12,10 @@ const useFetching = <T>(fetchFunc: FetchFunc<T>) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetchFunc(...args); 
+            const response = await fetchFunc(...args);
             setData(response.data);
-        } catch (err) {
-            setError("Произошла ошибка при получении данных");
+        } catch (err: any) {
+            setError(err.response?.data?.message || err?.message || "Произошла ошибка при получении данных");
         } finally {
             setLoading(false);
         }
@@ -29,3 +29,4 @@ const useFetching = <T>(fetchFunc: FetchFunc<T>) => {
 };
 
 export default useFetching;
+

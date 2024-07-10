@@ -2,6 +2,7 @@ import $api from "../http";
 import { AxiosResponse } from 'axios';
 
 import IBranch from "#interfaces/IBranch";
+import StaffResponse from "#interfaces/response/StaffResponse";
 
 export default class BranchService {
     static async CreateBranch(name: string, business_id: string, city_id: number): Promise<AxiosResponse<IBranch>> {
@@ -25,5 +26,22 @@ export default class BranchService {
 
     static async GetBranches(business_id: string): Promise<AxiosResponse<IBranch[]>> {
         return $api.get(`/branches?business_id=${business_id}`)
+    }
+
+    static async GetBranchInfo(branchID: string): Promise<AxiosResponse<IBranch>> {
+        return $api.get(`branches/${branchID}`)
+    }
+
+    static async GetBranchStaff(branchID: string, page: number, limit: number): Promise<AxiosResponse<StaffResponse>> {
+        return $api.get(`branches/staff?branch_id=${branchID}&page=${page}&limit=${limit}`)
+    }
+
+    static async RemoveFromStaff(userID: string, branchID: string): Promise<AxiosResponse<string>> {
+        return $api.delete(`branches/staff`, {
+            data: {
+                user_id: userID,
+                branch_id: branchID
+            }
+        })
     }
 }

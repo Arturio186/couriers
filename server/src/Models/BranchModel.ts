@@ -9,6 +9,8 @@ class BranchModel implements IBranchModel {
     private readonly businessesTableName = "businesses"
     private readonly citiesTableName = "cities"
     private readonly staffTableName = "branch_user"
+    private readonly usersTableName = "users"
+    private readonly rolesTableName = "roles"
 
     public Create = async (branch: IBranch): Promise<IBranch> => {
         const [newBranch] = await db(this.tableName).insert(branch).returning<IBranch[]>("*");
@@ -77,6 +79,50 @@ class BranchModel implements IBranchModel {
             .returning<IBranchStaff[]>("*");
         
         return createdStaffRow;
+    }
+
+    public GetBranchInfo = async (branchID: string): Promise<IBranch> => {
+        return db(this.tableName)
+            .join(this.businessesTableName, `${this.tableName}.business_id`, '=', `${this.businessesTableName}.id`)
+            .join(this.usersTableName, `${this.businessesTableName}.owner_id`, '=', `${this.usersTableName}.id`)
+            .where(`${this.tableName}.id`, branchID)
+            .select(
+                `${this.tableName}.*`,
+                `${this.businessesTableName}.name as business_name`,
+                `${this.usersTableName}.first_name as owner_first_name`,
+                `${this.usersTableName}.last_name as owner_last_name`,
+            )
+            .first()
+    }
+
+    public FindAllBranchStaffWithOffset = async (branchID: string, page: number, limit: number): Promise<IBranchStaff[]> => {
+        const offset = (page - 1) * limit;
+
+        return db(this.staffTableName)
+            .join(this.usersTableName, `${this.staffTableName}.user_id`, '=', `${this.usersTableName}.id`)
+            .join(this.rolesTableName, `${this.usersTableName}.role_id`, '=', `${this.rolesTableName}.id`)
+            .where(`${this.staffTableName}.branch_id`, branchID)
+            .select(
+                `${this.staffTableName}.*`,
+                `${this.usersTableName}.first_name as user_first_name`,
+                `${this.usersTableName}.last_name as user_last_name`,
+                `${this.usersTableName}.email as user_email`,
+                `${this.rolesTableName}.name as user_role` 
+            )
+            .limit(limit)
+            .offset(offset);
+    }
+
+    public GetMaxStaffPages = async (branchID: string, limit: number): Promise<number> => {
+        const totalCount = await db(this.staffTableName)
+                .count('* as total')
+                .where({ branch_id: branchID })
+                .first();
+
+        const totalRecords = totalCount.total;
+        const maxPages = Math.ceil(Number(totalRecords) / limit);
+
+        return maxPages;
     }
 }
 

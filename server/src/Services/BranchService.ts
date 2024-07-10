@@ -84,6 +84,12 @@ class BranchService implements IBranchService {
         return new BranchDTO(updatedBranch)
     };
 
+    public GetBranchInfo = async (branchID: string) => {
+        const branch = await this.BranchModel.GetBranchInfo(branchID)
+
+        return new BranchDTO(branch);
+    }
+
     public GetBranchesByUserID = async (userID: string) => {
         return (await this.BranchModel.GetUserBranches(userID)).map(
             branchStaff => new BranchStaffDTO(branchStaff)
@@ -105,6 +111,25 @@ class BranchService implements IBranchService {
 
         await this.BranchModel.JoinBranch(branchID, userID)
     }
+
+    public GetBranchStaff = async (branchID: string, page: number, limit: number, userID: string) => {
+        const branch = await this.FindBranch(branchID);
+
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(branch.business_id, userID);
+
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
+        }
+
+        const maxPage = await this.BranchModel.GetMaxStaffPages(branchID, limit)
+
+        const staff = await this.BranchModel.FindAllBranchStaffWithOffset(branchID, page, limit)
+
+        return {
+            staff: staff.map(staff => new BranchStaffDTO(staff)),
+            maxPage
+        }
+    };
 }
 
 export default BranchService;

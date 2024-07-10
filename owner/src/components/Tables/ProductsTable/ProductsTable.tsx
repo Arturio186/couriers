@@ -36,7 +36,6 @@ const ProductsTable: FC<ProductsTableProps> = ({ targetCategory, products, setPr
     useEffect(() => {
         if (data) {
             setProducts(data)
-            console.log(data)
         }
     }, [data])
 

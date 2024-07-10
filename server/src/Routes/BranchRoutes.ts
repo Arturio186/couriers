@@ -24,7 +24,7 @@ export default (branchController: IBranchController) => {
         AuthMiddleware,
         OwnerMiddleware,
         body("name").notEmpty(),
-        body("business_id").notEmpty().isUUID(),
+        body("business_id").isUUID(),
         body("city_id").notEmpty().isNumeric(),
         ValidationMiddleware,
         branchController.Store
@@ -34,7 +34,7 @@ export default (branchController: IBranchController) => {
         "/:branch_id",
         AuthMiddleware,
         OwnerMiddleware,
-        param("branch_id").notEmpty().isUUID(),
+        param("branch_id").isUUID(),
         ValidationMiddleware,
         branchController.Destroy
     )
@@ -43,7 +43,7 @@ export default (branchController: IBranchController) => {
         "/:branch_id",
         AuthMiddleware,
         OwnerMiddleware,
-        param("branch_id").notEmpty().isUUID(),
+        param("branch_id").isUUID(),
         body("name").notEmpty(),
         body("city_id").notEmpty().isNumeric(),
         ValidationMiddleware,
@@ -71,6 +71,25 @@ export default (branchController: IBranchController) => {
         body("branch_id").isUUID(),
         ValidationMiddleware,
         branchController.JoinBrnach
+    )
+
+    router.get(
+        "/staff",
+        AuthMiddleware,
+        OwnerMiddleware,
+        query("branch_id").isUUID(),
+        query('page').notEmpty().isNumeric(),
+        query('limit').notEmpty().isNumeric(),
+        ValidationMiddleware,
+        branchController.GetStaff
+    )
+
+    router.get(
+        "/:branch_id",
+        AuthMiddleware,
+        param("branch_id").isUUID(),
+        ValidationMiddleware,
+        branchController.GetBranch
     )
 
     return router;
