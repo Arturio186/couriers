@@ -8,4 +8,6 @@ export default interface IBranchModel {
     FindAll: (conditions: Partial<IBranch>) => Promise<IBranch[] | undefined>
     FindOne: (conditions: Partial<IBranch>) => Promise<IBranch | undefined>
     GetUserBranches: (userID: string) => Promise<IBranchStaff[]>
+    FindBrnachStaff: (branchID: string, userID: string) => Promise<IBranchStaff>
+    JoinBranch: (branchID: string, userID: string) => Promise<IBranchStaff>
 }

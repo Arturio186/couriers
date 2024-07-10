@@ -8,6 +8,7 @@ export default interface IBranchService {
     RemoveBranch: (branchID: string, userID: string) => Promise<number>;
     UpdateBranch: (branchID: string, name: string, cityID: number, userID: string) => Promise<BranchDTO>;
     GetBranchesByBusinessID: (businessID: string, userID: string) => Promise<BranchDTO[]>;
-
     GetBranchesByUserID: (userID: string) => Promise<BranchStaffDTO[]>
+    JoinBranch: (branchID: string, userID: string) => Promise<void>;
+    IsUserInBranch: (branchID: string, userID: string) => Promise<boolean>;
 }

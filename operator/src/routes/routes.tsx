@@ -26,7 +26,7 @@ export const privateRoutes: IRoute[] = [
             { path: "/", element: <Navigate to={MAP_ROUTE} />, title: "Переадресация" },
             { path: MAP_ROUTE, element: <CouriersMap />, title: "Карта", icon: <FaLocationArrow /> },
             { path: DASHBOARD_ROUTE, element: <Dashboard />, title: "Личный кабинет", icon: <FaUser /> },
-            { path: "*", element: <NotFound />, title: "Страница не найдена" }
+            { path: "/*", element: <NotFound />, title: "Страница не найдена" }
         ],
     },
     

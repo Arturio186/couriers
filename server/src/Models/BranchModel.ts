@@ -2,6 +2,7 @@ import db from "../Database/db";
 
 import IBranch from "../Interfaces/Branch/IBranch";
 import IBranchModel from "../Interfaces/Branch/IBranchModel";
+import IBranchStaff from "../Interfaces/Branch/IBranchStaff";
 
 class BranchModel implements IBranchModel {
     private readonly tableName = "branches";
@@ -56,6 +57,26 @@ class BranchModel implements IBranchModel {
                 `${this.businessesTableName}.name as business_name`,
                 `${this.citiesTableName}.coords as city_coords` 
             )
+    }
+
+    public FindBrnachStaff = async (branchID: string, userID: string): Promise<IBranchStaff | undefined> => {
+        return db(this.staffTableName)
+            .where({ 
+                user_id: userID,
+                branch_id: branchID
+            })
+            .first()
+    }
+
+    public JoinBranch = async (branchID: string, userID: string): Promise<IBranchStaff> => {
+        const [createdStaffRow] = await db(this.staffTableName)
+            .insert({
+                user_id: userID,
+                branch_id: branchID
+            })
+            .returning<IBranchStaff[]>("*");
+        
+        return createdStaffRow;
     }
 }
 

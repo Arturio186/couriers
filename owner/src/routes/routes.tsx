@@ -32,7 +32,7 @@ export const privateRoutes: IRoute[] = [
             { path: CATALOG_ROUTE, element: <Catalog />, title: "Каталог", icon: <FaShoppingBasket /> },
             { path: STATISTIC_ROUTE, element: <p>Statistic</p>, title: "Статистика", icon: <FaChartBar /> },
             { path: DASHBOARD_ROUTE, element: <Dashboard />, title: "Личный кабинет", icon: <FaUser /> },
-            { path: "*", element: <NotFound />, title: "Страница не найдена" }
+            { path: "/*", element: <NotFound />, title: "Страница не найдена" }
         ],
     },
     

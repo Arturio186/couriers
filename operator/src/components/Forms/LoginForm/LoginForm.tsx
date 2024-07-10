@@ -7,7 +7,7 @@ import "./LoginForm.scss";
 import { AppDispatch } from "#store/store";
 
 import { login } from "#store/userSlice";
-import { REGISTER_ROUTE } from "#utils/consts";
+import { MAP_ROUTE, REGISTER_ROUTE } from "#utils/consts";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
@@ -37,7 +37,7 @@ const LoginForm = () => {
         try {
             await dispatch(login({ email: data.email, password: data.password })).unwrap();
 
-            navigate("/");
+            navigate(MAP_ROUTE);
         }
         catch (error : any) {
             setAuthError(error || "Ошибка при аутентификации")

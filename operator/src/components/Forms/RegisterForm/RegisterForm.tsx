@@ -7,7 +7,7 @@ import "./RegisterForm.scss";
 import { AppDispatch } from "#store/store";
 
 import { registration } from "#store/userSlice";
-import { LOGIN_ROUTE } from "#utils/consts";
+import { LOGIN_ROUTE, MAP_ROUTE } from "#utils/consts";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
@@ -39,7 +39,7 @@ const RegisterForm = () => {
         try {
             await dispatch(registration({ name: data.name, email: data.email, password: data.password })).unwrap();
 
-            navigate("/");
+            navigate(MAP_ROUTE);
         }
         catch (error: any) {
             setAuthError(error || "Ошибка при аутентификации")

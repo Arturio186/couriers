@@ -7,4 +7,5 @@ export default interface IBranchController {
     GetByBusiness: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     GetUserBranches: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     GetAndroidUserBranches: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    JoinBrnach: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

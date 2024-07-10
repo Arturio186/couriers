@@ -5,7 +5,6 @@ import IBusinessService from "../Interfaces/Business/IBusinessService";
 import APIError from "../Exceptions/APIError";
 import BranchDTO from "../DTO/BranchDTO";
 import ICityService from "../Interfaces/City/ICityService";
-import IBranchStaff from "../Interfaces/Branch/IBranchStaff";
 import BranchStaffDTO from "../DTO/BranchStaffDTO";
 
 class BranchService implements IBranchService {
@@ -90,6 +89,22 @@ class BranchService implements IBranchService {
             branchStaff => new BranchStaffDTO(branchStaff)
         )
     };
+
+    public IsUserInBranch = async (branchID: string, userID: string) => {
+        const branchStaff = await this.BranchModel.FindBrnachStaff(branchID, userID)
+
+        return !!branchStaff;
+    }
+
+    public JoinBranch = async (branchID: string, userID: string) => {
+        const isUserInBranch = await this.IsUserInBranch(branchID, userID)
+
+        if (isUserInBranch) {
+            throw APIError.BadRequest("Вы уже являетесь работником данного филиала");
+        }
+
+        await this.BranchModel.JoinBranch(branchID, userID)
+    }
 }
 
 export default BranchService;

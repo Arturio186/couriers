@@ -64,5 +64,14 @@ export default (branchController: IBranchController) => {
         branchController.GetAndroidUserBranches
     )
 
+    router.post(
+        "/join",
+        AuthMiddleware,
+        OperatorMiddleware,
+        body("branch_id").isUUID(),
+        ValidationMiddleware,
+        branchController.JoinBrnach
+    )
+
     return router;
 };
