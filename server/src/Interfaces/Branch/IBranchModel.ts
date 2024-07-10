@@ -11,6 +11,7 @@ export default interface IBranchModel {
     FindBrnachStaff: (branchID: string, userID: string) => Promise<IBranchStaff>
     JoinBranch: (branchID: string, userID: string) => Promise<IBranchStaff>
     GetBranchInfo: (branchID: string) => Promise<IBranch>;
-    FindAllBranchStaffWithOffset: (branchID: string, page: number, limit: number) => Promise<IBranchStaff[]> 
+    FindAllBranchStaffWithOffset: (branchID: string, page: number, limit: number) => Promise<IBranchStaff[]>
+    DeleteStaff: (conditions: Pick<IBranchStaff, "branch_id" | "user_id">) => Promise<number>
     GetMaxStaffPages: (branchID: string, limit: number) => Promise<number>
 }

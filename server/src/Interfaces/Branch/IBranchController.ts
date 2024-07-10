@@ -10,4 +10,5 @@ export default interface IBranchController {
     GetAndroidUserBranches: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     JoinBrnach: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     GetStaff: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    DeleteBranchStaff: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

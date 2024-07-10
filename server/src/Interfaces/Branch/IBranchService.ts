@@ -16,4 +16,5 @@ export default interface IBranchService {
         staff: BranchStaffDTO[],
         maxPage: number;
     }>;
+    RemoveStaffMember: (branchID: string, userID: string, ownerID: string) => Promise<number>
 }

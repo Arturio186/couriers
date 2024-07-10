@@ -1,4 +1,5 @@
 import { FC, useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { FaRegTrashAlt } from "react-icons/fa";
 import './StaffTable.scss'
 
@@ -7,6 +8,8 @@ import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 import useFetching from "#hooks/useFetching";
 import BranchService from "#services/BranchService";
+
+import { addToast } from "#store/toastSlice";
 
 import IStaff from "#interfaces/IStaff";
 import StaffResponse from "#interfaces/response/StaffResponse";
@@ -23,9 +26,11 @@ const translation: Record<string, string> = {
 };
 
 const StaffTable: FC<StaffTableProps> = ({ branchID }) => {
+    const dispatch = useDispatch()
     const [staff, setStaff] = useState<IStaff[]>([]);
     const [page, setPage] = useState<number>(1);
     const [maxPage, setMaxPage] = useState<number>(1);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
     const { data, loading, error } = useFetching<StaffResponse>(
         useCallback(() => BranchService.GetBranchStaff(branchID, page, limit), [branchID, page])
@@ -39,7 +44,25 @@ const StaffTable: FC<StaffTableProps> = ({ branchID }) => {
     }, [data]);
 
     const handleDelete = async (member: IStaff) => {
-        console.log(member);
+        try {
+            if (isDeleting) return
+            
+            if (confirm(`Вы уверены, что хотите удалить сотрудника ${member.user_first_name}?`)) {
+                console.log(branchID, member.user_id)
+                const response = await BranchService.RemoveFromStaff(member.user_id, branchID);
+
+                if (response.status === 200) {
+                    setStaff(prev => prev.filter(m => m.user_id !== member.user_id))
+                    dispatch(addToast("Сотрудник успешно удален"))
+                }
+            }
+        } catch (error) {
+            console.log(error)
+            console.error('Ошибка при удалении ', error);
+            dispatch(addToast("Ошибка при удалении сотрудника"))
+        } finally {
+            setIsDeleting(false)
+        }
     };
 
     const handlePageChange = (newPage: number) => {

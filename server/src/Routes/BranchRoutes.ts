@@ -30,15 +30,6 @@ export default (branchController: IBranchController) => {
         branchController.Store
     );
 
-    router.delete(
-        "/:branch_id",
-        AuthMiddleware,
-        OwnerMiddleware,
-        param("branch_id").isUUID(),
-        ValidationMiddleware,
-        branchController.Destroy
-    )
-
     router.put(
         "/:branch_id",
         AuthMiddleware,
@@ -82,6 +73,25 @@ export default (branchController: IBranchController) => {
         query('limit').notEmpty().isNumeric(),
         ValidationMiddleware,
         branchController.GetStaff
+    )
+
+    router.delete(
+        "/staff",
+        AuthMiddleware,
+        OwnerMiddleware,
+        body("branch_id").isUUID(),
+        body("user_id").isUUID(),
+        ValidationMiddleware,
+        branchController.DeleteBranchStaff        
+    )
+
+    router.delete(
+        "/:branch_id",
+        AuthMiddleware,
+        OwnerMiddleware,
+        param("branch_id").isUUID(),
+        ValidationMiddleware,
+        branchController.Destroy
     )
 
     router.get(

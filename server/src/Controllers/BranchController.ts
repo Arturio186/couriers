@@ -131,6 +131,23 @@ class BranchController implements IBranchController {
         }
     }
 
+    public DeleteBranchStaff = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { branch_id, user_id } = req.body;
+
+            await this.BranchService.RemoveStaffMember(
+                String(branch_id), 
+                String(user_id), 
+                res.locals.user.id
+            )
+
+            res.status(200).json({message: "Success"})
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 export default BranchController;

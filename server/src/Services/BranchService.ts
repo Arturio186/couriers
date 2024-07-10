@@ -130,6 +130,18 @@ class BranchService implements IBranchService {
             maxPage
         }
     };
+
+    public RemoveStaffMember = async (branchID: string, userID: string, ownerID: string) => {
+        const branch = await this.FindBranch(branchID);
+
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(branch.business_id, ownerID);
+
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
+        }
+
+        return await this.BranchModel.DeleteStaff({user_id: userID, branch_id: branchID})
+    };
 }
 
 export default BranchService;

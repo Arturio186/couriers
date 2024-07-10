@@ -124,6 +124,10 @@ class BranchModel implements IBranchModel {
 
         return maxPages;
     }
+
+    public DeleteStaff = async (conditions: Pick<IBranchStaff, "branch_id" | "user_id">) => {
+        return db(this.staffTableName).where(conditions).del();
+    };
 }
 
 export default new BranchModel();
