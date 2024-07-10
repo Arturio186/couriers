@@ -28,6 +28,10 @@ import ProductService from "./Services/ProductService";
 import ProductModel from "./Models/ProductModel";
 import ProductController from "./Controllers/ProductController";
 
+import OrderService from "./Services/OrderService";
+import OrderModel from "./Models/OrderModel";
+import OrderController from "./Controllers/OrderController";
+
 const refreshSessionService = new RefreshSessionService(RefreshSessionModel)
 const roleService = new RoleService(RoleModel)
 
@@ -49,13 +53,17 @@ const categoryController = new CategoryController(categoryService)
 const productService = new ProductService(ProductModel, categoryService, businessService)
 const productController = new ProductController(productService)
 
+const orderService = new OrderService(OrderModel)
+const orderController = new OrderController(orderService)
+
 const container = {
     userController,
     businessController,
     branchController,
     cityController,
     categoryController,
-    productController
+    productController,
+    orderController
 }
 
 export default container;

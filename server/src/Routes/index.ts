@@ -7,6 +7,7 @@ import BranchRoutes from "./BranchRoutes";
 import CityRoutes from "./CityRoutes";
 import CategoryRoutes from "./CategoryRoutes";
 import ProductRoutes from "./ProductRoutes";
+import OrderRoutes from "./OrderRoutes";
 
 const router = Router()
 
@@ -16,5 +17,6 @@ router.use('/branches', BranchRoutes(container.branchController))
 router.use('/citites', CityRoutes(container.cityController))
 router.use('/categories', CategoryRoutes(container.categoryController))
 router.use('/products', ProductRoutes(container.productController))
+router.use('/orders', OrderRoutes(container.orderController))
 
 export default router;

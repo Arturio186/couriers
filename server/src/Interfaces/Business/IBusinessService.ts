@@ -1,5 +1,4 @@
 import BusinessDTO from "../../DTO/BusinessDTO"
-import BranchDTO from "../../DTO/BranchDTO";
 import IBusiness from "./IBusiness";
 
 export default interface IBusinessService {

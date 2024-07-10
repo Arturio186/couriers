@@ -26,7 +26,7 @@ class BranchStaffDTO {
         this.business_id = branchStaff.business_id;
         this.business_name = branchStaff.business_name;
 
-        if (this.city_coords) {
+        if (branchStaff.city_coords) {
             this.city_coords = CoordsConverter(branchStaff.city_coords);
         }
     }

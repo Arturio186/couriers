@@ -60,6 +60,8 @@ const SelectBranch: FC<SelectBranchProps> = ({ setModalVisible }) => {
     const handleChangeBranch = (option: SingleValue<Option>) => {
         const branchStaff = data?.find(b => b.branch_id === option?.value)
 
+        console.log(data)
+
         if (branchStaff) {
             dispatch(setCurrentBranch({
                 id: branchStaff.branch_id,

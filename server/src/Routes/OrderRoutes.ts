@@ -10,11 +10,11 @@ export default (orderController: IOrderController) => {
     const router = Router();
 
     router.get(
-        "/",
+        "/active",
         AuthMiddleware,
         query('branch_id').isUUID(),
         ValidationMiddleware,
-        orderController.GetOrders
+        orderController.GetActiveOrders
     )
 
     return router;

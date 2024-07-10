@@ -83,8 +83,6 @@ class BusinessService implements IBusinessService {
         if (business.owner_id !== userID) {
             const staffRow = await this.BusinessModel.FindUserInStaffs(userID, businessID)
 
-            console.log(staffRow)
-
             if (!staffRow) {
                 return false;
             }

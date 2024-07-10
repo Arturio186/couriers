@@ -114,8 +114,8 @@ const CoolMap = () => {
                         ]}
                         defaultState={{
                             center: [
-                                user.currentBranch?.coords.lat || 0,
-                                user.currentBranch?.coords.long || 0,
+                                user.currentBranch?.coords?.lat || 0,
+                                user.currentBranch?.coords?.long || 0,
                             ],
                             zoom: 15,
                             controls: [],
