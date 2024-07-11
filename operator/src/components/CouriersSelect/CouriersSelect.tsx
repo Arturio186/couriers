@@ -36,8 +36,6 @@ const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef }) => {
                 };
             })
         );
-
-        console.log(couriersOptions);
     }, [couriers]);
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
+import { YMaps, Map, Placemark, Button, SearchControl } from "@pbe/react-yandex-maps";
 import io from "socket.io-client";
 import "./CoolMap.scss";
 
@@ -11,6 +11,7 @@ import MapAnnotation from "#components/MapAnnotation/MapAnnotation";
 import CouriersSelect from "#components/CouriersSelect/CouriersSelect";
 import { addToast } from "#store/toastSlice";
 import { useDispatch } from "react-redux";
+import { SOCKET_URL } from "#utils/consts";
 
 interface CourierLocationMessage {
     userId: string;
@@ -25,29 +26,74 @@ interface CourierConnectionMessage {
     userLastName: string;
 }
 
+interface SearchControlType extends ymaps.control.SearchControl {
+    getResultsArray: () => Array<{ geometry: { getCoordinates: () => number[] } }>;
+    hideResult: () => void;
+}
+
 const CoolMap = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.user);
+
     const mapRef = useRef<ymaps.Map | null>(null);
+    const creatorPlacemarkRef = useRef<ymaps.Map | null>(null);
+    const searchControlRef = useRef<SearchControlType | null>(null);
 
     const [couriers, setCouriers] = useState<ICourier[]>([]);
+    const [creatorPlacemark, setCreatorPlacemark] = useState<React.ReactNode>(null);
+
+    const addCreatorPlacemark = (coords: number[]) => {
+        setCreatorPlacemark(
+            <Placemark
+                onClick={() => console.log('open modal create order')/* setModalCreateOrder(true) */}
+                instanceRef={(placemark) => creatorPlacemarkRef.current = placemark}
+                geometry={{
+                    type: 'Point',
+                    coordinates: coords
+                }}
+                options={{
+                    preset: 'islands#dotIcon',
+                    iconColor: 'black',
+                    draggable: true
+                }} 
+                properties={{
+                    hintContent: 'Чтобы создать заказ, нажми на меня!'
+                }}
+            />
+        ) 
+    }
+
+    const handleResultShow = () => {
+        const searchControlRefCurrent = searchControlRef.current;
+
+        if (searchControlRefCurrent) {
+            const results = searchControlRefCurrent.getResultsArray();
+    
+            searchControlRefCurrent.hideResult();
+            
+            if (results.length > 0) {
+                const firstResult = results[0];
+                const coordinates = firstResult?.geometry?.getCoordinates();
+
+                addCreatorPlacemark(coordinates);
+            }
+        }
+    };
 
     useEffect(() => {
         if (user.currentBranch?.id) {
-            const socket = io("http://localhost:3001", {
+            const socket = io(SOCKET_URL, {
                 withCredentials: true,
             });
 
             socket.emit("new_operator", { branchId: user.currentBranch.id });
 
             socket.on("location_update", (message: CourierLocationMessage) => {
-                console.log("Курьер отправил локацию:", message);
-
                 setCouriers((prev) => {
                     return prev.map((courier) => {
                         if (courier.id === message.userId) {
                             (courier.lat = message.lat),
-                                (courier.long = message.long);
+                            (courier.long = message.long);
                         }
 
                         return courier;
@@ -58,14 +104,16 @@ const CoolMap = () => {
             socket.on(
                 "courier_connected",
                 (message: CourierConnectionMessage) => {
-                    dispatch(addToast(`Подключился курьер: ${message.userFirstName} ${message.userLastName}`))
+                    const courierLastName = message.userLastName === "null" ? "" : message.userLastName
+
+                    dispatch(addToast(`Подключился курьер: ${message.userFirstName} ${courierLastName}`))
 
                     setCouriers((prev) => [
                         ...prev,
                         {
                             id: message.userId,
                             firstName: message.userFirstName,
-                            lastName: message.userLastName,
+                            lastName: courierLastName,
                             lat: -1,
                             long: -1,
                         },
@@ -76,7 +124,9 @@ const CoolMap = () => {
             socket.on(
                 "courier_disconnected",
                 (message: CourierConnectionMessage) => {
-                    console.log("Курьер отключился:", message);
+                    const courierLastName = message.userLastName === "null" ? "" : message.userLastName
+
+                    dispatch(addToast(`Отключился курьер: ${message.userFirstName} ${courierLastName}`))
 
                     setCouriers((prev) =>
                         prev.filter((courier) => courier.id !== message.userId)
@@ -90,10 +140,11 @@ const CoolMap = () => {
         }
     }, [user.currentBranch?.id]);
 
+    
+
     return (
         <div className="map-wrapper">
             <div className="menu">
-                 
                     <CouriersSelect
                         mapRef={mapRef}
                         couriers={couriers} 
@@ -123,6 +174,18 @@ const CoolMap = () => {
                         instanceRef={(map) => (mapRef.current = map)}
                         options={{ suppressMapOpenBlock: true }}
                     >
+                        {mapRef.current && <Button
+                            options={{ maxWidth: 128, selectOnClick: false }}
+                            data={{ content: "Создать заказ" }}
+                            onClick={() => {
+                                const coords = mapRef.current!.getCenter();
+
+                                if (coords) {
+                                    addCreatorPlacemark(coords);
+                                }
+                            }} 
+                        />}
+
                         {couriers.map((courier) => {
                             if (courier.lat === -1 || courier.long === -1) {
                                 return null;
@@ -149,6 +212,12 @@ const CoolMap = () => {
                                 />
                             );
                         })}
+                        <SearchControl
+                            options={{ float: 'right' }}
+                            instanceRef={(searchControl: any) => (searchControlRef.current = searchControl)}
+                            onResultShow={handleResultShow}
+                        />
+                        {creatorPlacemark}
                     </Map>
                     <MapAnnotation />
                 </div>
