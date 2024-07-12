@@ -53,7 +53,7 @@ const categoryController = new CategoryController(categoryService)
 const productService = new ProductService(ProductModel, categoryService, businessService)
 const productController = new ProductController(productService)
 
-const orderService = new OrderService(OrderModel)
+const orderService = new OrderService(OrderModel, branchService, ProductModel)
 const orderController = new OrderController(orderService)
 
 const container = {

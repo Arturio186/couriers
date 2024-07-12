@@ -6,4 +6,5 @@ export default interface IProductModel {
     Delete: (conditions: Partial<IProduct>) => Promise<number>
     FindOne: (conditions: Partial<IProduct>) => Promise<IProduct | undefined>
     FindAll: (conditions: Partial<IProduct>) => Promise<IProduct[]>
+    GetProductsByIDs: (productIDs: string[]) => Promise<IProduct[]>
 }

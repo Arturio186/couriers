@@ -17,5 +17,13 @@ export default (orderController: IOrderController) => {
         orderController.GetActiveOrders
     )
 
+    router.post(
+        "/",
+        AuthMiddleware,
+        // ДОБАВИТЬ ВАЛИДАЦИЮ ПОЛЕЙ,
+        ValidationMiddleware,
+        orderController.Store
+    )
+
     return router;
 };

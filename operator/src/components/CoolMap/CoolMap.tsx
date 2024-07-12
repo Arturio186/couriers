@@ -41,6 +41,7 @@ const CoolMap = () => {
 
     const [couriers, setCouriers] = useState<ICourier[]>([]);
     const [creatorPlacemark, setCreatorPlacemark] = useState<React.ReactNode>(null);
+    const [targetCourier, setTargetCourier] = useState<ICourier | null>(null);
 
     const addCreatorPlacemark = (coords: number[]) => {
         setCreatorPlacemark(
@@ -140,14 +141,19 @@ const CoolMap = () => {
         }
     }, [user.currentBranch?.id]);
 
-    
+    useEffect(() => {
+        if (targetCourier) {
+            console.log(targetCourier)
+        }
+    }, [targetCourier])
 
     return (
         <div className="map-wrapper">
             <div className="menu">
                     <CouriersSelect
                         mapRef={mapRef}
-                        couriers={couriers} 
+                        couriers={couriers}
+                        setTargetCourier={setTargetCourier}
                     />
             </div>
             <YMaps

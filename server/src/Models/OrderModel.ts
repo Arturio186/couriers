@@ -7,14 +7,6 @@ class OrderModel implements IOrderModel {
     private readonly tableName = "orders";
     private readonly orderStatusesTableName = "order_statuses";
 
-    public FindAll = async (conditions: Partial<IOrder>): Promise<IOrder[]> => {
-        const orders = await db(this.tableName)
-            .where(conditions)
-            .orderBy("created_at", "desc");
-            
-        return orders;
-    }; 
-
     public FindActiveOrders = async (branchID: string): Promise<IOrder[]> => {
         const orders = await db(this.tableName)
             .join(this.orderStatusesTableName, `${this.tableName}.status_id`, `${this.orderStatusesTableName}.id`)

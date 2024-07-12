@@ -9,6 +9,7 @@ import Option from "#interfaces/Option";
 interface CouriersSelectProps {
     couriers: ICourier[];
     mapRef: React.MutableRefObject<ymaps.Map | null>
+    setTargetCourier: React.Dispatch<React.SetStateAction<ICourier | null>>;
 }
 
 const setFocusOnCoord = (mapRef: React.MutableRefObject<ymaps.Map | null>, lat: number, long: number) => {
@@ -23,7 +24,7 @@ const setFocusOnCoord = (mapRef: React.MutableRefObject<ymaps.Map | null>, lat: 
     }
 }
 
-const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef }) => {
+const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef, setTargetCourier }) => {
     const [couriersOptions, setCouriersOptions] = useState<Option[]>([]);
     const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -46,6 +47,7 @@ const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef }) => {
         const courier = couriers.find(c => c.id === selectedOption?.value)
 
         if (courier) {
+            setTargetCourier(courier)
             setFocusOnCoord(mapRef, courier.lat, courier.long)
         }
 

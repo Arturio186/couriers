@@ -50,6 +50,12 @@ class ProductModel implements IProductModel {
 
         return products;
     };
+
+    public GetProductsByIDs = async (productIDs: string[]): Promise<IProduct[]> => {
+        return db(this.tableName)
+            .select('*')
+            .whereIn('id', productIDs);
+    }
 }
 
 export default new ProductModel();
