@@ -32,6 +32,9 @@ import OrderService from "./Services/OrderService";
 import OrderModel from "./Models/OrderModel";
 import OrderController from "./Controllers/OrderController";
 
+import ClientModel from "./Models/ClientModel";
+import OrderStatusModel from "./Models/OrderStatusModel";
+
 const refreshSessionService = new RefreshSessionService(RefreshSessionModel)
 const roleService = new RoleService(RoleModel)
 
@@ -53,7 +56,13 @@ const categoryController = new CategoryController(categoryService)
 const productService = new ProductService(ProductModel, categoryService, businessService)
 const productController = new ProductController(productService)
 
-const orderService = new OrderService(OrderModel, branchService, ProductModel)
+const orderService = new OrderService(
+    OrderModel, 
+    branchService, 
+    ProductModel, 
+    ClientModel, 
+    OrderStatusModel
+)
 const orderController = new OrderController(orderService)
 
 const container = {

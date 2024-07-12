@@ -53,8 +53,9 @@ class ProductModel implements IProductModel {
 
     public GetProductsByIDs = async (productIDs: string[]): Promise<IProduct[]> => {
         return db(this.tableName)
-            .select('*')
-            .whereIn('id', productIDs);
+            .join(this.categoriesTableName, `${this.categoriesTableName}.id`, '=', `${this.tableName}.category_id`)
+            .whereIn(`${this.tableName}.id`, productIDs)
+            .select(`${this.tableName}.*`, `${this.categoriesTableName}.business_id`);
     }
 }
 

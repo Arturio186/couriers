@@ -26,7 +26,7 @@ class OrderController implements IOrderController {
 
     public Store = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { 
+            const {
                 status_id,
                 address,
                 note,
@@ -36,9 +36,11 @@ class OrderController implements IOrderController {
                 client_phone,
                 courier_id,
                 branch_id,
-                products
+                products,
+                delivery_time
             } = req.body;
-
+    
+    
             const orderRequest: IOrderRequest = {
                 status_id,
                 address,
@@ -49,10 +51,9 @@ class OrderController implements IOrderController {
                 client_phone,
                 courier_id,
                 branch_id,
-                products
+                products,
+                delivery_time
             }
-
-            console.log(orderRequest)
 
             const order = await this.OrderService.SaveOrder(orderRequest, res.locals.user.id)
 

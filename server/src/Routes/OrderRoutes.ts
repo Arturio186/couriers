@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { query } from "express-validator";
+import { query, body} from "express-validator";
 
 import AuthMiddleware from "../Middlewares/AuthMiddleware";
 import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
 
 import IOrderController from "../Interfaces/Order/IOrderController";
+import OperatorMiddleware from "../Middlewares/OperatorMiddleware";
 
 export default (orderController: IOrderController) => {
     const router = Router();
@@ -20,7 +21,16 @@ export default (orderController: IOrderController) => {
     router.post(
         "/",
         AuthMiddleware,
-        // ДОБАВИТЬ ВАЛИДАЦИЮ ПОЛЕЙ,
+        OperatorMiddleware,
+        body("branch_id").isUUID(),
+        body("client_name").notEmpty(),
+        body("client_phone").notEmpty(),
+        body("courier_id").optional({ nullable: true }).isUUID(),
+        body("lat").isNumeric(),
+        body("long").isNumeric(),
+        body("address").notEmpty(),
+        body("status_id").isNumeric(),
+        body("delivery_time").isISO8601(),
         ValidationMiddleware,
         orderController.Store
     )

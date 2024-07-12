@@ -2,6 +2,7 @@ import db from "../Database/db";
 
 import IOrder from "../Interfaces/Order/IOrder";
 import IOrderModel from "../Interfaces/Order/IOrderModel";
+import IOrderData from "../Interfaces/Order/IOrderData";
 
 class OrderModel implements IOrderModel {
     private readonly tableName = "orders";
@@ -17,6 +18,27 @@ class OrderModel implements IOrderModel {
 
         return orders;
     };
+
+    public Create = async (data: IOrderData): Promise<IOrder> => {
+        const [newOrder] = await db(this.tableName)
+            .insert({
+                status_id: data.status_id,
+                address: data.address,
+                note: data.note,
+                coords: db.raw(`ST_GeomFromText('POINT(${data.lat} ${data.long})', 4326)`),
+                client_id: data.client_id,
+                delivery_time: data.delivery_time,
+                courier_id: data.courier_id,
+                branch_id: data.branch_id
+            })   
+            .returning<IOrder[]>("*")
+
+        return newOrder;
+
+        //const [newBusiness] = await db(this.tableName).insert(buisness).returning<IBusiness[]>("*");
+
+        //return newBusiness;
+    }
 }
 
 export default new OrderModel();

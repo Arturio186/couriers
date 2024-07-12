@@ -10,5 +10,6 @@ export default interface IOrderRequest {
     client_phone: string;
     courier_id: string | null;
     branch_id: string;
+    delivery_time: Date;
     products: IOrderProduct[];
 }
