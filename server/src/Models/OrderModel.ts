@@ -3,10 +3,12 @@ import db from "../Database/db";
 import IOrder from "../Interfaces/Order/IOrder";
 import IOrderModel from "../Interfaces/Order/IOrderModel";
 import IOrderData from "../Interfaces/Order/IOrderData";
+import IOrderProduct from "../Interfaces/Order/IOrderProduct";
 
 class OrderModel implements IOrderModel {
     private readonly tableName = "orders";
     private readonly orderStatusesTableName = "order_statuses";
+    private readonly productOrderTableName = "product_order";
 
     public FindActiveOrders = async (branchID: string): Promise<IOrder[]> => {
         const orders = await db(this.tableName)
@@ -34,10 +36,17 @@ class OrderModel implements IOrderModel {
             .returning<IOrder[]>("*")
 
         return newOrder;
+    }
 
-        //const [newBusiness] = await db(this.tableName).insert(buisness).returning<IBusiness[]>("*");
+    public async AddProductsToOrder(orderID: string, products: IOrderProduct[]): Promise<void> {
+        const productOrders = products.map(product => ({
+            order_id: orderID,
+            product_id: product.id,
+            quantity: product.quantity,
+            product_price: product.price
+        }));
 
-        //return newBusiness;
+        await db(this.productOrderTableName).insert(productOrders);
     }
 }
 

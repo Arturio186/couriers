@@ -57,7 +57,7 @@ class OrderController implements IOrderController {
 
             const order = await this.OrderService.SaveOrder(orderRequest, res.locals.user.id)
 
-            res.status(200).json("create")
+            res.status(200).json(order)
         }
         catch (error) {
             next(error)

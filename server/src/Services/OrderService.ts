@@ -52,7 +52,7 @@ class OrderService implements IOrderService {
             throw APIError.BadRequest("Вы не являетесь работником данного филиала");
         }
 
-        await this.validateProducts(orderRequest.products, branch.business_id);
+        const products = await this.GetValidateProducts(orderRequest.products, branch.business_id);
 
         const client = await this.ClientModel.FindOrCreate(
             { 
@@ -94,15 +94,16 @@ class OrderService implements IOrderService {
             delivery_time: deliveryDate,
             courier_id: orderRequest.courier_id ? orderRequest.courier_id : null,
             branch_id: branch.id,
-            // 
         }
 
         const order = await this.OrderModel.Create(orderData)
 
+        await this.OrderModel.AddProductsToOrder(order.id, products);
+
         return order;
     }
 
-    private validateProducts = async (products: IOrderProduct[], businessID: string) => {
+    private GetValidateProducts = async (products: IOrderProduct[], businessID: string) => {
         const productIds = products.map(p => p.id);
 
         const productsFromDB = await this.ProductModel.GetProductsByIDs(productIds);
@@ -111,13 +112,22 @@ class OrderService implements IOrderService {
             throw APIError.BadRequest("Некорректный список товаров");
         }
 
-        productsFromDB.forEach(product => {
-            if (product.business_id !== businessID) {
+        const validatedProducts: IOrderProduct[] = products.map(product => {
+            const dbProduct = productsFromDB.find(p => p.id === product.id);
+
+            if (!dbProduct || dbProduct.business_id !== businessID) {
                 throw APIError.BadRequest(`Продукт ${product.id} не относится к бизнесу`);
             }
-        });
-    } 
 
+            return {
+                id: dbProduct.id,
+                quantity: product.quantity,
+                price: Number(dbProduct.price)
+            };
+        });
+
+        return validatedProducts
+    } 
 }
 
 export default OrderService;
