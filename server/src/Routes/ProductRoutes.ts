@@ -17,6 +17,14 @@ export default (productController: IProductController) => {
         productController.GetProducts
     )
 
+    router.get(
+        "/assortment",
+        AuthMiddleware,
+        query('business_id').isUUID(),
+        ValidationMiddleware,
+        productController.GetAssortment
+    )
+
     router.post(
         "/",
         AuthMiddleware,

@@ -88,6 +88,36 @@ class ProductService implements IProductService {
         
         return products
     };
+
+    public GetAssortment = async (businessID: string, userID: string) => {
+        const isCorrectStaff = await this.BusinessService.IsUserWorkInBusiness(businessID, userID)
+
+        if (!isCorrectStaff) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
+        }
+
+        const assortment = await this.ProductModel.GetProductAssortment(businessID);
+
+        const categoryMap = new Map();
+
+        assortment.forEach(item => {
+            if (!categoryMap.has(item.category_id)) {
+                categoryMap.set(item.category_id, {
+                    id: item.category_id,
+                    name: item.category_name,
+                    products: []
+                });
+            }
+
+            categoryMap.get(item.category_id).products.push({
+                id: item.product_id,
+                name: item.product_name,
+                price: item.product_price
+            });
+        });
+
+        return Array.from(categoryMap.values())
+    }
 }
 
 export default ProductService;

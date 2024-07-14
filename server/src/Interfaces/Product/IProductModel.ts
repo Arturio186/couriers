@@ -1,3 +1,4 @@
+import IAssortmentRow from "./IAssortmentRow";
 import IProduct from "./IProduct";
 
 export default interface IProductModel {
@@ -7,4 +8,5 @@ export default interface IProductModel {
     FindOne: (conditions: Partial<IProduct>) => Promise<IProduct | undefined>
     FindAll: (conditions: Partial<IProduct>) => Promise<IProduct[]>
     GetProductsByIDs: (productIDs: string[]) => Promise<IProduct[]>
+    GetProductAssortment: (businessID: string) => Promise<IAssortmentRow[]>
 }

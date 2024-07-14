@@ -1,4 +1,5 @@
 import ProductDTO from "../../DTO/ProductDTO";
+import IAssortmentCategory from "./IAssortmentCategory";
 import IProduct from "./IProduct";
 
 export default interface IProductService {
@@ -7,4 +8,5 @@ export default interface IProductService {
     RemoveProduct: (productID: string, userID: string) => Promise<number>;
     GetProducts: (categoryID: string, userID: string) => Promise<ProductDTO[]>;
     FindProduct: (productID: string) => Promise<IProduct>
+    GetAssortment: (businessID: string, userID: string) => Promise<IAssortmentCategory[]>
 }

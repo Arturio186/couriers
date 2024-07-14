@@ -5,4 +5,5 @@ export default interface IProductController {
     Update: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Destroy: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     GetProducts: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    GetAssortment: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

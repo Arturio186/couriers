@@ -1,4 +1,5 @@
 import db from "../Database/db";
+import IAssortmentRow from "../Interfaces/Product/IAssortmentRow";
 
 import IProduct from "../Interfaces/Product/IProduct";
 import IProductModel from "../Interfaces/Product/IProductModel";
@@ -56,6 +57,23 @@ class ProductModel implements IProductModel {
             .join(this.categoriesTableName, `${this.categoriesTableName}.id`, '=', `${this.tableName}.category_id`)
             .whereIn(`${this.tableName}.id`, productIDs)
             .select(`${this.tableName}.*`, `${this.categoriesTableName}.business_id`);
+    }
+
+    public GetProductAssortment = async (businessID: string): Promise<IAssortmentRow[]> => {
+        const result = await db(this.tableName)
+            .join(this.categoriesTableName, `${this.categoriesTableName}.id`, '=', `${this.tableName}.category_id`)
+            .where(`${this.categoriesTableName}.business_id`, '=', businessID)
+            .select(
+                `${this.categoriesTableName}.id as category_id`,
+                `${this.categoriesTableName}.name as category_name`,
+                `${this.tableName}.id as product_id`,
+                `${this.tableName}.name as product_name`,
+                `${this.tableName}.price as product_price`
+            )
+            .orderBy(`${this.categoriesTableName}.name`)
+            .orderBy(`${this.tableName}.name`);
+
+        return result
     }
 }
 

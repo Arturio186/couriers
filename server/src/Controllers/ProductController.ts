@@ -64,6 +64,19 @@ class ProductController implements IProductController {
             next(error);
         }
     };
+
+    public GetAssortment = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { business_id } = req.query;
+
+            const assortment = await this.ProductService.GetAssortment(String(business_id), res.locals.user.id)
+
+            res.status(200).json(assortment)
+        }
+        catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default ProductController;
