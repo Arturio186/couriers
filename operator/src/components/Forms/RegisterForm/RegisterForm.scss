@@ -5,6 +5,7 @@ $black-color: hsl(0, 0%, 0%);
 
 $body-font: "Poppins", sans-serif;
 $h1-font-size: 2.3rem;
+$h2-font-size: 1.2rem;
 $normal-font-size: 1rem;
 $small-font-size: .813rem;
 $font-medium: 500;
@@ -33,7 +34,14 @@ $font-medium: 500;
         text-align: center;
         font-size: $h1-font-size;
         font-weight: $font-medium;
-        margin-bottom: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .auth__subtitle {
+        text-align: center;
+        font-size: $h2-font-size;
+        font-weight: $font-medium;
+        margin-bottom: 1rem;
     }
 
     .auth__content {
