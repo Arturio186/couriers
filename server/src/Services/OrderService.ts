@@ -8,6 +8,7 @@ import IOrder from "../Interfaces/Order/IOrder";
 import IOrderData from "../Interfaces/Order/IOrderData";
 import IOrderModel from "../Interfaces/Order/IOrderModel";
 import IOrderProduct from "../Interfaces/Order/IOrderProduct";
+import IOrderProductRequest from "../Interfaces/Order/IOrderProductRequest";
 import IOrderRequest from "../Interfaces/Order/IOrderRequest";
 import IOrderService from "../Interfaces/Order/IOrderService";
 import IOrderStatusModel from "../Interfaces/OrderStatus/IOrderStatusModel";
@@ -32,6 +33,16 @@ class OrderService implements IOrderService {
         this.ProductModel = productModel;
         this.ClientModel = clientModel;
         this.OrderStatusModel = orderStatusModel;
+    }
+
+    public FindOrder = async (orderID: string) => {
+        const order = await this.OrderModel.FindOne({ id: orderID })
+
+        if (!order) {
+            throw APIError.BadRequest("Заказ не найден");
+        }
+
+        return order;
     }
 
     public GetActiveOrders = async (branchID: string, userID: string) => {
@@ -106,7 +117,7 @@ class OrderService implements IOrderService {
         return order;
     }
 
-    private GetValidateProducts = async (products: IOrderProduct[], businessID: string) => {
+    private GetValidateProducts = async (products: IOrderProductRequest[], businessID: string) => {
         const productIds = products.map(p => p.id);
 
         const productsFromDB = await this.ProductModel.GetProductsByIDs(productIds);
@@ -115,7 +126,7 @@ class OrderService implements IOrderService {
             throw APIError.BadRequest("Некорректный список товаров");
         }
 
-        const validatedProducts: IOrderProduct[] = products.map(product => {
+        const validatedProducts = products.map(product => {
             const dbProduct = productsFromDB.find(p => p.id === product.id);
 
             if (!dbProduct || dbProduct.business_id !== businessID) {
@@ -123,7 +134,7 @@ class OrderService implements IOrderService {
             }
 
             return {
-                id: dbProduct.id,
+                product_id: product.id,
                 quantity: product.quantity,
                 price: Number(dbProduct.price)
             };
@@ -131,6 +142,22 @@ class OrderService implements IOrderService {
 
         return validatedProducts
     } 
+
+    public GetOrderProduct = async (orderID: string, userID: string) => {
+        const order = await this.FindOrder(orderID)
+
+        const branch = await this.BranchService.FindBranch(order.branch_id)
+
+        const isUserInBranch = await this.BranchService.IsUserInBranch(branch.id, userID)
+
+        if (!isUserInBranch) {
+            throw APIError.BadRequest("Вы не являетесь работником данного филиала");
+        }
+
+        const products = await this.OrderModel.GetOrderProducts(order.id)
+
+        return products;
+    }
 }
 
 export default OrderService;

@@ -1,17 +1,29 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { YMaps, Map, Placemark, Button, SearchControl } from "@pbe/react-yandex-maps";
+import { useDispatch } from "react-redux";
 import io from "socket.io-client";
 import "./CoolMap.scss";
 
+const APIKey = import.meta.env.VITE_MAP_API_KEY;
+const APISuggestKey = import.meta.env.VITE_MAP_SUGGEST_API_KEY;
+
 import ICourier from "#interfaces/ICourier";
+import IOrder from "#interfaces/IOrder";
 
 import { RootState } from "#store/store";
+import { addToast } from "#store/toastSlice";
+
 import MapAnnotation from "#components/MapAnnotation/MapAnnotation";
 import CouriersSelect from "#components/CouriersSelect/CouriersSelect";
-import { addToast } from "#store/toastSlice";
-import { useDispatch } from "react-redux";
+import CouriersPlacemarks from "#components/Placemarks/Couriers/CouriersPlacemarks";
+
 import { SOCKET_URL } from "#utils/consts";
+
+import useFetching from "#hooks/useFetching";
+import OrderService from "#services/OrderService";
+import Loader from "#components/UI/Loader/Loader";
+import Modal from "#components/UI/Modal/Modal";
 
 interface CourierLocationMessage {
     userId: string;
@@ -31,6 +43,11 @@ interface SearchControlType extends ymaps.control.SearchControl {
     hideResult: () => void;
 }
 
+const orderColors: Record<string, string> = {
+    "free": "red",
+    "progress": "green"
+}
+
 const CoolMap = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.user);
@@ -43,43 +60,22 @@ const CoolMap = () => {
     const [creatorPlacemark, setCreatorPlacemark] = useState<React.ReactNode>(null);
     const [targetCourier, setTargetCourier] = useState<ICourier | null>(null);
 
-    const addCreatorPlacemark = (coords: number[]) => {
-        setCreatorPlacemark(
-            <Placemark
-                onClick={() => console.log('open modal create order')/* setModalCreateOrder(true) */}
-                instanceRef={(placemark) => creatorPlacemarkRef.current = placemark}
-                geometry={{
-                    type: 'Point',
-                    coordinates: coords
-                }}
-                options={{
-                    preset: 'islands#dotIcon',
-                    iconColor: 'black',
-                    draggable: true
-                }} 
-                properties={{
-                    hintContent: 'Чтобы создать заказ, нажми на меня!'
-                }}
-            />
-        ) 
-    }
+    const [orders, setOrders] = useState<IOrder[]>([]);
+    const [targetOrder, setTargetOrder] = useState<IOrder | null>(null);
 
-    const handleResultShow = () => {
-        const searchControlRefCurrent = searchControlRef.current;
+    const [modalOrderInfo, setModalOrderInfo] = useState<boolean>(false);
 
-        if (searchControlRefCurrent) {
-            const results = searchControlRefCurrent.getResultsArray();
-    
-            searchControlRefCurrent.hideResult();
-            
-            if (results.length > 0) {
-                const firstResult = results[0];
-                const coordinates = firstResult?.geometry?.getCoordinates();
-
-                addCreatorPlacemark(coordinates);
-            }
+    const {
+        data: ordersData,
+        loading,
+        error,
+    } = useFetching<IOrder[]>(useCallback(() => {
+        if (user.currentBranch!.id) {
+            return OrderService.GetActiveOrders(user.currentBranch!.id)
+        } else {
+            throw new Error("Branch ID is undefined");
         }
-    };
+    }, [user.currentBranch!.id]));
 
     useEffect(() => {
         if (user.currentBranch?.id) {
@@ -142,24 +138,85 @@ const CoolMap = () => {
     }, [user.currentBranch?.id]);
 
     useEffect(() => {
-        if (targetCourier) {
-            console.log(targetCourier)
+        if (ordersData) {
+            setOrders(ordersData)
         }
-    }, [targetCourier])
+    }, [ordersData])
 
+    const addCreatorPlacemark = (coords: number[]) => {
+        setCreatorPlacemark(
+            <Placemark
+                onClick={() => console.log('open modal create order')/* setModalCreateOrder(true) */}
+                instanceRef={(placemark) => creatorPlacemarkRef.current = placemark}
+                geometry={{
+                    type: 'Point',
+                    coordinates: coords
+                }}
+                options={{
+                    preset: 'islands#dotIcon',
+                    iconColor: 'black',
+                    draggable: true
+                }} 
+                properties={{
+                    hintContent: 'Чтобы создать заказ, нажми на меня!'
+                }}
+            />
+        ) 
+    }
+
+    const handleResultShow = () => {
+        const searchControlRefCurrent = searchControlRef.current;
+
+        if (searchControlRefCurrent) {
+            const results = searchControlRefCurrent.getResultsArray();
+    
+            searchControlRefCurrent.hideResult();
+            
+            if (results.length > 0) {
+                const firstResult = results[0];
+                const coordinates = firstResult?.geometry?.getCoordinates();
+
+                addCreatorPlacemark(coordinates);
+            }
+        }
+    };
+
+    const handleOrderPlacemarkClick = (order: IOrder) => {
+        setTargetOrder(order)
+        setModalOrderInfo(true)
+    }
+
+    if (loading) {
+        return <Loader />
+    }
+
+    if (error) {
+        return <div>{error}</div>
+    }
+    
     return (
         <div className="map-wrapper">
+            <Modal
+                visible={modalOrderInfo}
+                setVisible={setModalOrderInfo}
+            >
+                {targetOrder && <div>
+                    {targetOrder.client_name}
+                    {targetOrder.client_phone}
+                    
+                </div>}
+            </Modal>
             <div className="menu">
-                    <CouriersSelect
-                        mapRef={mapRef}
-                        couriers={couriers}
-                        setTargetCourier={setTargetCourier}
-                    />
+                <CouriersSelect
+                    mapRef={mapRef}
+                    couriers={couriers}
+                    setTargetCourier={setTargetCourier}
+                />
             </div>
             <YMaps
                 query={{
-                    apikey: "0b375996-25a4-4d5d-9152-504fa8810cd2",
-                    suggest_apikey: "fd6f5511-dbbe-4db1-bc61-b5f9a6b71f37",
+                    apikey: APIKey,
+                    suggest_apikey: APISuggestKey,
                 }}
             >
                 <div className="map-container">
@@ -180,7 +237,8 @@ const CoolMap = () => {
                         instanceRef={(map) => (mapRef.current = map)}
                         options={{ suppressMapOpenBlock: true }}
                     >
-                        {mapRef.current && <Button
+                        
+                        <Button
                             options={{ maxWidth: 128, selectOnClick: false }}
                             data={{ content: "Создать заказ" }}
                             onClick={() => {
@@ -190,34 +248,32 @@ const CoolMap = () => {
                                     addCreatorPlacemark(coords);
                                 }
                             }} 
-                        />}
+                        />
+                        
 
-                        {couriers.map((courier) => {
-                            if (courier.lat === -1 || courier.long === -1) {
-                                return null;
-                            }
+                        {orders.map((order, index) => {
+                            if (targetCourier === null || targetCourier.id === order.courier_id) {
+                                return <Placemark
+                                        key={order.id}
+                                        geometry={{
+                                            type: 'Point',
+                                            coordinates: [order.coords.lat, order.coords.long]
+                                        }}
+                                        options={{
+                                            preset: 'islands#dotIcon',
+                                            iconColor: targetOrder?.id === order.id ? "blue" : orderColors[order.status],
+                                        }} 
+                                        properties={{
+                                            hintContent: `Заказ ${index + 1}`,
+                                        }}
+                                        onClick={() => handleOrderPlacemarkClick(order)}
+                                    />
+                                }
+                            })
+                        }
 
-                            return (
-                                <Placemark
-                                    key={courier.id}
-                                    geometry={{
-                                        type: "Point",
-                                        coordinates: [
-                                            courier.lat,
-                                            courier.long,
-                                        ],
-                                    }}
-                                    options={{
-                                        preset: "islands#circleIcon",
-                                        iconColor: "blue",
-                                    }}
-                                    properties={{
-                                        hintContent: `${courier.firstName} ${courier.lastName}`,
-                                        balloonContent: `${courier.firstName} ${courier.lastName}`,
-                                    }}
-                                />
-                            );
-                        })}
+                        <CouriersPlacemarks couriers={couriers} />
+                        
                         <SearchControl
                             options={{ float: 'right' }}
                             instanceRef={(searchControl: any) => (searchControlRef.current = searchControl)}

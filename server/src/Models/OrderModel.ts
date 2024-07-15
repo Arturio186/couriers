@@ -9,24 +9,12 @@ class OrderModel implements IOrderModel {
     private readonly tableName = "orders";
     private readonly orderStatusesTableName = "order_statuses";
     private readonly productOrderTableName = "product_order";
+    private readonly productsTableName = "products"
     private readonly clientTableName = "clients"
 
-    public FindActiveOrders = async (branchID: string): Promise<IOrder[]> => {
-        const orders = await db(this.tableName)
-            .join(this.orderStatusesTableName, `${this.tableName}.status_id`, '=', `${this.orderStatusesTableName}.id`)
-            .join(this.clientTableName, `${this.tableName}.client_id`, '=', `${this.clientTableName}.id`)
-            .select(
-                `${this.tableName}.*`, 
-                `${this.orderStatusesTableName}.name as status`, 
-                `${this.clientTableName}.name as client_name`,
-                `${this.clientTableName}.phone as client_phone`,
-            )
-            .where(`${this.tableName}.branch_id`, branchID)
-            .whereIn(`${this.orderStatusesTableName}.name`, ['free', 'progress'])
-            .orderBy(`${this.tableName}.created_at`, 'desc');
-
-        return orders;
-    };
+    public FindOne = async (conditions: Partial<IOrder>) => {
+        return db(this.tableName).where(conditions).first();
+    }
 
     public Create = async (data: IOrderData): Promise<IOrder> => {
         const [newOrder] = await db(this.tableName)
@@ -45,15 +33,41 @@ class OrderModel implements IOrderModel {
         return newOrder;
     }
 
-    public async AddProductsToOrder(orderID: string, products: IOrderProduct[]): Promise<void> {
+    public FindActiveOrders = async (branchID: string): Promise<IOrder[]> => {
+        const orders = await db(this.tableName)
+            .join(this.orderStatusesTableName, `${this.tableName}.status_id`, '=', `${this.orderStatusesTableName}.id`)
+            .join(this.clientTableName, `${this.tableName}.client_id`, '=', `${this.clientTableName}.id`)
+            .select(
+                `${this.tableName}.*`, 
+                `${this.orderStatusesTableName}.name as status`, 
+                `${this.clientTableName}.name as client_name`,
+                `${this.clientTableName}.phone as client_phone`,
+            )
+            .where(`${this.tableName}.branch_id`, branchID)
+            .whereIn(`${this.orderStatusesTableName}.name`, ['free', 'progress'])
+            .orderBy(`${this.tableName}.created_at`, 'desc');
+
+        return orders;
+    };
+
+    public async AddProductsToOrder(orderID: string, products: Omit<IOrderProduct, 'order_id'>[]): Promise<void> {
         const productOrders = products.map(product => ({
             order_id: orderID,
-            product_id: product.id,
+            product_id: product.product_id,
             quantity: product.quantity,
             product_price: product.price
         }));
 
         await db(this.productOrderTableName).insert(productOrders);
+    }
+
+    public async GetOrderProducts(orderID: string): Promise<IOrderProduct[]> {
+        const products = await db(this.productOrderTableName)
+            .join(this.productsTableName, `${this.productsTableName}.id`, '=', `${this.productOrderTableName}.product_id`)
+            .where({ order_id: orderID })
+            .select(`${this.productOrderTableName}.*`, `${this.productsTableName}.name`)
+
+        return products;
     }
 }
 

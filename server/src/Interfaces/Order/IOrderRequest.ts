@@ -1,4 +1,4 @@
-import IOrderProduct from "./IOrderProduct";
+import IOrderProductRequest from "./IOrderProductRequest";
 
 export default interface IOrderRequest {
     status_id: number;
@@ -11,5 +11,5 @@ export default interface IOrderRequest {
     courier_id: string | null;
     branch_id: string;
     delivery_time: Date;
-    products: IOrderProduct[];
+    products: IOrderProductRequest[];
 }

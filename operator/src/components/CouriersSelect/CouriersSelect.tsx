@@ -25,22 +25,33 @@ const setFocusOnCoord = (mapRef: React.MutableRefObject<ymaps.Map | null>, lat: 
 }
 
 const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef, setTargetCourier }) => {
-    const [couriersOptions, setCouriersOptions] = useState<Option[]>([]);
+    const [couriersOptions, setCouriersOptions] = useState<Option[]>([
+        { label: "Все курьеры", value: "" }
+    ]);
     const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
     useEffect(() => {
-        setCouriersOptions(
-            couriers.map((courier) => {
-                return {
-                    value: courier.id,
-                    label: `${courier.firstName} ${courier.lastName}`,
-                };
-            })
+        setCouriersOptions([
+                { label: "Все курьеры", value: "" },
+                ...couriers.map((courier) => {
+                    return {
+                        value: courier.id,
+                        label: `${courier.firstName} ${courier.lastName}`,
+                    };
+                })]
         );
-    }, [couriers]);
+
+        const defaultOption = couriersOptions.find(o => o.value === "")
+        
+        if (defaultOption) {
+            setSelectedOption(defaultOption)
+        }
+
+    }, [couriers.length]);
 
     useEffect(() => {
         if (selectedOption?.value === "") {
+            setTargetCourier(null)
             return
         }
 
@@ -57,10 +68,7 @@ const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef, setTargetCo
         <div>
             <Select
                 value={selectedOption}
-                options={[
-                    { label: "Все курьеры", value: "" },
-                    ...couriersOptions,
-                ]}
+                options={couriersOptions}
                 onChange={(selected) =>
                     setSelectedOption(selected)
                 }

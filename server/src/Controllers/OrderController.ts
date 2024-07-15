@@ -63,6 +63,19 @@ class OrderController implements IOrderController {
             next(error)
         }
     }
+
+    public GetOrderProducts = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { order_id } = req.query;
+
+            const products = await this.OrderService.GetOrderProduct(String(order_id), res.locals.user.id)
+
+            res.status(200).json(products)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default OrderController

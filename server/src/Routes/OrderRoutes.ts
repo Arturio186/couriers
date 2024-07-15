@@ -18,6 +18,14 @@ export default (orderController: IOrderController) => {
         orderController.GetActiveOrders
     )
 
+    router.get(
+        "/products",
+        AuthMiddleware,
+        query('order_id').isUUID(),
+        ValidationMiddleware,
+        orderController.GetOrderProducts
+    )
+
     router.post(
         "/",
         AuthMiddleware,
