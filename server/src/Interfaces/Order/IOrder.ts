@@ -10,6 +10,8 @@ export default interface IOrder {
     client_phone?: string;
     delivery_time: Date;
     courier_id: string;
+    courier_first_name: string;
+    courier_last_name: string;
     branch_id: string;
     created_at?: Date;
     updated_at?: Date;

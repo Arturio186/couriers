@@ -6,6 +6,7 @@ import IOrderData from "../Interfaces/Order/IOrderData";
 import IOrderProduct from "../Interfaces/Order/IOrderProduct";
 
 class OrderModel implements IOrderModel {
+    private readonly usersTableName = "users";
     private readonly tableName = "orders";
     private readonly orderStatusesTableName = "order_statuses";
     private readonly productOrderTableName = "product_order";
@@ -37,11 +38,14 @@ class OrderModel implements IOrderModel {
         const orders = await db(this.tableName)
             .join(this.orderStatusesTableName, `${this.tableName}.status_id`, '=', `${this.orderStatusesTableName}.id`)
             .join(this.clientTableName, `${this.tableName}.client_id`, '=', `${this.clientTableName}.id`)
+            .leftJoin(this.usersTableName, `${this.usersTableName}.id`, '=', `${this.tableName}.courier_id`)
             .select(
                 `${this.tableName}.*`, 
                 `${this.orderStatusesTableName}.name as status`, 
                 `${this.clientTableName}.name as client_name`,
                 `${this.clientTableName}.phone as client_phone`,
+                `${this.usersTableName}.first_name as courier_first_name`,
+                `${this.usersTableName}.last_name as courier_last_name`,
             )
             .where(`${this.tableName}.branch_id`, branchID)
             .whereIn(`${this.orderStatusesTableName}.name`, ['free', 'progress'])

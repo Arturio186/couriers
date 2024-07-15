@@ -12,6 +12,8 @@ class OrderDTO {
     public client_phone: string; 
     public delivery_time: Date;
     public courier_id: string;
+    public courier_first_name: string;
+    public courier_last_name: string;
     public branch_id: string;
 
     constructor(order: IOrder) {
@@ -24,6 +26,8 @@ class OrderDTO {
         this.client_phone = order.client_phone;
         this.delivery_time = order.delivery_time;
         this.courier_id = order.courier_id;
+        this.courier_first_name = order.courier_first_name;
+        this.courier_last_name = order.courier_last_name;
         this.branch_id = order.branch_id;
     }   
 }

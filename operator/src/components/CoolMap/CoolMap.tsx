@@ -24,6 +24,7 @@ import useFetching from "#hooks/useFetching";
 import OrderService from "#services/OrderService";
 import Loader from "#components/UI/Loader/Loader";
 import Modal from "#components/UI/Modal/Modal";
+import OrderInfo from "#components/OrderInfo/OrderInfo";
 
 interface CourierLocationMessage {
     userId: string;
@@ -200,11 +201,7 @@ const CoolMap = () => {
                 visible={modalOrderInfo}
                 setVisible={setModalOrderInfo}
             >
-                {targetOrder && <div>
-                    {targetOrder.client_name}
-                    {targetOrder.client_phone}
-                    
-                </div>}
+                {targetOrder && <OrderInfo order={targetOrder} />}
             </Modal>
             <div className="menu">
                 <CouriersSelect
