@@ -1,3 +1,4 @@
+import OrderDTO from "../DTO/OrderDTO";
 import APIError from "../Exceptions/APIError";
 
 import IBranchService from "../Interfaces/Branch/IBranchService";
@@ -40,7 +41,9 @@ class OrderService implements IOrderService {
             throw APIError.BadRequest("Вы не являетесь работником данного филиала");
         }
 
-        return await this.OrderModel.FindActiveOrders(branchID)
+        const orders = await this.OrderModel.FindActiveOrders(branchID);
+
+        return orders.map(o => new OrderDTO(o))
     };
 
     public SaveOrder = async (orderRequest: IOrderRequest, userID: string) => {
