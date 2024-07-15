@@ -9,11 +9,18 @@ class OrderModel implements IOrderModel {
     private readonly tableName = "orders";
     private readonly orderStatusesTableName = "order_statuses";
     private readonly productOrderTableName = "product_order";
+    private readonly clientTableName = "clients"
 
     public FindActiveOrders = async (branchID: string): Promise<IOrder[]> => {
         const orders = await db(this.tableName)
-            .join(this.orderStatusesTableName, `${this.tableName}.status_id`, `${this.orderStatusesTableName}.id`)
-            .select(`${this.tableName}.*`, `${this.orderStatusesTableName}.name as status`)
+            .join(this.orderStatusesTableName, `${this.tableName}.status_id`, '=', `${this.orderStatusesTableName}.id`)
+            .join(this.clientTableName, `${this.tableName}.client_id`, '=', `${this.clientTableName}.id`)
+            .select(
+                `${this.tableName}.*`, 
+                `${this.orderStatusesTableName}.name as status`, 
+                `${this.clientTableName}.name as client_name`,
+                `${this.clientTableName}.phone as client_phone`,
+            )
             .where(`${this.tableName}.branch_id`, branchID)
             .whereIn(`${this.orderStatusesTableName}.name`, ['free', 'progress'])
             .orderBy(`${this.tableName}.created_at`, 'desc');
