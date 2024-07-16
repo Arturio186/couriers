@@ -30,5 +30,95 @@
                 gap: 0.5rem;
             }
         }
+
+        .right {
+            width: 50%;
+           
+            .centered {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                max-height: 30vh;
+                overflow: auto;
+
+                &::-webkit-scrollbar {
+                    width: 2px;
+                }
+                
+                &::-webkit-scrollbar-thumb {
+                    background-color: #9e9e9e;
+                    border: none;
+                    border-radius: 20px;
+                }
+
+                .simpleInputs {
+                    width: 100%;
+
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+
+                    .quantity {
+                        padding: 8px 12px;
+
+                        outline: none;
+                        border: none;
+
+                        background-color: #222;
+                        color: #fff;
+                    }
+
+                    select {
+                        width: 40%;
+                        margin-right: 6px;
+
+                        padding: 8px 12px;
+
+                        outline: none;
+                        border: none;
+
+                        background-color: #222;
+                        color: #fff;
+                    }
+
+                    input {
+                        width: 10%;
+                    }
+
+                    button {
+                        width: 20px;
+                        height: 100%;
+
+                        padding: 0;
+                        margin: 0;
+
+                        cursor: pointer;
+                        background: none;
+                        border: none;
+                        font-size: 18px;
+                        color: #fff;
+                    }
+
+                    .close {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        
+                    }
+
+                    margin-bottom: 5px;
+                }
+
+                button {
+                    align-self: center;
+                    margin-top: 1rem;
+                }
+            }
+
+            h3 {
+                margin-bottom: 1rem;
+            }
+        }
     }
 }

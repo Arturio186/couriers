@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import Select from "react-select";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { formatISO } from "date-fns";
 import "./AddOrderForm.scss";
 
@@ -13,12 +13,20 @@ import CoolButton from "#components/UI/CoolButton/CoolButton";
 import Option from "#interfaces/Option";
 import darkSelectConfig from "#utils/darkSelectConfig";
 import Loader from "#components/UI/Loader/Loader";
+import IAssortmentCategory from "#interfaces/IAssortmentCategory";
+import IAssortmentProduct from "#interfaces/IAssortmentProduct";
 
 interface AddOrderFormProps {
     couriers: ICourier[];
     lat: number;
     long: number;
     visible: boolean;
+    assortment: IAssortmentCategory[];
+}
+
+interface IAddOrderProduct {
+    id: string;
+    quantity: number;
 }
 
 interface IAddOrderField {
@@ -27,25 +35,41 @@ interface IAddOrderField {
     client_name: string;
     client_phone: string;
     delivery_time: Date;
+    products: IAddOrderProduct[];
 }
 
-const AddOrderForm: FC<AddOrderFormProps> = ({ couriers, lat, long, visible }) => {
+const AddOrderForm: FC<AddOrderFormProps> = ({
+    couriers,
+    lat,
+    long,
+    visible,
+    assortment,
+}) => {
     const {
         control,
         register,
         handleSubmit,
         formState: { errors },
         setValue,
+        reset
     } = useForm<IAddOrderField>({ mode: "onChange" });
 
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "products",
+    });
 
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedOption, setSelectedOption] = useState<Option | null>(null);
     const [couriersOptions, setCouriersOptions] = useState<Option[]>([
         { label: "Не выбран", value: null },
     ]);
 
     const [geoCodeLoading, setGeoCodeLoading] = useState(false);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [productOptions, setProductOptions] = useState<{
+        [key: string]: IAssortmentProduct[];
+    }>({});
 
     useEffect(() => {
         setCouriersOptions([
@@ -68,20 +92,47 @@ const AddOrderForm: FC<AddOrderFormProps> = ({ couriers, lat, long, visible }) =
     useEffect(() => {
         if (visible) {
             (async () => {
-                setGeoCodeLoading(true)
+                setGeoCodeLoading(true);
 
                 const response = await fetch(
-                    `https://geocode-maps.yandex.ru/1.x/?apikey=${APIKey}&geocode=${long},${lat}&format=json&results=2`);
+                    `https://geocode-maps.yandex.ru/1.x/?apikey=${APIKey}&geocode=${long},${lat}&format=json&results=2`
+                );
 
                 if (response.status === 200) {
                     const result = await response.json();
-                    setValue("address", result.response.GeoObjectCollection.featureMember[0].GeoObject.name);
+                    setValue(
+                        "address",
+                        result.response.GeoObjectCollection.featureMember[0]
+                            .GeoObject.name
+                    );
                 }
-                
-                setGeoCodeLoading(false)
+
+                setGeoCodeLoading(false);
             })();
         }
+        else {
+            reset({
+                address: "",
+                note: "",
+                client_name: "",
+                client_phone: "",
+                products: [{ id: "", quantity: 1 }]
+            });
+            setSelectedDate(null);
+            setSelectedOption({ label: "Не выбран", value: null });
+            setSelectedCategories([]);
+        }
+       
     }, [visible]);
+
+    useEffect(() => {
+        const initialProductOptions: { [key: string]: IAssortmentProduct[] } =
+            {};
+        assortment.forEach((category) => {
+            initialProductOptions[category.id] = category.products;
+        });
+        setProductOptions(initialProductOptions);
+    }, [assortment]);
 
     const onSubmit: SubmitHandler<IAddOrderField> = async (data) => {
         const formattedData = {
@@ -89,10 +140,23 @@ const AddOrderForm: FC<AddOrderFormProps> = ({ couriers, lat, long, visible }) =
             delivery_time: selectedDate ? formatISO(selectedDate) : null,
             courier_id: selectedOption?.value,
         };
+
+        console.log(formattedData);
+
+        // ЗАПРОС К АПИ
+    };
+
+    const handleCategoryChange = (index: number, categoryId: string) => {
+        setSelectedCategories((prevState) => {
+            const newState = [...prevState];
+            newState[index] = categoryId;
+            return newState;
+        });
+        setValue(`products.${index}.id`, "");
     };
 
     if (geoCodeLoading) {
-        return <Loader />
+        return <Loader />;
     }
 
     return (
@@ -156,7 +220,72 @@ const AddOrderForm: FC<AddOrderFormProps> = ({ couriers, lat, long, visible }) =
                         />
                     </div>
                 </div>
-                <div className="right">Товары</div>
+                <div className="right">
+                    <h3>Продукты</h3>
+                    <div className="centered">
+                        {fields.map((product, index) => (
+                            <div key={product.id}>
+                                <div className="simpleInputs">
+                                    <select
+                                        onChange={(e) =>
+                                            handleCategoryChange(
+                                                index,
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <option value="" disabled selected>
+                                            Выберите категорию
+                                        </option>
+                                        {assortment.map((category) => (
+                                            <option
+                                                key={category.id}
+                                                value={category.id}
+                                            >
+                                                {category.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        {...register(`products.${index}.id`)}
+                                    >
+                                        <option value="">
+                                            Выберите продукт
+                                        </option>
+                                        {selectedCategories[index] &&
+                                            productOptions[
+                                                selectedCategories[index]
+                                            ]?.map((product) => (
+                                                <option
+                                                    key={product.id}
+                                                    value={product.id}
+                                                >
+                                                    {product.name}
+                                                </option>
+                                            ))}
+                                    </select>
+                                    <input
+                                        className="quantity"
+                                        type="number"
+                                        min="1"
+                                        {...register(
+                                            `products.${index}.quantity`
+                                        )}
+                                    />
+                                    <button onClick={() => remove(index)}>X</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <CoolButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            append({ id: "", quantity: 1 });
+                        }}
+                    >
+                        Добавить
+                    </CoolButton>
+                </div>
             </div>
             <CoolButton>Создать</CoolButton>
         </form>

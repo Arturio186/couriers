@@ -26,6 +26,8 @@ import Loader from "#components/UI/Loader/Loader";
 import Modal from "#components/UI/Modal/Modal";
 import OrderInfo from "#components/OrderInfo/OrderInfo";
 import AddOrderForm from "#components/Forms/AddOrderForm/AddOrderForm";
+import IAssortmentCategory from "#interfaces/IAssortmentCategory";
+import ProductService from "#services/ProductService";
 
 interface CourierLocationMessage {
     userId: string;
@@ -79,6 +81,18 @@ const CoolMap = () => {
     } = useFetching<IOrder[]>(useCallback(() => {
         if (user.currentBranch!.id) {
             return OrderService.GetActiveOrders(user.currentBranch!.id)
+        } else {
+            throw new Error("Branch ID is undefined");
+        }
+    }, [user.currentBranch!.id]));
+
+    const {
+        data: assortmentData,
+        loading: assortmentLoading,
+        error: assortmentError,
+    } = useFetching<IAssortmentCategory[]>(useCallback(() => {
+        if (user.currentBranch!.id) {
+            return ProductService.GetAssortment(user.currentBranch!.business_id)
         } else {
             throw new Error("Branch ID is undefined");
         }
@@ -193,12 +207,16 @@ const CoolMap = () => {
         setModalOrderInfo(true)
     }
 
-    if (loading) {
+    if (loading || assortmentLoading) {
         return <Loader />
     }
 
     if (error) {
         return <div>{error}</div>
+    }
+
+    if (assortmentError) {
+        return <div>{assortmentError}</div>
     }
     
     return (
@@ -218,6 +236,7 @@ const CoolMap = () => {
                     lat={creatorPlacemarkRef.current.geometry?._coordinates[0]!}
                     long={creatorPlacemarkRef.current.geometry?._coordinates[1]!}
                     visible={modalOrderCreate}
+                    assortment={assortmentData!}
                 />}
             </Modal>
 

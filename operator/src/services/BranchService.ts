@@ -10,7 +10,7 @@ export default class BranchService {
     }
 
     static async GetBranchInfo(branchID: string): Promise<AxiosResponse<IBranch>> {
-        return $api.get(`branches/${branchID}`)
+        return $api.get(`/branches/${branchID}`)
     }
 
     static async JoinBranch(branch_id: string): Promise<AxiosResponse<string>> {
