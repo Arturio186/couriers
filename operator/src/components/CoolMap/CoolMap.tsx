@@ -25,6 +25,7 @@ import OrderService from "#services/OrderService";
 import Loader from "#components/UI/Loader/Loader";
 import Modal from "#components/UI/Modal/Modal";
 import OrderInfo from "#components/OrderInfo/OrderInfo";
+import AddOrderForm from "#components/Forms/AddOrderForm/AddOrderForm";
 
 interface CourierLocationMessage {
     userId: string;
@@ -44,6 +45,10 @@ interface SearchControlType extends ymaps.control.SearchControl {
     hideResult: () => void;
 }
 
+interface PlacemarkType extends ymaps.Map {
+    geometry?: { _coordinates: [number, number] }
+}
+
 const orderColors: Record<string, string> = {
     "free": "red",
     "progress": "green"
@@ -54,7 +59,7 @@ const CoolMap = () => {
     const user = useSelector((state: RootState) => state.user);
 
     const mapRef = useRef<ymaps.Map | null>(null);
-    const creatorPlacemarkRef = useRef<ymaps.Map | null>(null);
+    const creatorPlacemarkRef = useRef<PlacemarkType | null>(null);
     const searchControlRef = useRef<SearchControlType | null>(null);
 
     const [couriers, setCouriers] = useState<ICourier[]>([]);
@@ -65,6 +70,7 @@ const CoolMap = () => {
     const [targetOrder, setTargetOrder] = useState<IOrder | null>(null);
 
     const [modalOrderInfo, setModalOrderInfo] = useState<boolean>(false);
+    const [modalOrderCreate, setModalOrderCreate] = useState<boolean>(false);
 
     const {
         data: ordersData,
@@ -147,7 +153,7 @@ const CoolMap = () => {
     const addCreatorPlacemark = (coords: number[]) => {
         setCreatorPlacemark(
             <Placemark
-                onClick={() => console.log('open modal create order')/* setModalCreateOrder(true) */}
+                onClick={() => setModalOrderCreate(true)}
                 instanceRef={(placemark) => creatorPlacemarkRef.current = placemark}
                 geometry={{
                     type: 'Point',
@@ -203,6 +209,18 @@ const CoolMap = () => {
             >
                 {targetOrder && <OrderInfo order={targetOrder} />}
             </Modal>
+            <Modal
+                visible={modalOrderCreate}
+                setVisible={setModalOrderCreate}
+            >
+                {creatorPlacemarkRef.current !== null && <AddOrderForm
+                    couriers={couriers}
+                    lat={creatorPlacemarkRef.current.geometry?._coordinates[0]!}
+                    long={creatorPlacemarkRef.current.geometry?._coordinates[1]!}
+                    visible={modalOrderCreate}
+                />}
+            </Modal>
+
             <div className="menu">
                 <CouriersSelect
                     mapRef={mapRef}

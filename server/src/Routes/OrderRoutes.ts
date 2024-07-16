@@ -37,7 +37,6 @@ export default (orderController: IOrderController) => {
         body("lat").isNumeric(),
         body("long").isNumeric(),
         body("address").notEmpty(),
-        body("status_id").isNumeric(),
         body("delivery_time").isISO8601(),
         ValidationMiddleware,
         orderController.Store

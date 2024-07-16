@@ -1,7 +1,6 @@
 import IOrderProductRequest from "./IOrderProductRequest";
 
 export default interface IOrderRequest {
-    status_id: number;
     address: string;
     note: string;
     lat: number;

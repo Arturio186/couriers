@@ -29,7 +29,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ order }) => {
     const totalCost = useMemo(() => {
         if (!productsData) return 0;
 
-        return productsData.reduce((acc, product) => acc + Number(product.product_price), 0);
+        return productsData.reduce((acc, product) => acc + Number(product.product_price) * product.quantity, 0);
     }, [productsData]);
 
     let courierName = "Отсутствует";
@@ -69,7 +69,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ order }) => {
                                     <li key={product.product_id} className="product-item">
                                         <p><strong>Товар:</strong> {product.name}</p>
                                         <p><strong>Количество:</strong> {product.quantity}</p>
-                                        <p><strong>Стоимость:</strong> {Number(product.product_price)} ₽</p>
+                                        <p><strong>Стоимость:</strong> {Number(product.product_price) * product.quantity} ₽</p>
                                     </li>
                                 ))}
                             </ul>

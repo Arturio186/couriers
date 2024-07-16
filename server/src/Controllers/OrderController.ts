@@ -27,7 +27,6 @@ class OrderController implements IOrderController {
     public Store = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const {
-                status_id,
                 address,
                 note,
                 lat,
@@ -42,7 +41,6 @@ class OrderController implements IOrderController {
     
     
             const orderRequest: IOrderRequest = {
-                status_id,
                 address,
                 note,
                 lat,

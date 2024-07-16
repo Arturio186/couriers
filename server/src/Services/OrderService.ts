@@ -58,46 +58,46 @@ class OrderService implements IOrderService {
     };
 
     public SaveOrder = async (orderRequest: IOrderRequest, userID: string) => {
-        const branch = await this.BranchService.FindBranch(orderRequest.branch_id)
-
-        const isUserInBranch = await this.BranchService.IsUserInBranch(orderRequest.branch_id, userID)
-
+        const branch = await this.BranchService.FindBranch(orderRequest.branch_id);
+    
+        const isUserInBranch = await this.BranchService.IsUserInBranch(orderRequest.branch_id, userID);
+    
         if (!isUserInBranch) {
             throw APIError.BadRequest("Вы не являетесь работником данного филиала");
         }
-
+    
         const products = await this.GetValidateProducts(orderRequest.products, branch.business_id);
-
+    
         const client = await this.ClientModel.FindOrCreate(
             { 
                 name: orderRequest.client_name,
                 phone: orderRequest.client_phone
             }, 
             branch.business_id
-        )
-
-        const orderStatus = await this.OrderStatusModel.FindOne({ id: orderRequest.status_id })
-
-        if (!orderStatus) {
-            throw APIError.BadRequest("Статус заказа не найден");
-        }
-
-        if (orderStatus.name !== "free" && !orderRequest.courier_id) {
-            throw APIError.BadRequest("Необходимо выбрать курьера или поменять статус заказа");
-        }
-
-        if (orderStatus.name === "free") {
-            orderRequest.courier_id = null;
+        );
+    
+        let orderStatus;
+    
+        if (orderRequest.courier_id === null) {
+            orderStatus = await this.OrderStatusModel.FindOne({ name: "free" });
+            if (!orderStatus) {
+                throw APIError.BadRequest("Статус заказа 'free' не найден");
+            }
         } else {
-            const isCourierInBranch = await this.BranchService.IsUserInBranch(branch.id, orderRequest.courier_id)
-
+            const isCourierInBranch = await this.BranchService.IsUserInBranch(branch.id, orderRequest.courier_id);
+            
             if (!isCourierInBranch) {
-                throw APIError.BadRequest("Курьер не относится к данном филиалу");
+                throw APIError.BadRequest("Курьер не относится к данному филиалу");
+            }
+            orderStatus = await this.OrderStatusModel.FindOne({ name: "progress" });
+
+            if (!orderStatus) {
+                throw APIError.BadRequest("Статус заказа 'progress' не найден");
             }
         }
-
+    
         const deliveryDate = new Date(orderRequest.delivery_time);
-
+    
         const orderData: IOrderData = {
             status_id: orderStatus.id,
             address: orderRequest.address,
@@ -108,14 +108,15 @@ class OrderService implements IOrderService {
             delivery_time: deliveryDate,
             courier_id: orderRequest.courier_id ? orderRequest.courier_id : null,
             branch_id: branch.id,
-        }
-
-        const order = await this.OrderModel.Create(orderData)
-
+        };
+    
+        const order = await this.OrderModel.Create(orderData);
+    
         await this.OrderModel.AddProductsToOrder(order.id, products);
-
+    
         return order;
-    }
+    };
+    
 
     private GetValidateProducts = async (products: IOrderProductRequest[], businessID: string) => {
         const productIds = products.map(p => p.id);
