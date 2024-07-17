@@ -205,6 +205,7 @@ const CoolMap = () => {
     const handleOrderPlacemarkClick = (order: IOrder) => {
         setTargetOrder(order)
         setModalOrderInfo(true)
+        console.log(orders)
     }
 
     if (loading || assortmentLoading) {
@@ -233,8 +234,8 @@ const CoolMap = () => {
             >
                 {creatorPlacemarkRef.current !== null && <AddOrderForm
                     couriers={couriers}
-                    lat={creatorPlacemarkRef.current.geometry?._coordinates[0]!}
-                    long={creatorPlacemarkRef.current.geometry?._coordinates[1]!}
+                    lat={creatorPlacemarkRef.current.geometry?._coordinates[1]!}
+                    long={creatorPlacemarkRef.current.geometry?._coordinates[0]!}
                     visible={modalOrderCreate}
                     assortment={assortmentData!}
                 />}
@@ -286,7 +287,7 @@ const CoolMap = () => {
                         
 
                         {orders.map((order, index) => {
-                            if (targetCourier === null || targetCourier.id === order.courier_id) {
+                            if ((targetCourier === null || targetCourier.id === order.courier_id)) {
                                 return <Placemark
                                         key={order.id}
                                         geometry={{
@@ -295,7 +296,7 @@ const CoolMap = () => {
                                         }}
                                         options={{
                                             preset: 'islands#dotIcon',
-                                            iconColor: targetOrder?.id === order.id ? "blue" : orderColors[order.status],
+                                            iconColor: orderColors[order.status],
                                         }} 
                                         properties={{
                                             hintContent: `Заказ ${index + 1}`,

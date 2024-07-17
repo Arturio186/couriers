@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
-import Select from "react-select";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
+import { useSelector } from "react-redux";
+import Select from "react-select";
 import { formatISO } from "date-fns";
 import "./AddOrderForm.scss";
 
@@ -15,6 +16,10 @@ import darkSelectConfig from "#utils/darkSelectConfig";
 import Loader from "#components/UI/Loader/Loader";
 import IAssortmentCategory from "#interfaces/IAssortmentCategory";
 import IAssortmentProduct from "#interfaces/IAssortmentProduct";
+import { RootState } from "#store/store";
+import AddOrderProduct from "#interfaces/request/AddOrderProduct";
+import AddOrderRequest from "#interfaces/request/AddOrderRequest";
+import OrderService from "#services/OrderService";
 
 interface AddOrderFormProps {
     couriers: ICourier[];
@@ -24,18 +29,13 @@ interface AddOrderFormProps {
     assortment: IAssortmentCategory[];
 }
 
-interface IAddOrderProduct {
-    id: string;
-    quantity: number;
-}
-
 interface IAddOrderField {
     address: string;
     note: string;
     client_name: string;
     client_phone: string;
     delivery_time: Date;
-    products: IAddOrderProduct[];
+    products: AddOrderProduct[];
 }
 
 const AddOrderForm: FC<AddOrderFormProps> = ({
@@ -71,6 +71,8 @@ const AddOrderForm: FC<AddOrderFormProps> = ({
         [key: string]: IAssortmentProduct[];
     }>({});
 
+    const user = useSelector((state: RootState) => state.user);
+
     useEffect(() => {
         setCouriersOptions([
             { label: "Не выбран", value: null },
@@ -95,7 +97,7 @@ const AddOrderForm: FC<AddOrderFormProps> = ({
                 setGeoCodeLoading(true);
 
                 const response = await fetch(
-                    `https://geocode-maps.yandex.ru/1.x/?apikey=${APIKey}&geocode=${long},${lat}&format=json&results=2`
+                    `https://geocode-maps.yandex.ru/1.x/?apikey=${APIKey}&geocode=${lat},${long}&format=json&results=2`
                 );
 
                 if (response.status === 200) {
@@ -135,15 +137,32 @@ const AddOrderForm: FC<AddOrderFormProps> = ({
     }, [assortment]);
 
     const onSubmit: SubmitHandler<IAddOrderField> = async (data) => {
-        const formattedData = {
+        const formattedData: AddOrderRequest = {
             ...data,
             delivery_time: selectedDate ? formatISO(selectedDate) : null,
             courier_id: selectedOption?.value,
+            branch_id: user.currentBranch?.id,
+            lat,
+            long
         };
 
         console.log(formattedData);
 
-        // ЗАПРОС К АПИ
+        if (formattedData.products.length === 0) {
+            alert("Добавьте к заказу хотя бы один товар")
+            return
+        }
+
+        if (formattedData.products.some(p => p.id === "")) {
+            alert("Некорректный список товаров")
+            return
+        }
+
+        const response = await OrderService.AddOrder(formattedData)
+
+        if (response.status === 200) {
+            alert('Заказ создан')
+        }
     };
 
     const handleCategoryChange = (index: number, categoryId: string) => {
@@ -226,14 +245,7 @@ const AddOrderForm: FC<AddOrderFormProps> = ({
                         {fields.map((product, index) => (
                             <div key={product.id}>
                                 <div className="simpleInputs">
-                                    <select
-                                        onChange={(e) =>
-                                            handleCategoryChange(
-                                                index,
-                                                e.target.value
-                                            )
-                                        }
-                                    >
+                                    <select onChange={(e) =>handleCategoryChange(index, e.target.value)}>
                                         <option value="" disabled selected>
                                             Выберите категорию
                                         </option>
