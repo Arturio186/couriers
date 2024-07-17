@@ -158,6 +158,32 @@ class OrderService implements IOrderService {
 
         return products;
     }
+
+    public RemoveOrder = async (orderID: string, userID: string) => {
+        const order = await this.FindOrder(orderID)
+
+        const isUserInBranch = await this.BranchService.IsUserInBranch(order.branch_id, userID)
+
+        if (!isUserInBranch) {
+            throw APIError.BadRequest("Вы не являетесь работником данного филиала");
+        }
+        
+        await this.OrderModel.Delete({ id: orderID })
+    }
+
+    public FinishOrder = async (orderID: string, userID: string) => {
+        const order = await this.FindOrder(orderID)
+
+        const isUserInBranch = await this.BranchService.IsUserInBranch(order.branch_id, userID)
+
+        if (!isUserInBranch) {
+            throw APIError.BadRequest("Вы не являетесь работником данного филиала");
+        }
+
+        const finishStatus = await this.OrderStatusModel.FindOne({ name: "delivered" });
+
+        await this.OrderModel.Update({ id: orderID }, { status_id: finishStatus.id })
+    }
 }
 
 export default OrderService;

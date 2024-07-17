@@ -7,4 +7,6 @@ export default interface IOrderModel {
     FindOne: (conditions: Partial<IOrder>) => Promise<IOrder | undefined>
     FindActiveOrders: (branchID: string) => Promise<IOrder[]>;
     GetOrderProducts: (orderID: string) => Promise<IOrderProduct[]>;
+    Update: (conditions: Partial<IOrder>, data: Partial<IOrder>) => Promise<IOrder>
+    Delete: (conditions: Partial<IOrder>) => Promise<number>
 }

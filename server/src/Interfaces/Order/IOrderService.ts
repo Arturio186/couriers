@@ -5,7 +5,9 @@ import IOrderRequest from "./IOrderRequest";
 
 export default interface IOrderService {
     FindOrder: (orderID: string) => Promise<IOrder>;
-    GetActiveOrders: (branchID: string, userID: string) => Promise<OrderDTO[]>
-    GetOrderProduct: (orderID: string, userID: string) => Promise<IOrderProduct[]>
-    SaveOrder: (orderRequest: IOrderRequest, userID: string) => Promise<OrderDTO>
+    GetActiveOrders: (branchID: string, userID: string) => Promise<OrderDTO[]>;
+    GetOrderProduct: (orderID: string, userID: string) => Promise<IOrderProduct[]>;
+    SaveOrder: (orderRequest: IOrderRequest, userID: string) => Promise<OrderDTO>;
+    FinishOrder: (orderID: string, userID: string) => Promise<void>;
+    RemoveOrder: (orderID: string, userID: string) => Promise<void>;
 }

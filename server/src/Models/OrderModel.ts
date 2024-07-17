@@ -88,6 +88,22 @@ class OrderModel implements IOrderModel {
 
         return products;
     }
+
+    public async Delete(conditions: Partial<IOrder>): Promise<number> {
+        return db(this.tableName).where(conditions).del();
+    }
+
+    public Update = async (conditions: Partial<IOrder>, data: Partial<IOrder>) => {
+        const [updatedOrder] = await db(this.tableName)
+            .where(conditions)
+            .update({
+                ...data,
+                updated_at: db.fn.now()
+            })
+            .returning<IOrder[]>('*');
+
+        return updatedOrder;
+    };
 }
 
 export default new OrderModel();

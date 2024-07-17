@@ -74,6 +74,32 @@ class OrderController implements IOrderController {
             next(error)
         }
     }
+
+    public Destroy = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { order_id } = req.params;
+
+            await this.OrderService.RemoveOrder(order_id, res.locals.user.id)
+
+            res.status(200).json("Success")
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
+    public Finish = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { order_id } = req.params;
+
+            await this.OrderService.FinishOrder(order_id, res.locals.user.id)
+
+            res.status(200).json("Success")
+        }
+        catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default OrderController

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { query, body} from "express-validator";
+import { query, body, param} from "express-validator";
 
 import AuthMiddleware from "../Middlewares/AuthMiddleware";
 import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
@@ -40,6 +40,24 @@ export default (orderController: IOrderController) => {
         body("delivery_time").isISO8601(),
         ValidationMiddleware,
         orderController.Store
+    )
+
+    router.patch(
+        "/:order_id",
+        AuthMiddleware,
+        OperatorMiddleware,
+        param("order_id").isUUID(),
+        ValidationMiddleware,
+        orderController.Finish
+    )
+
+    router.delete(
+        "/:order_id",
+        AuthMiddleware,
+        OperatorMiddleware,
+        param("order_id").isUUID(),
+        ValidationMiddleware,
+        orderController.Destroy
     )
 
     return router;
