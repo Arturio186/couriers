@@ -17,5 +17,13 @@ export default class OrderService {
     static async AddOrder(orderData: AddOrderRequest): Promise<AxiosResponse<IOrder>> {
         return $api.post('/orders', orderData)
     }
+
+    static async FinishOrder(orderID: string): Promise<AxiosResponse<string>> {
+        return $api.patch(`/orders/${orderID}`)
+    }
+
+    static async DeleteOrder(orderID: string): Promise<AxiosResponse<string>> {
+        return $api.delete(`/orders/${orderID}`)
+    }
 }
 

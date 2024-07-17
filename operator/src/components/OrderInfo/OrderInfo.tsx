@@ -8,9 +8,14 @@ import { normalizeDate } from "#utils/normalizeDate";
 import useFetching from "#hooks/useFetching";
 import OrderService from "#services/OrderService";
 import Loader from "#components/UI/Loader/Loader";
+import CoolButton from "#components/UI/CoolButton/CoolButton";
+import { useDispatch } from "react-redux";
+import { addToast } from "#store/toastSlice";
 
 interface OrderInfoProps {
     order: IOrder;
+    setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    setOrders: React.Dispatch<React.SetStateAction<IOrder[]>>;
 }
 
 const statusTranslation: Record<string, string> = {
@@ -19,7 +24,9 @@ const statusTranslation: Record<string, string> = {
     "delivered": "Доставлен"
 }
 
-const OrderInfo: React.FC<OrderInfoProps> = ({ order }) => {
+const OrderInfo: React.FC<OrderInfoProps> = ({ order, setVisible, setOrders }) => {
+    const dispatch = useDispatch();
+
     const {
         data: productsData,
         loading,
@@ -31,6 +38,40 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ order }) => {
 
         return productsData.reduce((acc, product) => acc + Number(product.product_price) * product.quantity, 0);
     }, [productsData]);
+
+    const handleFinishClick = async () => {
+        try {
+            const response = await OrderService.FinishOrder(order.id)
+
+            if (response.status === 200) {
+                dispatch(addToast("Заказ успешно завершен"))
+
+                setOrders(prev => prev.filter(o => o.id !== order.id))
+            }
+        } catch (error: any) {
+            dispatch(addToast(error.response?.data?.message || "Произошла ошибка при изменении заказа"));
+        } finally {
+            setVisible(false)
+        }
+    }
+
+    const handleDeleteClick = async () => {
+        if (confirm("Вы уверены, что хотите удалить заказ?")) {
+            try {
+                const response = await OrderService.DeleteOrder(order.id)
+
+                if (response.status === 200) {
+                    dispatch(addToast("Заказ успешно удален"))
+
+                    setOrders(prev => prev.filter(o => o.id !== order.id))
+                }
+            } catch (error: any) {
+                dispatch(addToast(error.response?.data?.message || "Произошла ошибка при удалении заказа"));
+            } finally {
+                setVisible(false)
+            }
+        }
+    }
 
     return (
         <div className="order-info">
@@ -70,6 +111,10 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ order }) => {
                     )
                 )
             )}
+            <div className="controls">
+                <CoolButton onClick={handleFinishClick}>Завершить заказ</CoolButton>
+                <CoolButton onClick={handleDeleteClick}>Удалить</CoolButton>
+            </div>
         </div>
     );
 };

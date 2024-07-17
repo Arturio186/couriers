@@ -182,7 +182,7 @@ const AddOrderForm: FC<AddOrderFormProps> = ({
             }
         }
         catch (error: any) {
-            dispatch(addToast(error.response?.data?.message || "Произошла ошибка при удалении аккаунта"));
+            dispatch(addToast(error.response?.data?.message || "Произошла ошибка при создании заказа"));
         } finally {
             setVisible(false)
             setCreatorPlacemark(false)

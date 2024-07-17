@@ -228,7 +228,13 @@ const CoolMap = () => {
                 visible={modalOrderInfo}
                 setVisible={setModalOrderInfo}
             >
-                {targetOrder && <OrderInfo order={targetOrder} />}
+                {targetOrder && 
+                    <OrderInfo 
+                        order={targetOrder}
+                        setVisible={setModalOrderInfo}
+                        setOrders={setOrders}
+                    />
+                }
             </Modal>
             <Modal
                 visible={modalOrderCreate}

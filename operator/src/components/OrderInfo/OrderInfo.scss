@@ -5,6 +5,12 @@
     min-width: 40vw;
     max-height: 80vh;
     overflow-y: auto; 
+
+    .controls {
+        margin-top: 1rem;
+        display: flex;
+        gap: 1.5rem;
+    }
 }
 
 .order-details {
