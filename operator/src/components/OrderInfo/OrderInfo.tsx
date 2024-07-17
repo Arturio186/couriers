@@ -32,22 +32,12 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ order }) => {
         return productsData.reduce((acc, product) => acc + Number(product.product_price) * product.quantity, 0);
     }, [productsData]);
 
-    let courierName = "Отсутствует";
-
-    if (order.courier_first_name !== null) {
-        courierName = order.courier_first_name;
-        
-        if (order.courier_last_name) {
-            courierName += ` ${order.courier_last_name}`;
-        }
-    }
-
     return (
         <div className="order-info">
             <h1>Информация о заказе</h1>
             <div className="order-details">
                 <p><strong>Статус:</strong> {statusTranslation[order.status]}</p>
-                <p><strong>Курьер: </strong>{courierName}</p>
+                <p><strong>Курьер: </strong>{order.courier_first_name} {order.courier_last_name !== null && order.courier_last_name}</p>
                 <p><strong>Адрес:</strong> {order.address}</p>
                 <p><strong>Примечание:</strong> {order.note}</p>
                 <p><strong>Клиент:</strong> {order.client_name}</p>

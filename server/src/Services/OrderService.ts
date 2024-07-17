@@ -80,6 +80,7 @@ class OrderService implements IOrderService {
     
         if (orderRequest.courier_id === null) {
             orderStatus = await this.OrderStatusModel.FindOne({ name: "free" });
+
             if (!orderStatus) {
                 throw APIError.BadRequest("Статус заказа 'free' не найден");
             }
@@ -110,11 +111,9 @@ class OrderService implements IOrderService {
             branch_id: branch.id,
         };
     
-        const order = await this.OrderModel.Create(orderData);
-    
-        await this.OrderModel.AddProductsToOrder(order.id, products);
-    
-        return order;
+        const order = await this.OrderModel.CreateOrderWithProducts(orderData, products);
+
+        return new OrderDTO(order);
     };
     
 

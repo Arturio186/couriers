@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { YMaps, Map, Placemark, Button, SearchControl } from "@pbe/react-yandex-maps";
+import { YMaps, Map, Placemark, Button, SearchControl, Clusterer } from "@pbe/react-yandex-maps";
 import { useDispatch } from "react-redux";
 import io from "socket.io-client";
 import "./CoolMap.scss";
@@ -28,6 +28,8 @@ import OrderInfo from "#components/OrderInfo/OrderInfo";
 import AddOrderForm from "#components/Forms/AddOrderForm/AddOrderForm";
 import IAssortmentCategory from "#interfaces/IAssortmentCategory";
 import ProductService from "#services/ProductService";
+import OrdersList from "#components/OrdersList/OrdersList";
+import SetFocusOnCoord from "#utils/SetFocusOnCoord";
 
 interface CourierLocationMessage {
     userId: string;
@@ -205,7 +207,7 @@ const CoolMap = () => {
     const handleOrderPlacemarkClick = (order: IOrder) => {
         setTargetOrder(order)
         setModalOrderInfo(true)
-        console.log(orders)
+        SetFocusOnCoord(mapRef, order.coords.lat, order.coords.long)
     }
 
     if (loading || assortmentLoading) {
@@ -237,7 +239,10 @@ const CoolMap = () => {
                     lat={creatorPlacemarkRef.current.geometry?._coordinates[1]!}
                     long={creatorPlacemarkRef.current.geometry?._coordinates[0]!}
                     visible={modalOrderCreate}
+                    setVisible={setModalOrderCreate}
                     assortment={assortmentData!}
+                    setOrders={setOrders}
+                    setCreatorPlacemark={setCreatorPlacemark}
                 />}
             </Modal>
 
@@ -246,6 +251,12 @@ const CoolMap = () => {
                     mapRef={mapRef}
                     couriers={couriers}
                     setTargetCourier={setTargetCourier}
+                />
+
+                <OrdersList
+                    orders={orders}
+                    targetCourier={targetCourier}
+                    handleOrderClick={handleOrderPlacemarkClick}
                 />
             </div>
             <YMaps
@@ -285,27 +296,33 @@ const CoolMap = () => {
                             }} 
                         />
                         
-
-                        {orders.map((order, index) => {
-                            if ((targetCourier === null || targetCourier.id === order.courier_id)) {
-                                return <Placemark
-                                        key={order.id}
-                                        geometry={{
-                                            type: 'Point',
-                                            coordinates: [order.coords.lat, order.coords.long]
-                                        }}
-                                        options={{
-                                            preset: 'islands#dotIcon',
-                                            iconColor: orderColors[order.status],
-                                        }} 
-                                        properties={{
-                                            hintContent: `Заказ ${index + 1}`,
-                                        }}
-                                        onClick={() => handleOrderPlacemarkClick(order)}
-                                    />
-                                }
-                            })
-                        }
+                        <Clusterer
+                            options={{
+                                preset: "islands#invertedBlueClusterIcons",
+                                groupByCoordinates: false,
+                            }}
+                        >
+                            {orders.map((order, index) => {
+                                if ((targetCourier === null || targetCourier.id === order.courier_id)) {
+                                    return <Placemark
+                                            key={order.id}
+                                            geometry={{
+                                                type: 'Point',
+                                                coordinates: [order.coords.lat, order.coords.long]
+                                            }}
+                                            options={{
+                                                preset: 'islands#dotIcon',
+                                                iconColor: orderColors[order.status],
+                                            }} 
+                                            properties={{
+                                                hintContent: `Заказ ${index + 1}`,
+                                            }}
+                                            onClick={() => handleOrderPlacemarkClick(order)}
+                                        />
+                                    }
+                                })
+                            }
+                        </Clusterer>
 
                         <CouriersPlacemarks couriers={couriers} />
                         

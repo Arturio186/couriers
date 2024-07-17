@@ -1,6 +1,8 @@
 import { FC, useState, useEffect } from "react";
 import Select from "react-select";
 import "./CouriersSelect.scss";
+
+import SetFocusOnCoord from "#utils/SetFocusOnCoord";
 import darkSelectConfig from "#utils/darkSelectConfig";
 
 import ICourier from "#interfaces/ICourier";
@@ -12,27 +14,15 @@ interface CouriersSelectProps {
     setTargetCourier: React.Dispatch<React.SetStateAction<ICourier | null>>;
 }
 
-const setFocusOnCoord = (mapRef: React.MutableRefObject<ymaps.Map | null>, lat: number, long: number) => {
-    if (lat === -1 || long === -1) {
-        return
-    }
-    
-    if (mapRef.current?.setCenter) {
-        mapRef.current.setCenter([lat, long], mapRef.current.getZoom(), {
-            duration: 300
-        })
-    }
-}
-
 const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef, setTargetCourier }) => {
     const [couriersOptions, setCouriersOptions] = useState<Option[]>([
-        { label: "Все курьеры", value: "" }
+        { label: "Все курьеры", value: null }
     ]);
     const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
     useEffect(() => {
         setCouriersOptions([
-                { label: "Все курьеры", value: "" },
+                { label: "Все курьеры", value: null },
                 ...couriers.map((courier) => {
                     return {
                         value: courier.id,
@@ -41,7 +31,7 @@ const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef, setTargetCo
                 })]
         );
 
-        const defaultOption = couriersOptions.find(o => o.value === "")
+        const defaultOption = couriersOptions.find(o => o.value === null)
         
         if (defaultOption) {
             setSelectedOption(defaultOption)
@@ -50,7 +40,7 @@ const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef, setTargetCo
     }, [couriers.length]);
 
     useEffect(() => {
-        if (selectedOption?.value === "") {
+        if (selectedOption?.value === null) {
             setTargetCourier(null)
             return
         }
@@ -59,7 +49,7 @@ const CouriersSelect: FC<CouriersSelectProps> = ({ couriers, mapRef, setTargetCo
 
         if (courier) {
             setTargetCourier(courier)
-            setFocusOnCoord(mapRef, courier.lat, courier.long)
+            SetFocusOnCoord(mapRef, courier.lat, courier.long)
         }
 
     }, [selectedOption])

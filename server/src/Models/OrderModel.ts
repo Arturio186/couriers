@@ -17,21 +17,47 @@ class OrderModel implements IOrderModel {
         return db(this.tableName).where(conditions).first();
     }
 
-    public Create = async (data: IOrderData): Promise<IOrder> => {
-        const [newOrder] = await db(this.tableName)
-            .insert({
-                status_id: data.status_id,
-                address: data.address,
-                note: data.note,
-                coords: db.raw(`ST_GeomFromText('POINT(${data.lat} ${data.long})', 4326)`),
-                client_id: data.client_id,
-                delivery_time: data.delivery_time,
-                courier_id: data.courier_id,
-                branch_id: data.branch_id
-            })   
-            .returning<IOrder[]>("*")
-
-        return newOrder;
+    public CreateOrderWithProducts = async (data: IOrderData, products: Omit<IOrderProduct, 'order_id'>[]): Promise<IOrder> => {
+        return await db.transaction(async trx => {
+            const [createdOrder] = await trx(this.tableName)
+                .insert({
+                    status_id: data.status_id,
+                    address: data.address,
+                    note: data.note,
+                    coords: db.raw(`ST_GeomFromText('POINT(${data.lat} ${data.long})', 4326)`),
+                    client_id: data.client_id,
+                    delivery_time: data.delivery_time,
+                    courier_id: data.courier_id,
+                    branch_id: data.branch_id
+                })
+                .returning<IOrder[]>('*');
+    
+            
+            const productOrders = products.map(product => ({
+                order_id: createdOrder.id,
+                product_id: product.product_id,
+                quantity: product.quantity,
+                product_price: product.price
+            }));
+    
+            await trx(this.productOrderTableName).insert(productOrders);
+    
+            const [newOrder] = await trx(this.tableName)
+                .join(this.orderStatusesTableName, `${this.tableName}.status_id`, '=', `${this.orderStatusesTableName}.id`)
+                .join(this.clientTableName, `${this.tableName}.client_id`, '=', `${this.clientTableName}.id`)
+                .leftJoin(this.usersTableName, `${this.usersTableName}.id`, '=', `${this.tableName}.courier_id`)
+                .select(
+                    `${this.tableName}.*`,
+                    `${this.orderStatusesTableName}.name as status`,
+                    `${this.clientTableName}.name as client_name`,
+                    `${this.clientTableName}.phone as client_phone`,
+                    `${this.usersTableName}.first_name as courier_first_name`,
+                    `${this.usersTableName}.last_name as courier_last_name`
+                )
+                .where(`${this.tableName}.id`, createdOrder.id);
+    
+            return newOrder;
+        });
     }
 
     public FindActiveOrders = async (branchID: string): Promise<IOrder[]> => {
@@ -53,17 +79,6 @@ class OrderModel implements IOrderModel {
 
         return orders;
     };
-
-    public async AddProductsToOrder(orderID: string, products: Omit<IOrderProduct, 'order_id'>[]): Promise<void> {
-        const productOrders = products.map(product => ({
-            order_id: orderID,
-            product_id: product.product_id,
-            quantity: product.quantity,
-            product_price: product.price
-        }));
-
-        await db(this.productOrderTableName).insert(productOrders);
-    }
 
     public async GetOrderProducts(orderID: string): Promise<IOrderProduct[]> {
         const products = await db(this.productOrderTableName)

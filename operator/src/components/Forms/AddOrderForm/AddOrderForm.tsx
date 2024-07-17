@@ -20,13 +20,19 @@ import { RootState } from "#store/store";
 import AddOrderProduct from "#interfaces/request/AddOrderProduct";
 import AddOrderRequest from "#interfaces/request/AddOrderRequest";
 import OrderService from "#services/OrderService";
+import IOrder from "#interfaces/IOrder";
+import { useDispatch } from "react-redux";
+import { addToast } from "#store/toastSlice";
 
 interface AddOrderFormProps {
     couriers: ICourier[];
     lat: number;
     long: number;
     visible: boolean;
+    setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     assortment: IAssortmentCategory[];
+    setOrders: React.Dispatch<React.SetStateAction<IOrder[]>>;
+    setCreatorPlacemark: React.Dispatch<React.SetStateAction<React.ReactNode>>;
 }
 
 interface IAddOrderField {
@@ -43,8 +49,13 @@ const AddOrderForm: FC<AddOrderFormProps> = ({
     lat,
     long,
     visible,
+    setVisible,
     assortment,
+    setOrders,
+    setCreatorPlacemark
 }) => {
+    const dispatch = useDispatch()
+
     const {
         control,
         register,
@@ -158,10 +169,23 @@ const AddOrderForm: FC<AddOrderFormProps> = ({
             return
         }
 
-        const response = await OrderService.AddOrder(formattedData)
+        try {
+            const response = await OrderService.AddOrder(formattedData)
 
-        if (response.status === 200) {
-            alert('Заказ создан')
+            if (response.status === 200) {
+                dispatch(addToast("Заказ создан"))
+    
+                setOrders(prev => [
+                    response.data,
+                    ...prev
+                ])
+            }
+        }
+        catch (error: any) {
+            dispatch(addToast(error.response?.data?.message || "Произошла ошибка при удалении аккаунта"));
+        } finally {
+            setVisible(false)
+            setCreatorPlacemark(false)
         }
     };
 
