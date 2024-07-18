@@ -1,5 +1,7 @@
 import IBusiness from "./IBusiness";
 
+import IBranchSales from "../Branch/IBranchSales";
+
 export default interface IBusinessModel {
     Create: (business: IBusiness) => Promise<IBusiness>;
     Update: (conditions: Partial<IBusiness>, data: Partial<IBusiness>) => Promise<IBusiness>
@@ -7,4 +9,5 @@ export default interface IBusinessModel {
     FindAll: (conditions: Partial<IBusiness>) => Promise<IBusiness[] | undefined>
     FindOne: (conditions: Partial<IBusiness>) => Promise<IBusiness | undefined>
     FindUserInStaffs: (userID: string, businessID: string) => Promise<{ branch_id: string; user_id: string; business_id: string; } | undefined>
+    GetBranchSalesByBusinessID: (businessID: string) => Promise<IBranchSales[]>
 }

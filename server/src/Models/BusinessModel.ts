@@ -3,10 +3,14 @@ import db from "../Database/db";
 import IBusiness from "../Interfaces/Business/IBusiness";
 import IBusinessModel from "../Interfaces/Business/IBusinessModel";
 
+import IBranchSales from "../Interfaces/Branch/IBranchSales";
+
 class BusinessModel implements IBusinessModel {
     private readonly tableName = "businesses";
-    private readonly branchTableName = "branches";
+    private readonly branchesTableName = "branches";
     private readonly staffTable = "branch_user"
+    private readonly productOrderTableName = "product_order";
+    private readonly ordersTableName = "orders"
 
     public Create = async (buisness: IBusiness): Promise<IBusiness> => {
         const [newBusiness] = await db(this.tableName).insert(buisness).returning<IBusiness[]>("*");
@@ -40,11 +44,26 @@ class BusinessModel implements IBusinessModel {
 
     public FindUserInStaffs = async (userID: string, businessID: string): Promise<{ branch_id: string; user_id: string; business_id: string; } | undefined> => {
         return db(this.staffTable)
-            .join(this.branchTableName, `${this.staffTable}.branch_id`, '=', `${this.branchTableName}.id`)
+            .join(this.branchesTableName, `${this.staffTable}.branch_id`, '=', `${this.branchesTableName}.id`)
             .where({ user_id: userID, business_id: businessID })
-            .select(`${this.staffTable}.*`, `${this.branchTableName}.business_id as business_id`)
+            .select(`${this.staffTable}.*`, `${this.branchesTableName}.business_id as business_id`)
             .first()
     };
+
+    public async GetBranchSalesByBusinessID(businessID: string): Promise<IBranchSales[]> {
+        const branchSales = await db(this.ordersTableName)
+            .join(this.branchesTableName, `${this.ordersTableName}.branch_id`, "=", `${this.branchesTableName}.id`)
+            .join(this.productOrderTableName, `${this.ordersTableName}.id`, "=", `${this.productOrderTableName}.order_id`)
+            .select(
+                `${this.branchesTableName}.name as branch_name`,
+                db.raw(`SUM(${this.productOrderTableName}.quantity * ${this.productOrderTableName}.product_price) as total_sales`),
+                db.raw(`COUNT(${this.ordersTableName}.id) as total_orders`)
+            )
+            .where(`${this.branchesTableName}.business_id`, businessID)
+            .groupBy(`${this.branchesTableName}.name`);
+
+        return branchSales;
+    }
 }
 
 export default new BusinessModel();

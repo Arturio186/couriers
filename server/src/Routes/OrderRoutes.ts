@@ -6,6 +6,7 @@ import ValidationMiddleware from "../Middlewares/ValidationMiddleware";
 
 import IOrderController from "../Interfaces/Order/IOrderController";
 import OperatorMiddleware from "../Middlewares/OperatorMiddleware";
+import OwnerMiddleware from "../Middlewares/OwnerMiddleware";
 
 export default (orderController: IOrderController) => {
     const router = Router();

@@ -4,10 +4,8 @@ import APIError from "../Exceptions/APIError";
 import IBranchService from "../Interfaces/Branch/IBranchService";
 import IClientModel from "../Interfaces/Client/IClientModel";
 
-import IOrder from "../Interfaces/Order/IOrder";
 import IOrderData from "../Interfaces/Order/IOrderData";
 import IOrderModel from "../Interfaces/Order/IOrderModel";
-import IOrderProduct from "../Interfaces/Order/IOrderProduct";
 import IOrderProductRequest from "../Interfaces/Order/IOrderProductRequest";
 import IOrderRequest from "../Interfaces/Order/IOrderRequest";
 import IOrderService from "../Interfaces/Order/IOrderService";

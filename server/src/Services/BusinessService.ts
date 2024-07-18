@@ -90,6 +90,18 @@ class BusinessService implements IBusinessService {
 
         return true;
     }
+
+    public GetStatisticSales = async (businessID: string, userID: string) => {
+        const isCorrectOwner = await this.IsOwnerHaveBusiness(businessID, userID);
+
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
+        }
+
+        console.log("В сервисе, запрос в бд уходит")
+
+        return await this.BusinessModel.GetBranchSalesByBusinessID(businessID)
+    }
 }
 
 export default BusinessService;

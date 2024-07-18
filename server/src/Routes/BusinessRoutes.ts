@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 
 import IBusinessController from "../Interfaces/Business/IBusinessController";
 
@@ -43,6 +43,15 @@ export default (businessController: IBusinessController) => {
         AuthMiddleware,
         OwnerMiddleware,
         businessController.GetMyBusinesses
+    )
+
+    router.get(
+        "/sales-statistic",
+        AuthMiddleware,
+        OwnerMiddleware,
+        query('business_id').isUUID(),
+        ValidationMiddleware,
+        businessController.GetBranchesSales
     )
 
     router.get(

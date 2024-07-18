@@ -74,6 +74,21 @@ class BusinessController implements IBusinessController {
             next(error)
         }
     }
+
+    public GetBranchesSales = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { business_id } = req.query;
+
+            console.log(business_id)
+
+            const sales = await this.BusinessService.GetStatisticSales(String(business_id), res.locals.user.id)
+
+            res.status(200).json(sales)
+        }
+        catch (error) {
+            next(error)
+        }
+    } 
 }
 
 export default BusinessController;

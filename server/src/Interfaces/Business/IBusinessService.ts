@@ -1,6 +1,8 @@
 import BusinessDTO from "../../DTO/BusinessDTO"
 import IBusiness from "./IBusiness";
 
+import IBranchSales from "../Branch/IBranchSales";
+
 export default interface IBusinessService {
     SaveBusiness: (name: string, owner_id: string) => Promise<BusinessDTO>
     UpdateBusiness: (name: string, businessID: string, userID: string) => Promise<BusinessDTO>;
@@ -10,4 +12,5 @@ export default interface IBusinessService {
     FindBusiness: (businessID: string) => Promise<IBusiness>
     IsOwnerHaveBusiness: (businessID: string, ownerID: string) => Promise<boolean>;
     IsUserWorkInBusiness: (businessID: string, userID: string) => Promise<boolean>;
+    GetStatisticSales: (businessID: string, userID: string) => Promise<IBranchSales[]>;
 }
