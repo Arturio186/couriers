@@ -52,6 +52,7 @@ const RegisterForm = () => {
     return (
         <form className="auth__form" onSubmit={handleSubmit(onSubmit)}>
             <h1 className="auth__title">Регистрация</h1>
+            <h2 className="auth__subtitle">Кабинет владельца</h2>
 
             <div className="auth__content">
                 <CoolInput

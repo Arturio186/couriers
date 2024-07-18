@@ -1,16 +1,20 @@
 import React, { useCallback, useMemo } from "react";
+import { useDispatch } from "react-redux";
 import './OrderInfo.scss';
+
+import { addToast } from "#store/toastSlice";
+
+import OrderService from "#services/OrderService";
+
+import useFetching from "#hooks/useFetching";
+
+import Loader from "#components/UI/Loader/Loader";
+import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 import IOrder from "#interfaces/IOrder";
 import IOrderProduct from "#interfaces/IOrderProduct";
-import { normalizeDate } from "#utils/normalizeDate";
 
-import useFetching from "#hooks/useFetching";
-import OrderService from "#services/OrderService";
-import Loader from "#components/UI/Loader/Loader";
-import CoolButton from "#components/UI/CoolButton/CoolButton";
-import { useDispatch } from "react-redux";
-import { addToast } from "#store/toastSlice";
+import { normalizeDate } from "#utils/normalizeDate";
 
 interface OrderInfoProps {
     order: IOrder;

@@ -2,11 +2,11 @@ import { FC, useState, useEffect } from "react";
 import Select from "react-select";
 import "./CouriersSelect.scss";
 
-import SetFocusOnCoord from "#utils/SetFocusOnCoord";
-import darkSelectConfig from "#utils/darkSelectConfig";
-
 import ICourier from "#interfaces/ICourier";
 import Option from "#interfaces/Option";
+
+import SetFocusOnCoord from "#utils/SetFocusOnCoord";
+import darkSelectConfig from "#utils/darkSelectConfig";
 
 interface CouriersSelectProps {
     couriers: ICourier[];

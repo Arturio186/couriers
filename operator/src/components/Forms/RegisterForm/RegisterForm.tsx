@@ -5,13 +5,14 @@ import { useDispatch } from 'react-redux'
 import "./RegisterForm.scss";
 
 import { AppDispatch } from "#store/store";
-
 import { registration } from "#store/userSlice";
-import { LOGIN_ROUTE, MAP_ROUTE } from "#utils/consts";
+
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
 import Loader from "#components/UI/Loader/Loader";
+
+import { LOGIN_ROUTE, MAP_ROUTE } from "#utils/consts";
 
 interface IRegisterField {
     name: string;

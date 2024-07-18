@@ -6,8 +6,8 @@ import { checkAuth } from "#store/userSlice";
 
 import AuthRouter from "./AuthRouter";
 import GuestRouter from "./GuestRouter";
-import Loader from "#components/UI/Loader/Loader";
 
+import Loader from "#components/UI/Loader/Loader";
 import Forbidden from "#components/Forbidden/Forbidden";
 
 const AppRouter: FC = () => {

@@ -1,13 +1,13 @@
+import axios from 'axios';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 import AuthService from '#services/AuthService';
-import axios from 'axios';
 
 import IUser from '#interfaces/IUser';
+import IBranch from '#interfaces/IBranch';
 import { AuthResponse } from '#interfaces/response/AuthResponse';
 
 import { API_URL } from '#utils/consts';
-import IBranch from '#interfaces/IBranch';
 
 interface UserState {
     data: IUser;
@@ -103,7 +103,7 @@ const userSlice = createSlice({
                 state.isAuth = false;
                 state.data = {} as IUser;
             })
-            .addCase(logout.rejected, (state, action) => {
+            .addCase(logout.rejected, (state) => {
                 state.isLoading = false;
             })
             .addCase(checkAuth.pending, (state) => {

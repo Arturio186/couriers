@@ -3,13 +3,14 @@ import { useDispatch } from "react-redux";
 import { FaRegTrashAlt } from "react-icons/fa";
 import './StaffTable.scss'
 
-import Loader from "#components/UI/Loader/Loader";
-import CoolButton from "#components/UI/CoolButton/CoolButton";
+import { addToast } from "#store/toastSlice";
 
-import useFetching from "#hooks/useFetching";
 import BranchService from "#services/BranchService";
 
-import { addToast } from "#store/toastSlice";
+import useFetching from "#hooks/useFetching";
+
+import Loader from "#components/UI/Loader/Loader";
+import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 import IStaff from "#interfaces/IStaff";
 import StaffResponse from "#interfaces/response/StaffResponse";

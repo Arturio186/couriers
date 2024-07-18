@@ -1,16 +1,18 @@
 import { FC, useState } from "react";
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import "./MainLayout.scss";
 
-import { useSelector } from "react-redux";
 import { RootState } from "#store/store";
 
-import { privateRoutes } from "#routes/routes";
 import useDocumentTitle from "#hooks/useDocumentTitle";
 
 import SideBar from "#components/UI/SideBar/SideBar";
 import ToastContainer from "#components/UI/ToastContainer/ToastContainer";
-import { DASHBOARD_ROUTE, INVITE_ROUTE } from "#utils/consts";
+
+import { privateRoutes } from "#routes/routes";
+
+import { DASHBOARD_ROUTE } from "#utils/consts";
 
 const MainLayout: FC = () => {
     const [isOpen, setIsOpen] = useState(false);

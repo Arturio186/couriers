@@ -1,5 +1,6 @@
-import $api from "../http";
 import { AxiosResponse } from 'axios';
+import $api from "../http";
+
 import { AuthResponse } from "#interfaces/response/AuthResponse";
 import IUser from "#interfaces/IUser";
 

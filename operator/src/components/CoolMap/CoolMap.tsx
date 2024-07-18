@@ -5,31 +5,32 @@ import { useDispatch } from "react-redux";
 import io from "socket.io-client";
 import "./CoolMap.scss";
 
-const APIKey = import.meta.env.VITE_MAP_API_KEY;
-const APISuggestKey = import.meta.env.VITE_MAP_SUGGEST_API_KEY;
-
-import ICourier from "#interfaces/ICourier";
-import IOrder from "#interfaces/IOrder";
-
 import { RootState } from "#store/store";
 import { addToast } from "#store/toastSlice";
+
+import OrderService from "#services/OrderService";
+import ProductService from "#services/ProductService";
+
+import useFetching from "#hooks/useFetching";
 
 import MapAnnotation from "#components/MapAnnotation/MapAnnotation";
 import CouriersSelect from "#components/CouriersSelect/CouriersSelect";
 import CouriersPlacemarks from "#components/Placemarks/Couriers/CouriersPlacemarks";
-
-import { SOCKET_URL } from "#utils/consts";
-
-import useFetching from "#hooks/useFetching";
-import OrderService from "#services/OrderService";
 import Loader from "#components/UI/Loader/Loader";
 import Modal from "#components/UI/Modal/Modal";
 import OrderInfo from "#components/OrderInfo/OrderInfo";
 import AddOrderForm from "#components/Forms/AddOrderForm/AddOrderForm";
-import IAssortmentCategory from "#interfaces/IAssortmentCategory";
-import ProductService from "#services/ProductService";
 import OrdersList from "#components/OrdersList/OrdersList";
+
+import IAssortmentCategory from "#interfaces/IAssortmentCategory";
+import ICourier from "#interfaces/ICourier";
+import IOrder from "#interfaces/IOrder";
+
+import { SOCKET_URL } from "#utils/consts";
 import SetFocusOnCoord from "#utils/SetFocusOnCoord";
+
+const APIKey = import.meta.env.VITE_MAP_API_KEY;
+const APISuggestKey = import.meta.env.VITE_MAP_SUGGEST_API_KEY;
 
 interface CourierLocationMessage {
     userId: string;

@@ -4,12 +4,13 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "#store/store";
 import "./UpdatePasswordForm.scss";
 
-import ProfileInput from "#components/UI/ProfileInput/ProfileInput";
-import CoolButton from "#components/UI/CoolButton/CoolButton";
+import { addToast } from "#store/toastSlice";
 
 import AuthService from "#services/AuthService";
 
-import { addToast } from "#store/toastSlice";
+import ProfileInput from "#components/UI/ProfileInput/ProfileInput";
+import CoolButton from "#components/UI/CoolButton/CoolButton";
+
 
 interface UpdatePasswordField {
     oldPassword: string;

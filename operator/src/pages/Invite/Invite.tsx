@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import Loader from "#components/UI/Loader/Loader";
+import { addToast } from "#store/toastSlice";
 
-import useFetching from "#hooks/useFetching";
 import BranchService from "#services/BranchService";
 
-import IBranch from "#interfaces/IBranch";
+import useFetching from "#hooks/useFetching";
+
+import Loader from "#components/UI/Loader/Loader";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 
-import { addToast } from "#store/toastSlice";
-import { useDispatch } from "react-redux";
+import IBranch from "#interfaces/IBranch";
 
 const Invite = () => {
     const dispatch = useDispatch()

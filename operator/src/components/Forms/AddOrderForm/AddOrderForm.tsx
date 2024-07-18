@@ -1,28 +1,33 @@
 import { FC, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { formatISO } from "date-fns";
 import "./AddOrderForm.scss";
 
-const APIKey = import.meta.env.VITE_MAP_API_KEY;
+import { RootState } from "#store/store";
+import { addToast } from "#store/toastSlice";
 
-import ICourier from "#interfaces/ICourier";
+import OrderService from "#services/OrderService";
+
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import DateTimePicker from "#components/UI/DateTimePicker/DateTimePicker";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
-import Option from "#interfaces/Option";
-import darkSelectConfig from "#utils/darkSelectConfig";
 import Loader from "#components/UI/Loader/Loader";
+
+
+import ICourier from "#interfaces/ICourier";
+import Option from "#interfaces/Option";
+import IOrder from "#interfaces/IOrder";
 import IAssortmentCategory from "#interfaces/IAssortmentCategory";
 import IAssortmentProduct from "#interfaces/IAssortmentProduct";
-import { RootState } from "#store/store";
 import AddOrderProduct from "#interfaces/request/AddOrderProduct";
 import AddOrderRequest from "#interfaces/request/AddOrderRequest";
-import OrderService from "#services/OrderService";
-import IOrder from "#interfaces/IOrder";
-import { useDispatch } from "react-redux";
-import { addToast } from "#store/toastSlice";
+
+import darkSelectConfig from "#utils/darkSelectConfig";
+
+const APIKey = import.meta.env.VITE_MAP_API_KEY;
 
 interface AddOrderFormProps {
     couriers: ICourier[];
@@ -156,8 +161,6 @@ const AddOrderForm: FC<AddOrderFormProps> = ({
             lat,
             long
         };
-
-        console.log(formattedData);
 
         if (formattedData.products.length === 0) {
             alert("Добавьте к заказу хотя бы один товар")

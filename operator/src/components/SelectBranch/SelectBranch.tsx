@@ -6,15 +6,16 @@ import './SelectBranch.scss'
 import { setCurrentBranch } from "#store/userSlice";
 import { RootState } from "#store/store";
 
-import darkSelectConfig from "#utils/darkSelectConfig";
+import BranchService from "#services/BranchService";
 
 import useFetching from "#hooks/useFetching";
-import BranchService from "#services/BranchService";
 
 import Loader from "#components/UI/Loader/Loader";
 
 import IBranchStaff from "#interfaces/IBranchStaff";
 import Option from "#interfaces/Option";
+
+import darkSelectConfig from "#utils/darkSelectConfig";
 
 interface SelectBranchProps {
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>

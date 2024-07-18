@@ -49,6 +49,7 @@ const LoginForm = () => {
     return (
         <form className="auth__form" onSubmit={handleSubmit(onSubmit)}>
             <h1 className="auth__title">Вход</h1>
+            <h2 className="auth__subtitle">Кабинет владельца</h2>
 
             <div className="auth__content">
                 <CoolInput
