@@ -79,8 +79,6 @@ class BusinessController implements IBusinessController {
         try {
             const { business_id } = req.query;
 
-            console.log(business_id)
-
             const sales = await this.BusinessService.GetStatisticSales(String(business_id), res.locals.user.id)
 
             res.status(200).json(sales)

@@ -84,8 +84,6 @@ class UserController implements IUserController {
 
             const updatedUser = await this.UserService.EditProfileInfo(first_name, last_name || "", email, res.locals.user.id)
 
-            console.log(updatedUser)
-
             res.status(200).json(updatedUser)
         }
         catch (error) {
