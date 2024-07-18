@@ -27,11 +27,11 @@ const TotalInfo = () => {
                 <>
                     <div className="info-block">
                         <span className="label">Выручка за всё время</span>
-                        <span className="value">{Number(data.total_money)} ₽</span>
+                        <span className="value">{Number(data.total_money) || 0} ₽</span>
                     </div>
                     <div className="info-block">
                         <span className="label">Количество заказов</span>
-                        <span className="value">{Number(data.total_orders)}</span>
+                        <span className="value">{Number(data.total_orders) || 0}</span>
                     </div>
                 </>
             )}
