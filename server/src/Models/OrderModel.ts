@@ -119,7 +119,10 @@ class OrderModel implements IOrderModel {
             .groupBy(db.raw(`DATE(${this.tableName}.created_at)`))
             .orderBy('order_date');
 
-        return dailyOrders;
+        return dailyOrders.map(order => ({
+            order_date: new Date(order.order_date).toISOString().split('T')[0],
+            total_orders: order.total_orders
+        }));;
     }
 }
 

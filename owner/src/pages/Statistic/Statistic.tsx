@@ -32,7 +32,9 @@ const Statistic = () => {
                     <SalesStatistic
                         business={targetBusiness}
                     />
-                    <OrdersStatistic />
+                    <OrdersStatistic
+                        business={targetBusiness}
+                    />
                 </>
             ) :
             <p className="message">Для более подробной статистике выберите филиал</p>}
