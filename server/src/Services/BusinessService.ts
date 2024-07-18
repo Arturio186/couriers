@@ -103,10 +103,15 @@ class BusinessService implements IBusinessService {
         return sales.map((sale) => {
             return {
                 branch_name: sale.branch_name,
+                total_money: Number(sale.total_money),
                 total_sales: Number(sale.total_sales),
                 total_orders: Number(sale.total_orders)
             }
         })
+    }
+
+    public GetBusinessesStats = async (userID: string) => {
+        return await this.BusinessModel.GetBusinessesStatsByOwnerID(userID)
     }
 }
 

@@ -43,4 +43,4 @@ class UserModel implements IUserModel {
     };
 }
 
-export default new UserModel();
+export default UserModel;

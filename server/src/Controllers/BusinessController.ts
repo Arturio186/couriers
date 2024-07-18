@@ -88,6 +88,17 @@ class BusinessController implements IBusinessController {
         catch (error) {
             next(error)
         }
+    }
+
+    public GetBusinessesTotalInfo = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const info = await this.BusinessService.GetBusinessesStats(res.locals.user.id)
+
+            res.status(200).json(info)
+        }
+        catch (error) {
+            next(error)
+        }
     } 
 }
 

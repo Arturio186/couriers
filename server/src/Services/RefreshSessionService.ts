@@ -1,5 +1,3 @@
-import RefreshSessionModel from "../Models/RefreshSessionModel";
-
 import IRefreshSessionModel from "../Interfaces/RefreshSession/IRefreshSessionModel";
 import IRefreshSessionService from "../Interfaces/RefreshSession/IRefreshSessionService";
 
@@ -14,7 +12,7 @@ class RefreshSessionService implements IRefreshSessionService {
     }
 
     public SaveToken = async (userID: string, refreshToken: string) => {
-        const sessions = await RefreshSessionModel.FindAll({
+        const sessions = await this.RefreshSessionModel.FindAll({
             user_id: userID,
         });
 

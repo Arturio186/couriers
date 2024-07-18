@@ -1,5 +1,6 @@
 import { FC, useState, useCallback, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import './SalesStatistic.scss'
 
 import getStatisticColor from "#utils/getStatisticColor";
 
@@ -38,18 +39,18 @@ const SalesStatistic: FC<SalesStatisticProps> = ({ business }) => {
     }
 
     if (sales.length === 0) {
-        return <div>Нет данных</div>
+        return <div>Нет данных по продажам</div>
     }
 
     return (
-        <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <div className="totals__statistic">
             <div>
                 <h3>Общая сумма продаж по филиалам</h3>
                 <ResponsiveContainer width={400} height={300}>
                     <PieChart>
                         <Pie
                             data={sales}
-                            dataKey="total_sales"
+                            dataKey="total_money"
                             nameKey="branch_name"
                             cx="50%"
                             cy="50%"
@@ -71,6 +72,32 @@ const SalesStatistic: FC<SalesStatisticProps> = ({ business }) => {
 
             <div>
                 <h3>Общее количество продаж по филиалам</h3>
+                <ResponsiveContainer width={400} height={300}>
+                    <PieChart>
+                        <Pie
+                            data={sales}
+                            dataKey="total_sales"
+                            nameKey="branch_name"
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={100}
+                            fill="#82ca9d"
+                            label
+                        >
+                            {sales.map((entry, index) => (
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={getStatisticColor(index)}
+                                />
+                            ))}
+                        </Pie>
+                        <Tooltip />
+                    </PieChart>
+                </ResponsiveContainer>
+            </div>
+
+            <div>
+                <h3>Общее количество заказов по филиалам</h3>
                 <ResponsiveContainer width={400} height={300}>
                     <PieChart>
                         <Pie

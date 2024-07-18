@@ -2,6 +2,7 @@ import OrderDTO from "../DTO/OrderDTO";
 import APIError from "../Exceptions/APIError";
 
 import IBranchService from "../Interfaces/Branch/IBranchService";
+import IBusinessService from "../Interfaces/Business/IBusinessService";
 import IClientModel from "../Interfaces/Client/IClientModel";
 
 import IOrderData from "../Interfaces/Order/IOrderData";
@@ -18,19 +19,22 @@ class OrderService implements IOrderService {
     private readonly ProductModel: IProductModel;
     private readonly ClientModel: IClientModel;
     private readonly OrderStatusModel: IOrderStatusModel;
+    private readonly BusinessService: IBusinessService;
 
     constructor(
         orderModel: IOrderModel, 
         branchService: IBranchService, 
         productModel: IProductModel, 
         clientModel: IClientModel,
-        orderStatusModel: IOrderStatusModel
+        orderStatusModel: IOrderStatusModel,
+        businessService: IBusinessService
     ) {
         this.OrderModel = orderModel;
         this.BranchService = branchService;
         this.ProductModel = productModel;
         this.ClientModel = clientModel;
         this.OrderStatusModel = orderStatusModel;
+        this.BusinessService = businessService;
     }
 
     public FindOrder = async (orderID: string) => {
@@ -181,6 +185,16 @@ class OrderService implements IOrderService {
         const finishStatus = await this.OrderStatusModel.FindOne({ name: "delivered" });
 
         await this.OrderModel.Update({ id: orderID }, { status_id: finishStatus.id })
+    }
+
+    public GetLastTwoWeeksOrders = async (businessID: string, userID: string) => {
+        const isCorrectOwner = await this.BusinessService.IsOwnerHaveBusiness(businessID, userID);
+
+        if (!isCorrectOwner) {
+            throw APIError.Forbidden("Нет доступа к бизнесу");
+        }
+
+        return await this.OrderModel.GetDailyOrdersForBusiness(businessID);
     }
 }
 

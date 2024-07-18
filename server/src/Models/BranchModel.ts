@@ -130,4 +130,4 @@ class BranchModel implements IBranchModel {
     };
 }
 
-export default new BranchModel();
+export default BranchModel;

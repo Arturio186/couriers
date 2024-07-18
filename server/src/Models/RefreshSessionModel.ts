@@ -34,4 +34,4 @@ class RefreshSessionModel implements IRefreshSessionModel {
     }
 }
 
-export default new RefreshSessionModel();
+export default RefreshSessionModel;

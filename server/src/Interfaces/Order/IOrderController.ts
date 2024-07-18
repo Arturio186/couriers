@@ -6,4 +6,5 @@ export default interface IOrderController {
     Store: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Destroy: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     Finish: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    GetLastTwoWeeksOrdersCount: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

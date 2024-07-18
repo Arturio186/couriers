@@ -24,4 +24,4 @@ class ClientModel implements IClientModel {
     }
 }
 
-export default new ClientModel();
+export default ClientModel;

@@ -4,6 +4,7 @@ import IOrder from "../Interfaces/Order/IOrder";
 import IOrderModel from "../Interfaces/Order/IOrderModel";
 import IOrderData from "../Interfaces/Order/IOrderData";
 import IOrderProduct from "../Interfaces/Order/IOrderProduct";
+import IDailyOrders from "../Interfaces/Order/IDailyOrders";
 
 class OrderModel implements IOrderModel {
     private readonly usersTableName = "users";
@@ -12,6 +13,7 @@ class OrderModel implements IOrderModel {
     private readonly productOrderTableName = "product_order";
     private readonly productsTableName = "products"
     private readonly clientTableName = "clients"
+    private readonly branchesTableName = "branches"
 
     public FindOne = async (conditions: Partial<IOrder>) => {
         return db(this.tableName).where(conditions).first();
@@ -104,6 +106,21 @@ class OrderModel implements IOrderModel {
 
         return updatedOrder;
     };
+
+    public async GetDailyOrdersForBusiness(businessID: string): Promise<IDailyOrders[]> {
+        const dailyOrders = await db(this.tableName)
+            .join(this.branchesTableName, `${this.tableName}.branch_id`, '=', `${this.branchesTableName}.id`)
+            .select(
+                db.raw(`DATE(${this.tableName}.created_at) as order_date`),
+                db.raw(`COUNT(${this.tableName}.id) as total_orders`)
+            )
+            .where(`${this.branchesTableName}.business_id`, businessID)
+            .andWhere(`${this.tableName}.created_at`, '>=', db.raw('NOW() - INTERVAL \'14 days\''))
+            .groupBy(db.raw(`DATE(${this.tableName}.created_at)`))
+            .orderBy('order_date');
+
+        return dailyOrders;
+    }
 }
 
-export default new OrderModel();
+export default OrderModel;

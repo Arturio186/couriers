@@ -100,6 +100,19 @@ class OrderController implements IOrderController {
             next(error)
         }
     }
+
+    public GetLastTwoWeeksOrdersCount = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { business_id } = req.query;
+
+            const ordersCount = await this.OrderService.GetLastTwoWeeksOrders(String(business_id), res.locals.user.id)
+
+            res.status(200).json(ordersCount)
+        }
+        catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default OrderController

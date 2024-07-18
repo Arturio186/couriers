@@ -77,4 +77,4 @@ class ProductModel implements IProductModel {
     }
 }
 
-export default new ProductModel();
+export default ProductModel;

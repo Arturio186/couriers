@@ -7,4 +7,5 @@ export default interface IBusinessController {
     GetMyBusinesses: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     GetBusiness: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     GetBranchesSales: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    GetBusinessesTotalInfo: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

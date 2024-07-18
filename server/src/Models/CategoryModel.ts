@@ -41,4 +41,4 @@ class CategoryModel implements ICategoryModel {
     };
 }
 
-export default new CategoryModel();
+export default CategoryModel;

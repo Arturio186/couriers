@@ -55,6 +55,13 @@ export default (businessController: IBusinessController) => {
     )
 
     router.get(
+        "/businesses-statistic",
+        AuthMiddleware,
+        OwnerMiddleware,
+        businessController.GetBusinessesTotalInfo
+    )
+
+    router.get(
         "/:id",
         AuthMiddleware,
         param("id").notEmpty().isUUID(),

@@ -35,33 +35,48 @@ import OrderController from "./Controllers/OrderController";
 import ClientModel from "./Models/ClientModel";
 import OrderStatusModel from "./Models/OrderStatusModel";
 
-const refreshSessionService = new RefreshSessionService(RefreshSessionModel)
-const roleService = new RoleService(RoleModel)
+const refreshSessionModel = new RefreshSessionModel()
+const refreshSessionService = new RefreshSessionService(refreshSessionModel)
 
-const cityService = new CityService(CityModel)
+const roleModel = new RoleModel()
+const roleService = new RoleService(roleModel)
+
+const cityModel = new CityModel()
+const cityService = new CityService(cityModel)
 const cityController = new CityController(cityService)
 
-const userService = new UserService(UserModel, refreshSessionService, roleService)
+const userModel = new UserModel()
+const userService = new UserService(userModel, refreshSessionService, roleService)
 const userController = new UserController(userService)
 
-const businessService = new BusinessService(BusinessModel)
+const businessModel = new BusinessModel()
+const businessService = new BusinessService(businessModel)
 const businessController = new BusinessController(businessService)
 
-const branchService = new BranchService(BranchModel, businessService, cityService)
+const branchModel = new BranchModel()
+const branchService = new BranchService(branchModel, businessService, cityService)
 const branchController = new BranchController(branchService)
 
-const categoryService = new CategoryService(CategoryModel, businessService)
+const categoryModel = new CategoryModel()
+const categoryService = new CategoryService(categoryModel, businessService)
 const categoryController = new CategoryController(categoryService)
 
-const productService = new ProductService(ProductModel, categoryService, businessService)
+const productModel = new ProductModel()
+const productService = new ProductService(productModel, categoryService, businessService)
 const productController = new ProductController(productService)
 
+const clientModel = new ClientModel()
+
+const orderStatusModel = new OrderStatusModel()
+
+const orderModel = new OrderModel()
 const orderService = new OrderService(
-    OrderModel, 
+    orderModel, 
     branchService, 
-    ProductModel, 
-    ClientModel, 
-    OrderStatusModel
+    productModel, 
+    clientModel, 
+    orderStatusModel,
+    businessService
 )
 const orderController = new OrderController(orderService)
 

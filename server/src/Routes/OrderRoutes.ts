@@ -27,6 +27,15 @@ export default (orderController: IOrderController) => {
         orderController.GetOrderProducts
     )
 
+    router.get(
+        "/last-two-weeks",
+        AuthMiddleware,
+        OwnerMiddleware,
+        query('business_id').isUUID(),
+        ValidationMiddleware,
+        orderController.GetLastTwoWeeksOrdersCount
+    )
+
     router.post(
         "/",
         AuthMiddleware,

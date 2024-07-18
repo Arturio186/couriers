@@ -9,8 +9,6 @@ class RoleModel implements IRoleModel {
     public FindOne = async (conditions: Partial<IRole>): Promise<IRole | undefined> => {
         return db(this.tableName).where(conditions).first();
     }
-
-    
 }
 
-export default new RoleModel();
+export default RoleModel;

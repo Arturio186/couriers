@@ -11,4 +11,4 @@ class OrderStatusModel implements IOrderStatusModel {
     };
 }
 
-export default new OrderStatusModel();
+export default OrderStatusModel;

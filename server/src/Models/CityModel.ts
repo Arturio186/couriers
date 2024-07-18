@@ -20,4 +20,4 @@ class CityModel implements ICityModel {
     };
 }
 
-export default new CityModel();
+export default CityModel;
