@@ -19,6 +19,7 @@ import { DASHBOARD_ROUTE, BUSINESSES_ROUTE, STATISTIC_ROUTE, CATALOG_ROUTE, BRAN
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "#utils/consts";
 
 import { FaCity, FaUser, FaChartBar, FaShoppingBasket } from "react-icons/fa";
+import Statistic from "#pages/Statistic/Statistic";
 
 export const privateRoutes: IRoute[] = [
     {
@@ -30,7 +31,7 @@ export const privateRoutes: IRoute[] = [
             { path: `${BRANCH_ROUTE}/:id`, element: <Branch />, title: "Филиал" },
             { path: BUSINESSES_ROUTE, element: <Businesses />, title: "Сети", icon: <FaCity /> },
             { path: CATALOG_ROUTE, element: <Catalog />, title: "Каталог", icon: <FaShoppingBasket /> },
-            { path: STATISTIC_ROUTE, element: <p>Statistic</p>, title: "Статистика", icon: <FaChartBar /> },
+            { path: STATISTIC_ROUTE, element: <Statistic />, title: "Статистика", icon: <FaChartBar /> },
             { path: DASHBOARD_ROUTE, element: <Dashboard />, title: "Личный кабинет", icon: <FaUser /> },
             { path: "/*", element: <NotFound />, title: "Страница не найдена" }
         ],

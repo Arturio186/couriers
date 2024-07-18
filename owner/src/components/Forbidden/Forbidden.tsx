@@ -15,6 +15,7 @@ const Forbidden = () => {
 
     return (
         <div className="forbidden__container">
+            <span className="clown">🤡</span>
             <p className="forbidden__message">Вы не являетесь владельцем</p>
             <CoolButton onClick={handleLogout}>Выйти</CoolButton>
         </div>

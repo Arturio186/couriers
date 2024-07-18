@@ -43,7 +43,7 @@ export default (orderController: IOrderController) => {
     )
 
     router.patch(
-        "/:order_id",
+        "/finish/:order_id",
         AuthMiddleware,
         OperatorMiddleware,
         param("order_id").isUUID(),

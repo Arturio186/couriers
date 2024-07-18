@@ -19,7 +19,7 @@ export default class OrderService {
     }
 
     static async FinishOrder(orderID: string): Promise<AxiosResponse<string>> {
-        return $api.patch(`/orders/${orderID}`)
+        return $api.patch(`/orders/finish/${orderID}`)
     }
 
     static async DeleteOrder(orderID: string): Promise<AxiosResponse<string>> {

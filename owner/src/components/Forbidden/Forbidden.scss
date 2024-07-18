@@ -5,7 +5,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    height: 100vh;
+
     gap: 2rem;
+
+    .clown {
+        font-size: 10rem;
+    }
 
     button {
         width: 10%;
