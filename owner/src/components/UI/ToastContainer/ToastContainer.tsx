@@ -1,13 +1,11 @@
-// src/components/ToastContainer.tsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import "./ToastContainer.scss";
 
 import { RootState } from "#store/store";
 import { removeToast } from "#store/toastSlice";
 
 import Toast from "../Toast/Toast";
-
-import "./ToastContainer.scss";
 
 const ToastContainer: React.FC = () => {
     const toasts = useSelector((state: RootState) => state.toast.toasts);

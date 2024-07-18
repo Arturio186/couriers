@@ -1,8 +1,9 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import "./InviteLink.scss";
 
 import { addToast } from "#store/toastSlice";
-import { useDispatch } from "react-redux";
+
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 interface InviteLinkProps {

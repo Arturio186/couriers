@@ -4,11 +4,11 @@ import { useDispatch } from "react-redux";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import "./BranchTable.scss";
 
-import useFetching from "#hooks/useFetching";
-
 import { addToast } from "#store/toastSlice";
 
 import BranchService from "#services/BranchService";
+
+import useFetching from "#hooks/useFetching";
 
 import Modal from "#components/UI/Modal/Modal";
 import Loader from "#components/UI/Loader/Loader";
@@ -16,7 +16,6 @@ import EditBranchForm from "#components/Forms/EditBranchForm/EditBranchForm";
 
 import IBranch from "#interfaces/IBranch";
 import IBusiness from "#interfaces/IBusiness";
-
 
 interface BranchTableProps {
     business: IBusiness;

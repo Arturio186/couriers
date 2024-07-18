@@ -4,17 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "#store/store";
 import "./ProfileForm.scss";
 
+import { setUser } from "#store/userSlice";
+import { addToast } from "#store/toastSlice";
+
+import AuthService from "#services/AuthService";
+
+import useFetching from "#hooks/useFetching";
+
 import ProfileInput from "#components/UI/ProfileInput/ProfileInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 import Loader from "#components/UI/Loader/Loader";
 
 import IUser from "#interfaces/IUser";
-
-import useFetching from "#hooks/useFetching";
-import AuthService from "#services/AuthService";
-
-import { setUser } from "#store/userSlice";
-import { addToast } from "#store/toastSlice";
 
 interface ProfileFormField {
     name: string;

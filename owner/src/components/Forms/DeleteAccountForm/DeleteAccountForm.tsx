@@ -4,15 +4,15 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "#store/store";
 import "./DeleteAccountForm.scss";
 
+import { addToast } from "#store/toastSlice";
+import { setUser, setAuth } from "#store/userSlice";
+
+import AuthService from "#services/AuthService";
+
 import ProfileInput from "#components/UI/ProfileInput/ProfileInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 
 import IUser from "#interfaces/IUser";
-
-import AuthService from "#services/AuthService";
-
-import { addToast } from "#store/toastSlice";
-import { setUser, setAuth } from "#store/userSlice";
 
 interface DeleteAccountField {
     password: string;

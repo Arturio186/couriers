@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-import IBusiness from "#interfaces/IBusiness";
-
 import BusinessesSelect from "#components/BusinessesSelect/BusinessesSelect";
 import SalesStatistic from "#components/SalesStatistic/SalesStatistic";
 import TotalInfo from "#components/TotalInfo/TotalInfo";
 import OrdersStatistic from "#components/OrdersStatistic/OrdersStatistic";
+
+import IBusiness from "#interfaces/IBusiness";
 
 const Statistic = () => {
     const [targetBusiness, setTargetBusiness] = useState<IBusiness | null>(null);

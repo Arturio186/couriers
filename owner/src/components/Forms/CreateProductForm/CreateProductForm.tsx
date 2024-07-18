@@ -5,10 +5,10 @@ import "./CreateProductForm.scss";
 
 import { addToast } from "#store/toastSlice";
 
+import ProductService from "#services/ProductService";
+
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
-
-import ProductService from "#services/ProductService";
 
 import ICategory from "#interfaces/ICategory";
 import IProduct from "#interfaces/IProduct";

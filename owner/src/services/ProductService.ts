@@ -1,5 +1,5 @@
-import $api from "../http";
 import { AxiosResponse } from 'axios';
+import $api from "../http";
 
 import IProduct from "#interfaces/IProduct";
 import ICategory from "#interfaces/ICategory";

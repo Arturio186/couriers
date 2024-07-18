@@ -5,16 +5,16 @@ import './ProductsTable.scss'
 
 import { addToast } from "#store/toastSlice";
 
-import useFetching from "#hooks/useFetching";
-
 import ProductService from "#services/ProductService";
 
+import useFetching from "#hooks/useFetching";
+
+import EditProductForm from "#components/Forms/EditProductForm/EditProductForm";
 import Loader from "#components/UI/Loader/Loader";
 import Modal from "#components/UI/Modal/Modal";
 
 import ICategory from "#interfaces/ICategory";
 import IProduct from "#interfaces/IProduct";
-import EditProductForm from "#components/Forms/EditProductForm/EditProductForm";
 
 interface ProductsTableProps {
     targetCategory: ICategory;

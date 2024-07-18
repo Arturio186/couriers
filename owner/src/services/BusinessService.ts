@@ -1,5 +1,5 @@
-import $api from "../http";
 import { AxiosResponse } from 'axios';
+import $api from "../http";
 
 import IBusiness from "#interfaces/IBusiness";
 import IBranchSales from "#interfaces/IBranchSales";

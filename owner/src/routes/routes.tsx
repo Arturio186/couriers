@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
-
-import IRoute from "#interfaces/IRoute";
+import { FaCity, FaUser, FaChartBar, FaShoppingBasket } from "react-icons/fa";
 
 import AuthenticationLayout from "#layouts/AuthenticationLayout/AuthenticationLayout";
 import MainLayout from "#layouts/MainLayout/MainLayout";
@@ -14,12 +13,12 @@ import Business from "#pages/Business/Business";
 import Branch from "#pages/Branch/Branch";
 import Catalog from "#pages/Catalog/Catalog";
 import Dashboard from "#pages/Dashboard/Dashboard";
+import Statistic from "#pages/Statistic/Statistic";
+
+import IRoute from "#interfaces/IRoute";
 
 import { DASHBOARD_ROUTE, BUSINESSES_ROUTE, STATISTIC_ROUTE, CATALOG_ROUTE, BRANCH_ROUTE } from "#utils/consts";
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "#utils/consts";
-
-import { FaCity, FaUser, FaChartBar, FaShoppingBasket } from "react-icons/fa";
-import Statistic from "#pages/Statistic/Statistic";
 
 export const privateRoutes: IRoute[] = [
     {

@@ -6,14 +6,11 @@ import { addToast } from "#store/toastSlice";
 
 import BusinessService from "#services/BusinessService";
 
+import EditBusinessForm from "#components/Forms/EditBusinessForm/EditBusinessForm";
 import BusinessCard from "#components/BusinessCard/BusinessCard";
 import Modal from "#components/UI/Modal/Modal";
 
-
-
 import IBusiness from "#interfaces/IBusiness";
-import EditBusinessForm from "#components/Forms/EditBusinessForm/EditBusinessForm";
-
 
 interface BusinessesListProps {
     businesses: IBusiness[] | null;

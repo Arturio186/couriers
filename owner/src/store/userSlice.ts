@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 import AuthService from '#services/AuthService';
-import axios from 'axios';
 
 import IUser from '#interfaces/IUser';
 import { AuthResponse } from '#interfaces/response/AuthResponse';

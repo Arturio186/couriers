@@ -1,8 +1,8 @@
 import "./TotalInfo.scss";
 
-import useFetching from "#hooks/useFetching";
-
 import BusinessService from "#services/BusinessService";
+
+import useFetching from "#hooks/useFetching";
 
 import Loader from "#components/UI/Loader/Loader";
 

@@ -5,14 +5,13 @@ import { useDispatch } from 'react-redux'
 import "./LoginForm.scss";
 
 import { AppDispatch } from "#store/store";
-
 import { login } from "#store/userSlice";
-import { BUSINESSES_ROUTE, REGISTER_ROUTE } from "#utils/consts";
 
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import AuthButton from "#components/UI/AuthButton/AuthButton";
 import Loader from "#components/UI/Loader/Loader";
 
+import { BUSINESSES_ROUTE, REGISTER_ROUTE } from "#utils/consts";
 
 interface ILoginField {
     email: string;

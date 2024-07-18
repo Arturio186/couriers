@@ -5,10 +5,10 @@ import "./CreateCategoryForm.scss";
 
 import { addToast } from "#store/toastSlice";
 
+import CategoryService from "#services/CategoryService";
+
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
-
-import CategoryService from "#services/CategoryService";
 
 import ICategory from "#interfaces/ICategory";
 import IBusiness from "#interfaces/IBusiness";

@@ -3,20 +3,21 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
 
-import useDebouncing from "#hooks/useDebouncing";
-
 import { addToast } from "#store/toastSlice";
 
 import CityService from "#services/CityService";
 import BranchService from "#services/BranchService";
 
+import useDebouncing from "#hooks/useDebouncing";
+
 import CoolInput from "#components/UI/CoolInput/CoolInput";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 
-import darkSelectConfig from "#utils/darkSelectConfig";
-
 import IBranch from "#interfaces/IBranch";
 import Option from "#interfaces/Option";
+
+
+import darkSelectConfig from "#utils/darkSelectConfig";
 
 interface EditBranchField {
     name: string;
@@ -66,7 +67,7 @@ const EditBranchForm : FC<EditBranchFormProps> = ({ branch, setBranches, setModa
 
     useEffect(() => {
         setSelectedCity({ 
-            value: branch ? branch.city_id.toString() : "-1",
+            value: branch && branch.city_id?.toString() || "-1", 
             label: `${branch?.city_name} ` + (branch?.region === "" ? "" : `(${branch?.region})`) 
         });
         setValue('name', branch ? branch.name : "")

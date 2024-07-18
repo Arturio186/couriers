@@ -2,14 +2,17 @@ import { useState, useEffect } from "react";
 import Select, { SingleValue } from "react-select";
 import './Catalog.scss'
 
-import useFetching from "#hooks/useFetching";
-
 import BusinessService from "#services/BusinessService";
+
+import useFetching from "#hooks/useFetching";
 
 import Modal from "#components/UI/Modal/Modal";
 import Loader from "#components/UI/Loader/Loader";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 import CategoriesTable from "#components/Tables/CategoriesTable/CategoriesTable";
+import CreateCategoryForm from "#components/Forms/CreateCategoryForm/CreateCategoryForm";
+import ProductsTable from "#components/Tables/ProductsTable/ProductsTable";
+import CreateProductForm from "#components/Forms/CreateProductForm/CreateProductForm";
 
 import IBusiness from "#interfaces/IBusiness";
 import Option from "#interfaces/Option";
@@ -17,9 +20,6 @@ import ICategory from "#interfaces/ICategory";
 import IProduct from "#interfaces/IProduct";
 
 import darkSelectConfig from "#utils/darkSelectConfig";
-import CreateCategoryForm from "#components/Forms/CreateCategoryForm/CreateCategoryForm";
-import ProductsTable from "#components/Tables/ProductsTable/ProductsTable";
-import CreateProductForm from "#components/Forms/CreateProductForm/CreateProductForm";
 
 const Catalog = () => {
     const {

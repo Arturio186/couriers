@@ -1,12 +1,16 @@
 import React, { FC, useState, useEffect } from "react";
-
 import Select, { SingleValue } from "react-select";
-import useFetching from "#hooks/useFetching";
+
 import BusinessService from "#services/BusinessService";
+
+import useFetching from "#hooks/useFetching";
+
 import Loader from "#components/UI/Loader/Loader";
-import darkSelectConfig from "#utils/darkSelectConfig";
+
 import IBusiness from "#interfaces/IBusiness";
 import Option from "#interfaces/Option";
+
+import darkSelectConfig from "#utils/darkSelectConfig";
 
 interface BusinessesSelectProps {
     targetBusiness: IBusiness | null;

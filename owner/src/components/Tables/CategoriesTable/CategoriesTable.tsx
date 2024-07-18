@@ -5,17 +5,16 @@ import './CategoriesTable.scss'
 
 import { addToast } from "#store/toastSlice";
 
-import useFetching from "#hooks/useFetching";
-
 import CategoryService from "#services/CategoryService";
 
+import useFetching from "#hooks/useFetching";
+
+import EditCategoryForm from "#components/Forms/EditCategoryForm/EditCategoryForm";
 import Loader from "#components/UI/Loader/Loader";
+import Modal from "#components/UI/Modal/Modal";
 
 import IBusiness from "#interfaces/IBusiness";
 import ICategory from "#interfaces/ICategory";
-import Modal from "#components/UI/Modal/Modal";
-import EditCategoryForm from "#components/Forms/EditCategoryForm/EditCategoryForm";
-
 
 interface CategoriesTableProps {
     business: IBusiness;

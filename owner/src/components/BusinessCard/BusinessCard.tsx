@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './BusinessCard.scss';
 
+import CoolButton from '#components/UI/CoolButton/CoolButton';
+import Loader from '#components/UI/Loader/Loader';
+
 import IBusiness from '#interfaces/IBusiness';
 
 import { BUSINESSES_ROUTE } from '#utils/consts';
-import CoolButton from '#components/UI/CoolButton/CoolButton';
-import Loader from '#components/UI/Loader/Loader';
 
 interface BusinessCardProps {
     business: IBusiness;

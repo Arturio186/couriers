@@ -1,7 +1,6 @@
 import React from "react";
 import { UseFormRegisterReturn, FieldError } from "react-hook-form";
 import { v4 as uuidv4 } from 'uuid';
-
 import "./ProfileInput.scss";
 
 interface ProfileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {

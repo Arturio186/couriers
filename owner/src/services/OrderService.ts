@@ -1,5 +1,6 @@
 import IDailyOrders from "#interfaces/IDailyOrders";
 import $api from "../http";
+
 import { AxiosResponse } from 'axios';
 
 export default class OrderService {

@@ -4,6 +4,8 @@ export default interface IBranch {
     id: string;
     name: string;
     city_id?: number;
+    city_name?: string; 
+    region?: string;
     business_id: string;
     coords?: ICoords;
     business_name?: string;

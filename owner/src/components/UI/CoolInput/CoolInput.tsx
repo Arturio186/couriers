@@ -1,7 +1,6 @@
 import React from "react";
 import { UseFormRegisterReturn, FieldError } from "react-hook-form";
 import { v4 as uuidv4 } from 'uuid';
-
 import "./CoolInput.scss";
 
 interface CoolInputProps extends React.InputHTMLAttributes<HTMLInputElement> {

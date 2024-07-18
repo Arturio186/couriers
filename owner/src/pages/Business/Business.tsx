@@ -3,16 +3,17 @@ import { useParams } from 'react-router-dom';
 import './Business.scss'
 
 import BusinessService from "#services/BusinessService";
-import useFetching from "#hooks/useFetching";
 
-import IBusiness from "#interfaces/IBusiness";
-import IBranch from "#interfaces/IBranch";
+import useFetching from "#hooks/useFetching";
 
 import CreateBranchForm from "#components/Forms/CreateBranchForm/CreateBranchForm";
 import BranchTable from "#components/Tables/BranchTable/BranchTable";
 import Loader from "#components/UI/Loader/Loader";
 import CoolButton from "#components/UI/CoolButton/CoolButton";
 import Modal from "#components/UI/Modal/Modal";
+
+import IBusiness from "#interfaces/IBusiness";
+import IBranch from "#interfaces/IBranch";
 
 const Business = () => {
     const { id } = useParams<{ id: string }>();

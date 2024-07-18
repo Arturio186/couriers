@@ -2,13 +2,17 @@ import { FC, useState, useCallback, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import './SalesStatistic.scss'
 
-import getStatisticColor from "#utils/getStatisticColor";
+import BusinessService from "#services/BusinessService";
 
 import useFetching from "#hooks/useFetching";
-import BusinessService from "#services/BusinessService";
+
+import Loader from "#components/UI/Loader/Loader";
+
 import IBranchSales from "#interfaces/IBranchSales";
 import IBusiness from "#interfaces/IBusiness";
-import Loader from "#components/UI/Loader/Loader";
+
+import getStatisticColor from "#utils/getStatisticColor";
+
 
 interface SalesStatisticProps {
     business: IBusiness;
@@ -58,7 +62,7 @@ const SalesStatistic: FC<SalesStatisticProps> = ({ business }) => {
                             fill="#8884d8"
                             label
                         >
-                            {sales.map((entry, index) => (
+                            {sales.map((_, index) => (
                                 <Cell
                                     key={`cell-${index}`}
                                     fill={getStatisticColor(index)}
@@ -84,7 +88,7 @@ const SalesStatistic: FC<SalesStatisticProps> = ({ business }) => {
                             fill="#82ca9d"
                             label
                         >
-                            {sales.map((entry, index) => (
+                            {sales.map((_, index) => (
                                 <Cell
                                     key={`cell-${index}`}
                                     fill={getStatisticColor(index)}
@@ -110,7 +114,7 @@ const SalesStatistic: FC<SalesStatisticProps> = ({ business }) => {
                             fill="#82ca9d"
                             label
                         >
-                            {sales.map((entry, index) => (
+                            {sales.map((_, index) => (
                                 <Cell
                                     key={`cell-${index}`}
                                     fill={getStatisticColor(index)}

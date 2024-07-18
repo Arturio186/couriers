@@ -1,8 +1,9 @@
 import { FC, useState, useEffect, useCallback } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-import useFetching from "#hooks/useFetching";
 import OrderService from "#services/OrderService";
+
+import useFetching from "#hooks/useFetching";
 
 import Loader from "#components/UI/Loader/Loader";
 
