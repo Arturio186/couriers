@@ -2,6 +2,7 @@ import $api from "../http";
 import { AxiosResponse } from 'axios';
 
 import IBusiness from "#interfaces/IBusiness";
+import IBranchSales from "#interfaces/IBranchSales";
 
 export default class BusinessService {
     static async CreateBusiness(name: string): Promise<AxiosResponse<IBusiness>> {
@@ -22,5 +23,9 @@ export default class BusinessService {
 
     static async GetBusiness(id: string): Promise<AxiosResponse<IBusiness>> {
         return await $api.get<IBusiness>(`/businesses/${id}`);
+    }
+
+    static async GetSalesStatistic(businessID: string): Promise<AxiosResponse<IBranchSales[]>> {
+        return await $api.get<IBranchSales[]>(`/businesses/sales-statistic?business_id=${businessID}`)
     }
 }

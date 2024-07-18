@@ -54,7 +54,7 @@ class BusinessModel implements IBusinessModel {
         const branchSales = await db(this.ordersTableName)
             .join(this.branchesTableName, `${this.ordersTableName}.branch_id`, "=", `${this.branchesTableName}.id`)
             .join(this.productOrderTableName, `${this.ordersTableName}.id`, "=", `${this.productOrderTableName}.order_id`)
-            .select(
+            .select<IBranchSales[]>(
                 `${this.branchesTableName}.name as branch_name`,
                 db.raw(`SUM(${this.productOrderTableName}.quantity * ${this.productOrderTableName}.product_price) as total_sales`),
                 db.raw(`COUNT(${this.ordersTableName}.id) as total_orders`)

@@ -98,9 +98,15 @@ class BusinessService implements IBusinessService {
             throw APIError.Forbidden("Нет доступа к бизнесу");
         }
 
-        console.log("В сервисе, запрос в бд уходит")
+        const sales = await this.BusinessModel.GetBranchSalesByBusinessID(businessID)
 
-        return await this.BusinessModel.GetBranchSalesByBusinessID(businessID)
+        return sales.map((sale) => {
+            return {
+                branch_name: sale.branch_name,
+                total_sales: Number(sale.total_sales),
+                total_orders: Number(sale.total_orders)
+            }
+        })
     }
 }
 
